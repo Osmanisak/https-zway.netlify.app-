@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sway – Less effort. More life.</title>
+  <meta name="description" content="Sway viser de nyeste, mest populære hverdagsprodukter i verden – håndplukket til at gøre dit liv lettere. Scroll-worthy produkter, nem shopping og nordisk enkelhed fra dag ét." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0f172a',
+            muted: '#64748b',
+            soft: '#f8fafc',
+            line: '#e5e7eb',
+            accent: '#0ea5e9',
+            offer: '#e11d48'
+          },
+          boxShadow: { soft: '0 10px 25px -10px rgba(2,8,23,0.15)' },
+          borderRadius: { xl2: '1rem' }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <style>
+    :root { --radius: 16px; }
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, ui-sans-serif, system-ui; background:#f8fafc; color:#0f172a; }
+    .glass { backdrop-filter: saturate(180%) blur(10px); background: rgba(255,255,255,.7); }
+    .no-scrollbar{scrollbar-width:none;-ms-overflow-style:none}.no-scrollbar::-webkit-scrollbar{display:none}
+    .focus-ring:focus-visible{outline:2px solid #0ea5e9; outline-offset:2px}
+  </style>
+</head>
+<body class="bg-soft text-ink">
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/70 glass border-b border-line">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <a href="#" class="flex items-center gap-2">
+          <div class="h-8 w-8 rounded-xl2 bg-ink grid place-items-center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
+              <path d="M4 12c5-8 11-8 16 0-5 8-11 8-16 0Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M8 12c3-4 5-4 8 0-3 4-5 4-8 0Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <span class="text-xl font-semibold tracking-tight">Sway</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm">
+          <a class="hover:text-accent" href="#categories">Kategorier</a>
+          <a class="hover:text-accent" href="#favorites">Udvalgte</a>
+          <a class="hover:text-accent" href="#offers">Tilbud</a>
+          <a class="hover:text-accent" href="#guides">Guides</a>
+          <a class="hover:text-accent" href="#about">Om Sway</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <div class="relative hidden sm:block">
+            <input aria-label="Søg produkter" type="search" placeholder="Søg produkter…" class="w-64 rounded-xl2 border border-line bg-white px-4 py-2 pl-10 text-sm outline-none focus:ring-2 focus:ring-accent"/>
+            <svg class="absolute left-3 top-2.5 h-5 w-5 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </div>
+          <button aria-label="Åbn menu" class="md:hidden rounded-xl2 border border-line p-2" id="mobileToggle">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <button aria-label="Kurv" class="rounded-xl2 border border-line p-2 hover:border-accent">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6l-2-2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu (safe overlay) -->
+  <nav id="mobileMenu" class="md:hidden fixed inset-0 bg-black/40 z-40 hidden" aria-hidden="true">
+    <div class="absolute right-0 top-0 h-full w-72 bg-white shadow-soft p-6">
+      <button id="mobileClose" class="mb-6 rounded-xl2 border border-line p-2" aria-label="Luk menuen">✕</button>
+      <ul class="space-y-4 text-sm">
+        <li><a class="block hover:text-accent" href="#categories">Kategorier</a></li>
+        <li><a class="block hover:text-accent" href="#favorites">Udvalgte</a></li>
+        <li><a class="block hover:text-accent" href="#offers">Tilbud</a></li>
+        <li><a class="block hover:text-accent" href="#guides">Guides</a></li>
+        <li><a class="block hover:text-accent" href="#about">Om Sway</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero with multiple slides -->
+  <section class="relative">
+    <div class="swiper hero-swiper">
+      <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide relative isolate">
+          <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=2100&auto=format&fit=crop" alt="Organiseret køkken" class="h-[58vh] w-full object-cover sm:h-[70vh]" fetchpriority="high" decoding="async"/>
+          <div class="absolute inset-0 bg-black/30"></div>
+          <div class="absolute inset-0 mx-auto max-w-7xl grid place-items-center">
+            <div class="text-center text-white px-4">
+              <h1 class="text-3xl sm:text-5xl font-bold">Less effort. More life.</h1>
+              <p class="mt-3 text-base sm:text-lg opacity-90">Vi viser de mest populære hacks og fund fra hele verden – samlet ét sted.</p>
+              <div class="mt-6 flex justify-center gap-3">
+                <a href="#categories" class="rounded-xl2 bg-white text-ink px-5 py-3 text-sm font-semibold shadow-soft hover:bg-soft">Se kategorier</a>
+                <a href="#offers" class="rounded-xl2 border border-white/80 px-5 py-3 text-sm font-semibold hover:bg-white/10">Se tilbud</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="swiper-slide relative isolate">
+          <img src="https://images.unsplash.com/photo-1604882737206-c2d5b3c9a0b7?q=80&w=2100&auto=format&fit=crop" alt="Smart rengøringsprodukt" class="h-[58vh] w-full object-cover sm:h-[70vh]" loading="lazy" decoding="async"/>
+          <div class="absolute inset-0 bg-black/25"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-center text-white px-4">
+            <div>
+              <h2 class="text-3xl sm:text-5xl font-bold">Renere hjem på minutter</h2>
+              <p class="mt-3 text-base sm:text-lg opacity-90">Oplev de smarte rengøringsgadgets der hitter lige nu.</p>
+              <a href="#favorites" class="mt-6 inline-block rounded-xl2 bg-accent text-white px-5 py-3 text-sm font-semibold shadow-soft hover:opacity-90">Shop rengøring</a>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="swiper-slide relative isolate">
+          <img src="https://images.unsplash.com/photo-1604328705002-d1010db97436?q=80&w=2100&auto=format&fit=crop" alt="Minimalistisk desk setup" class="h-[58vh] w-full object-cover sm:h-[70vh]" loading="lazy" decoding="async"/>
+          <div class="absolute inset-0 bg-black/25"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-center text-white px-4">
+            <div>
+              <h2 class="text-3xl sm:text-5xl font-bold">Organisering uden stress</h2>
+              <p class="mt-3 text-base sm:text-lg opacity-90">Fra kabler til skabe – små ting der gør en stor forskel.</p>
+              <a href="#categories" class="mt-6 inline-block rounded-xl2 border border-white/80 px-5 py-3 text-sm font-semibold hover:bg-white/10">Se organisering</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </section>
+
+  <!-- Categories Section (placed before Udvalgte) -->
+  <section id="categories" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+    <div class="flex items-end justify-between">
+      <h3 class="text-2xl sm:text-3xl font-bold">Kategorier</h3>
+    </div>
+    <p class="mt-3 text-sm text-muted">Opdag vores univers af smarte løsninger – organiseret i overskuelige kategorier.</p>
+
+    <div class="grid gap-6 mt-8 md:grid-cols-4 sm:grid-cols-2">
+      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
+        <h4 class="font-semibold text-sm">Organisering</h4>
+        <p class="mt-1 text-xs text-muted">Fra kabler til skabe</p>
+      </a>
+      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
+        <h4 class="font-semibold text-sm">Køkken</h4>
+        <p class="mt-1 text-xs text-muted">Smartere madlavning</p>
+      </a>
+      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
+        <h4 class="font-semibold text-sm">Rengøring</h4>
+        <p class="mt-1 text-xs text-muted">Effektive gadgets</p>
+      </a>
+      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
+        <h4 class="font-semibold text-sm">Teknologi</h4>
+        <p class="mt-1 text-xs text-muted">Praktiske tech‑løsninger</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Favorites Section -->
+  <section id="favorites" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 bg-white rounded-t-3xl shadow-soft">
+    <div class="flex items-end justify-between">
+      <h3 class="text-2xl sm:text-3xl font-bold">Udvalgte</h3>
+      <a href="#" class="text-sm text-accent hover:underline">Se alle</a>
+    </div>
+    <p class="mt-3 text-sm text-muted">Et håndplukket udvalg af produkter, som vi guider dig i at bruge bedst muligt.</p>
+
+    <div class="grid gap-8 mt-10 md:grid-cols-3">
+      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+        <img src="https://images.unsplash.com/photo-1593767146711-6c5262dcf3ae?q=80&w=1200&auto=format&fit=crop" alt="Mini håndstøvsuger" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
+        <div class="p-5">
+          <h4 class="text-sm font-semibold">Mini håndstøvsuger</h4>
+          <p class="mt-2 text-xs text-muted">Et stilrent valg til bilen eller kontoret – praktisk og effektiv.</p>
+          <a href="#guides" class="mt-4 inline-block text-xs font-semibold text-accent hover:underline">Se hvordan den bruges</a>
+        </div>
+      </article>
+      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+        <img src="https://images.unsplash.com/photo-1582588678413-dbf45f4823e9?q=80&w=1200&auto=format&fit=crop" alt="Magnetisk kabelorganizer" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
+        <div class="p-5">
+          <h4 class="text-sm font-semibold">Magnetisk kabelorganizer</h4>
+          <p class="mt-2 text-xs text-muted">Et elegant organiseringsværktøj til et ryddeligt skrivebord.</p>
+          <a href="#guides" class="mt-4 inline-block text-xs font-semibold text-accent hover:underline">Få tips til organisering</a>
+        </div>
+      </article>
+      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+        <img src="https://images.unsplash.com/photo-1557518012-686c2a4a07fb?q=80&w=1200&auto=format&fit=crop" alt="Automatisk sæbedispenser" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
+        <div class="p-5">
+          <h4 class="text-sm font-semibold">Auto‑sæbedispenser</h4>
+          <p class="mt-2 text-xs text-muted">Berøringsfri hygiejne i et moderne design – perfekt til køkken eller bad.</p>
+          <a href="#guides" class="mt-4 inline-block text-xs font-semibold text-accent hover:underline">Læs vores guide</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Offers Section -->
+  <section id="offers" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+    <div class="flex items-end justify-between">
+      <h3 class="text-2xl sm:text-3xl font-bold text-offer">Tilbud</h3>
+      <a href="#" class="text-sm text-offer hover:underline">Se alle</a>
+    </div>
+    <p class="mt-3 text-sm text-muted">Eksklusive kampagner og tidsbegrænsede tilbud – gå ikke glip af muligheden for at spare på smarte hverdagsløsninger.</p>
+
+    <div class="grid gap-8 mt-10 md:grid-cols-3">
+      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+        <img src="https://images.unsplash.com/photo-1607082349566-187342845f9d?q=80&w=1200&auto=format&fit=crop" alt="Smart køkkenredskab" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
+        <div class="p-5">
+          <h4 class="text-sm font-semibold">Smart køkkenredskab</h4>
+          <p class="mt-2 text-xs text-muted line-through">399 kr</p>
+          <p class="text-offer font-semibold">249 kr</p>
+          <a href="#" class="mt-4 inline-block text-xs font-semibold text-offer hover:underline">Køb nu</a>
+        </div>
+      </article>
+      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+        <img src="https://images.unsplash.com/photo-1524594154908-edd74e95d173?q=80&w=1200&auto=format&fit=crop" alt="Multifunktionel gadget" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
+        <div class="p-5">
+          <h4 class="text-sm font-semibold">Multifunktionel gadget</h4>
+          <p class="mt-2 text-xs text-muted line-through">599 kr</p>
+          <p class="text-offer font-semibold">399 kr</p>
+          <a href="#" class="mt-4 inline-block text-xs font-semibold text-offer hover:underline">Køb nu</a>
+        </div>
+      </article>
+      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+        <img src="https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=1200&auto=format&fit=crop" alt="Minimalistisk lampe" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
+        <div class="p-5">
+          <h4 class="text-sm font-semibold">Minimalistisk lampe</h4>
+          <p class="mt-2 text-xs text-muted line-through">899 kr</p>
+          <p class="text-offer font-semibold">699 kr</p>
+          <a href="#" class="mt-4 inline-block text-xs font-semibold text-offer hover:underline">Køb nu</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Guides Section -->
+  <section id="guides" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+    <div class="flex items-end justify-between">
+      <h3 class="text-xl sm:text-2xl font-semibold">Guides & inspiration</h3>
+      <a href="#" class="text-sm text-accent hover:underline">Læs alle</a>
+    </div>
+    <p class="mt-2 text-sm text-muted">Se hvordan vores værktøjer og produkter kan bruges i hverdagen – korte hacks, før/efter‑billeder og tips.</p>
+    <div class="mt-6 grid gap-6 md:grid-cols-2">
+      <div class="rounded-xl2 border border-line bg-white p-5 shadow-soft">
+        <h4 class="text-sm font-semibold">Sådan rydder du dit skrivebord på 30 sekunder</h4>
+        <p class="mt-2 text-xs text-muted">Med en simpel kabelorganizer kan du få et clean setup uden rod.</p>
+      </div>
+      <div class="rounded-xl2 border border-line bg-white p-5 shadow-soft">
+        <h4 class="text-sm font-semibold">Hold bilen ren med en mini håndstøvsuger</h4>
+        <p class="mt-2 text-xs text-muted">Et af vores favorit hacks – nemt at vise i en kort video.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+    <h3 class="text-xl sm:text-2xl font-semibold">Hvorfor Sway?</h3>
+    <p class="mt-2 text-sm text-muted">Sway er altid med på det nyeste. Vi vælger de produkter, som folk taler om globalt – og giver dig inspiration til, hvordan du kan bruge dem i din egen hverdag.</p>
+  </section>
+
+  <footer class="border-t border-line bg-white mt-10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 text-sm text-muted">
+      © <span id="y"></span> Sway – Less effort. More life.
+    </div>
+  </footer>
+
+  <!-- Trust bar -->
+  <section aria-label="Handelsfordele" class="bg-white/80 border-t border-line">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 grid gap-4 sm:grid-cols-3 text-sm text-muted">
+      <div>✓ 30 dages returret</div>
+      <div>✓ Hurtig levering</div>
+      <div>✓ Sikker checkout</div>
+    </div>
+  </section>
+
+  <!-- Chatbot: Sway Assistant (minimal) -->
+  <style>
+    #chatbotToggle{position:fixed;bottom:20px;right:20px;z-index:9999;border-radius:9999px;background:#0f172a;color:#fff;padding:14px;box-shadow:0 10px 25px -10px rgba(2,8,23,.25);display:flex;align-items:center;justify-content:center}
+    #chatbotToggle:hover{background:#0ea5e9}
+    #chatWindow{position:fixed;bottom:88px;right:20px;width:340px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 10px 25px -10px rgba(2,8,23,.25);display:none;z-index:9999;overflow:hidden}
+    #chatHeader{background:#0f172a;color:#fff;padding:10px 12px;display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px}
+    #chatBody{padding:12px;background:#f8fafc;max-height:320px;overflow:auto;font-size:14px;color:#334155}
+    .chat-row{display:flex;gap:8px;margin-bottom:8px}
+    .chat-avatar{width:22px;height:22px;border-radius:9999px;background:#0f172a;display:grid;place-items:center;flex:0 0 22px}
+    .chat-avatar svg{width:12px;height:12px;color:#fff}
+    .chat-bubble{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px 10px;max-width:240px}
+    .quick-replies{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .quick-replies button{background:#eef2f7;border:1px solid #e2e8f0;border-radius:9999px;padding:6px 12px;font-size:12px;cursor:pointer}
+    .quick-replies button:hover{background:#e2e8f0}
+    #chatInput{display:flex;gap:8px;align-items:center;border-top:1px solid #e5e7eb;background:#fff;padding:10px}
+    #chatInput input{flex:1;border:1px solid #e5e7eb;border-radius:9999px;padding:8px 12px;font-size:13px}
+    #chatInput button{border-radius:9999px;background:#0ea5e9;color:#fff;padding:8px 12px;font-size:13px}
+  </style>
+
+  <button id="chatbotToggle" aria-label="Åbn Sway chat">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 12c5-8 11-8 16 0-5 8-11 8-16 0Z" stroke="currentColor" stroke-width="2"/>
+      <path d="M8 12c3-4 5-4 8 0-3 4-5 4-8 0Z" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </button>
+
+  <div id="chatWindow" role="dialog" aria-label="Sway chat" aria-modal="false">
+    <div id="chatHeader">
+      <span class="chat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12c5-8 11-8 16 0-5 8-11 8-16 0Z" stroke="currentColor" stroke-width="2"/></svg>
+      </span>
+      Sway Chat
+    </div>
+    <div id="chatBody">
+      <div class="chat-row">
+        <span class="chat-avatar">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12c5-8 11-8 16 0-5 8-11 8-16 0Z" stroke="currentColor" stroke-width="2"/></svg>
+        </span>
+        <div class="chat-bubble">Hej 👋 Hvad vil du gerne gøre nemmere i dag?</div>
+      </div>
+      <div class="quick-replies" id="qrStep1">
+        <button data-step="1" data-value="Organisering">Organisering</button>
+        <button data-step="1" data-value="Rengøring">Rengøring</button>
+        <button data-step="1" data-value="Køkken">Køkken</button>
+        <button data-step="1" data-value="Teknologi">Teknologi</button>
+        <button data-link="#offers">Se tilbud</button>
+      </div>
+    </div>
+    <div id="chatInput">
+      <input id="chatFree" type="text" placeholder="Skriv dit spørgsmål…"/>
+      <button id="chatSend" aria-label="Send">Send</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    // year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Respect reduced motion
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hero = new Swiper('.hero-swiper', {
+      loop:true,
+      autoplay: reduce ? false : { delay:4000, disableOnInteraction:false },
+      pagination:{ el:'.hero-swiper .swiper-pagination', clickable:true },
+      navigation:{ nextEl:'.hero-swiper .swiper-button-next', prevEl:'.hero-swiper .swiper-button-prev' }
+    });
+
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+    function openMenu(){ mobileMenu.classList.remove('hidden'); mobileMenu.setAttribute('aria-hidden','false'); }
+    function closeMenu(){ mobileMenu.classList.add('hidden'); mobileMenu.setAttribute('aria-hidden','true'); }
+    mobileToggle?.addEventListener('click', openMenu);
+    mobileClose?.addEventListener('click', closeMenu);
+    mobileMenu?.addEventListener('click', (e)=>{ if(e.target === mobileMenu) closeMenu(); });
+
+    // Chatbot logik (minimal)
+    const toggleBtn = document.getElementById('chatbotToggle');
+    const chat = document.getElementById('chatWindow');
+    const body = document.getElementById('chatBody');
+    const freeInput = document.getElementById('chatFree');
+    const sendBtn = document.getElementById('chatSend');
+    const PREF_KEY = 'sway_chat_dismissed';
+
+    const steps = {
+      1: { q:'Hvilket budget kigger du efter?', options:['Under 200 kr','200–500 kr','500+ kr'] },
+      2: { q:'Vil du se forslag eller er du klar til at købe?', options:['Se forslag','Klar til at købe'] }
+    };
+
+    let context = { category:null, budget:null, intent:null };
+
+    function setOpen(v){ chat.style.display = v ? 'block' : 'none'; }
+    function addBot(text){
+      const row = document.createElement('div'); row.className='chat-row';
+      row.innerHTML = `<span class="chat-avatar"><svg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M4 12c5-8 11-8 16 0-5 8-11 8-16 0Z' stroke='currentColor' stroke-width='2'/></svg></span><div class='chat-bubble'>${text}</div>`;
+      body.appendChild(row); body.scrollTop = body.scrollHeight;
+    }
+    function addUser(text){
+      const row = document.createElement('div'); row.className='chat-row';
+      row.style.justifyContent='flex-end';
+      row.innerHTML = `<div class='chat-bubble' style='background:#e6f6fd;border-color:#bae6fd'>${text}</div>`;
+      body.appendChild(row); body.scrollTop = body.scrollHeight;
+    }
+    function addOptions(step, opts){
+      const wrap = document.createElement('div'); wrap.className='quick-replies';
+      opts.forEach(o=>{
+        const b=document.createElement('button'); b.textContent=o; b.dataset.step=step; b.dataset.value=o; wrap.appendChild(b);
+      });
+      body.appendChild(wrap); body.scrollTop = body.scrollHeight;
+    }
+
+    // Toggle
+    toggleBtn.addEventListener('click', ()=>{
+      const isOpen = chat.style.display === 'block';
+      setOpen(!isOpen);
+      if(!isOpen) sessionStorage.removeItem(PREF_KEY);
+    });
+
+    // Auto-open én gang pr. session
+    window.addEventListener('load', ()=>{ if(!sessionStorage.getItem(PREF_KEY)) setTimeout(()=> setOpen(true), 1400); });
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ setOpen(false); sessionStorage.setItem(PREF_KEY,'1'); }});
+
+    // Delegation for quick buttons
+    body.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      const link = btn.dataset.link; if(link){ location.hash = link.replace('#',''); setOpen(false); return; }
+
+      const step = Number(btn.dataset.step || 0); const val = btn.dataset.value;
+      if(step===1){ // category chosen
+        context.category = val; addUser(val);
+        addBot(steps[1].q); addOptions(101, steps[1].options); // budget step id 101
+        btn.parentElement.remove(); // remove first set
+      } else if(step===101){ // budget
+        context.budget = val; addUser(val);
+        addBot(steps[2].q); addOptions(102, steps[2].options);
+        btn.parentElement.remove();
+      } else if(step===102){ // intent
+        context.intent = val; addUser(val);
+        // Resultat
+        const anchor = context.category === 'Organisering' ? '#categories' :
+                       context.category === 'Rengøring' ? '#favorites' :
+                       context.category === 'Køkken' ? '#offers' : '#categories';
+        addBot(`Fint — her er vores bedste ${context.category?.toLowerCase()||'valg'}. Du kan altid spørge, hvis du ønsker mere specifikke forslag.`);
+        const go = document.createElement('div'); go.className='quick-replies';
+        go.innerHTML = `<button data-link='${anchor}'>Gå til ${context.category||'kategorier'}</button><button data-action='contact'>Kontakt os</button>`;
+        body.appendChild(go); body.scrollTop = body.scrollHeight;
+        btn.parentElement.remove();
+      } else if(btn.dataset.action==='contact'){
+        addBot("Du kan skrive til os på mail eller WhatsApp. Hvad foretrækker du?");
+        const c = document.createElement('div'); c.className='quick-replies';
+        c.innerHTML = `<button data-mail='mailto:hello@sway.shop'>Email</button><button data-wa='https://wa.me/4512345678'>WhatsApp</button>`;
+        body.appendChild(c); body.scrollTop = body.scrollHeight;
+      } else if(btn.dataset.mail){ window.location.href = btn.dataset.mail; }
+        else if(btn.dataset.wa){ window.open(btn.dataset.wa,'_blank'); }
+    });
+
+    // Free text send (enkel demo)
+    sendBtn.addEventListener('click', ()=>{
+      const t = freeInput.value.trim(); if(!t) return; addUser(t); freeInput.value='';
+      // simple keyword routing
+      const k = t.toLowerCase();
+      if(k.includes('tilbud')) { addBot('Selvfølgelig. Jeg åbner vores aktuelle tilbud.'); location.hash='offers'; setOpen(false); return; }
+      if(k.includes('organ')) { addBot('Her er vores bedste til organisering.'); location.hash='categories'; setOpen(false); return; }
+      if(k.includes('rengør')) { addBot('Her finder du populære løsninger til rengøring.'); location.hash='favorites'; setOpen(false); return; }
+      addBot('Tak! En fra teamet svarer hurtigst muligt. Du kan også kontakte os direkte herunder.');
+      const contact = document.createElement('div'); contact.className='quick-replies';
+      contact.innerHTML = `<button data-mail='mailto:hello@sway.shop'>Email</button><button data-wa='https://wa.me/4512345678'>WhatsApp</button>`;
+      body.appendChild(contact);
+    });
+  </script>
+</body>
+</html>
