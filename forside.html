@@ -360,6 +360,9 @@
     mobileToggle?.addEventListener('click', openMenu);
     mobileClose?.addEventListener('click', closeMenu);
     mobileMenu?.addEventListener('click', (e)=>{ if(e.target === mobileMenu) closeMenu(); });
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && !mobileMenu?.classList.contains('hidden')) closeMenu();
+    });
 
     // Chatbot logik (minimal)
     const toggleBtn = document.getElementById('chatbotToggle');
