@@ -38,6 +38,14 @@
     .glass { backdrop-filter: saturate(180%) blur(10px); background: rgba(255,255,255,.7); }
     .no-scrollbar{scrollbar-width:none;-ms-overflow-style:none}.no-scrollbar::-webkit-scrollbar{display:none}
     .focus-ring:focus-visible{outline:2px solid #0ea5e9; outline-offset:2px}
+    .chip{padding:0.45rem 1rem;border-radius:9999px;background:#fff;border:1px solid #e2e8f0;color:#0f172a;font-weight:500;transition:all .2s ease}
+    .chip:hover{border-color:#0ea5e9;color:#0ea5e9}
+    .chip.active{background:#0f172a;color:#fff;border-color:#0f172a}
+    .assist-card{width:100%;display:flex;gap:12px;align-items:center;text-align:left;padding:12px 14px;border-radius:16px;background:#f1f5f9;border:1px solid #e2e8f0;transition:all .2s ease}
+    .assist-card:hover{background:#e2e8f0}
+    .assist-icon{font-size:20px;line-height:1}
+    .assist-title{font-size:0.9rem;font-weight:600}
+    .assist-desc{font-size:0.75rem;color:#64748b}
   </style>
 </head>
 <body class="bg-soft text-ink">
@@ -60,6 +68,7 @@
           <a class="hover:text-accent" href="#offers">Tilbud</a>
           <a class="hover:text-accent" href="#guides">Guides</a>
           <a class="hover:text-accent" href="#about">Om Sway</a>
+          <a class="hover:text-accent" href="#behov">Behovsboks</a>
         </nav>
         <div class="flex items-center gap-3">
           <div class="relative hidden sm:block">
@@ -87,9 +96,28 @@
         <li><a class="block hover:text-accent" href="#offers">Tilbud</a></li>
         <li><a class="block hover:text-accent" href="#guides">Guides</a></li>
         <li><a class="block hover:text-accent" href="#about">Om Sway</a></li>
+        <li><a class="block hover:text-accent" href="#behov">Behovsboks</a></li>
       </ul>
     </div>
   </nav>
+
+  <!-- Trust signals -->
+  <div class="border-t border-line bg-white/90">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 text-xs flex flex-wrap gap-2 md:gap-3 justify-center text-ink/80">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-line">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/></svg>
+        Sikker betaling & data
+      </span>
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-line">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 12l-8 8-8-8" stroke="currentColor" stroke-width="2"/></svg>
+        Gratis fragt fra 499 kr.
+      </span>
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-line">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2"/></svg>
+        4.8/5 på Trustpilot
+      </span>
+    </div>
+  </div>
 
   <!-- Hero with multiple slides -->
   <section class="relative">
@@ -97,40 +125,49 @@
       <div class="swiper-wrapper">
         <!-- Slide 1 -->
         <div class="swiper-slide relative isolate">
-          <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=2100&auto=format&fit=crop" alt="Organiseret køkken" class="h-[58vh] w-full object-cover sm:h-[70vh]" fetchpriority="high" decoding="async"/>
+          <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=2100&auto=format&fit=crop" alt="Organiseret køkken" class="h-[60vh] w-full object-cover sm:h-[72vh]" fetchpriority="high" decoding="async"/>
           <div class="absolute inset-0 bg-black/30"></div>
-          <div class="absolute inset-0 mx-auto max-w-7xl grid place-items-center">
-            <div class="text-center text-white px-4">
-              <h1 class="text-3xl sm:text-5xl font-bold">Less effort. More life.</h1>
-              <p class="mt-3 text-base sm:text-lg opacity-90">Vi viser de mest populære hacks og fund fra hele verden – samlet ét sted.</p>
-              <div class="mt-6 flex justify-center gap-3">
-                <a href="#categories" class="rounded-xl2 bg-white text-ink px-5 py-3 text-sm font-semibold shadow-soft hover:bg-soft">Se kategorier</a>
-                <a href="#offers" class="rounded-xl2 border border-white/80 px-5 py-3 text-sm font-semibold hover:bg-white/10">Se tilbud</a>
+          <div class="absolute inset-0 mx-auto max-w-6xl flex items-center justify-center px-4">
+            <div class="text-center text-white max-w-2xl">
+              <p class="text-[11px] sm:text-xs uppercase tracking-wide text-white/80 mb-2">Kurateret til hjemmet</p>
+              <h1 class="text-3xl sm:text-5xl font-bold leading-tight mb-3">Less effort. More life.</h1>
+              <p class="text-sm sm:text-lg text-white/85 mb-5">Få de mest populære hverdagsfund samlet ét sted – testet og klar til brug.</p>
+              <div class="flex flex-wrap justify-center gap-3">
+                <a href="#behov" class="rounded-xl2 bg-white text-ink px-5 py-3 text-sm font-semibold shadow-soft hover:bg-soft">Byg din behovsboks</a>
+                <a href="#categories" class="rounded-xl2 border border-white/80 px-5 py-3 text-sm font-semibold hover:bg-white/10">Se kategorier</a>
               </div>
             </div>
           </div>
         </div>
         <!-- Slide 2 -->
         <div class="swiper-slide relative isolate">
-          <img src="https://images.unsplash.com/photo-1604882737206-c2d5b3c9a0b7?q=80&w=2100&auto=format&fit=crop" alt="Smart rengøringsprodukt" class="h-[58vh] w-full object-cover sm:h-[70vh]" loading="lazy" decoding="async"/>
+          <img src="https://images.unsplash.com/photo-1604882737206-c2d5b3c9a0b7?q=80&w=2100&auto=format&fit=crop" alt="Smart rengøringsprodukt" class="h-[60vh] w-full object-cover sm:h-[72vh]" loading="lazy" decoding="async"/>
           <div class="absolute inset-0 bg-black/25"></div>
-          <div class="absolute inset-0 flex items-center justify-center text-center text-white px-4">
-            <div>
-              <h2 class="text-3xl sm:text-5xl font-bold">Renere hjem på minutter</h2>
-              <p class="mt-3 text-base sm:text-lg opacity-90">Oplev de smarte rengøringsgadgets der hitter lige nu.</p>
-              <a href="#favorites" class="mt-6 inline-block rounded-xl2 bg-accent text-white px-5 py-3 text-sm font-semibold shadow-soft hover:opacity-90">Shop rengøring</a>
+          <div class="absolute inset-0 mx-auto max-w-6xl flex items-center justify-center px-4">
+            <div class="text-center text-white max-w-2xl">
+              <p class="text-[11px] sm:text-xs uppercase tracking-wide text-white/80 mb-2">Hurtig levering</p>
+              <h2 class="text-3xl sm:text-4xl font-bold leading-tight mb-3">Renere hjem på minutter</h2>
+              <p class="text-sm sm:text-lg text-white/85 mb-5">Vælg produkter, der er klar fra EU-lageret – leveret på 2-3 hverdage.</p>
+              <div class="flex flex-wrap justify-center gap-3">
+                <a href="#favorites" class="rounded-xl2 bg-accent text-white px-5 py-3 text-sm font-semibold shadow-soft hover:opacity-90">Se hurtige favoritter</a>
+                <a href="#offers" class="rounded-xl2 border border-white/80 px-5 py-3 text-sm font-semibold hover:bg-white/10">Opdag tilbud</a>
+              </div>
             </div>
           </div>
         </div>
         <!-- Slide 3 -->
         <div class="swiper-slide relative isolate">
-          <img src="https://images.unsplash.com/photo-1604328705002-d1010db97436?q=80&w=2100&auto=format&fit=crop" alt="Minimalistisk desk setup" class="h-[58vh] w-full object-cover sm:h-[70vh]" loading="lazy" decoding="async"/>
+          <img src="https://images.unsplash.com/photo-1604328705002-d1010db97436?q=80&w=2100&auto=format&fit=crop" alt="Minimalistisk desk setup" class="h-[60vh] w-full object-cover sm:h-[72vh]" loading="lazy" decoding="async"/>
           <div class="absolute inset-0 bg-black/25"></div>
-          <div class="absolute inset-0 flex items-center justify-center text-center text-white px-4">
-            <div>
-              <h2 class="text-3xl sm:text-5xl font-bold">Organisering uden stress</h2>
-              <p class="mt-3 text-base sm:text-lg opacity-90">Fra kabler til skabe – små ting der gør en stor forskel.</p>
-              <a href="#categories" class="mt-6 inline-block rounded-xl2 border border-white/80 px-5 py-3 text-sm font-semibold hover:bg-white/10">Se organisering</a>
+          <div class="absolute inset-0 mx-auto max-w-6xl flex items-center justify-center px-4">
+            <div class="text-center text-white max-w-2xl">
+              <p class="text-[11px] sm:text-xs uppercase tracking-wide text-white/80 mb-2">Planlagt levering</p>
+              <h2 class="text-3xl sm:text-4xl font-bold leading-tight mb-3">Organisering uden stress</h2>
+              <p class="text-sm sm:text-lg text-white/85 mb-5">Planlæg leveringen af unikke fund – vi samler det hele for dig.</p>
+              <div class="flex flex-wrap justify-center gap-3">
+                <a href="#behov" class="rounded-xl2 bg-white text-ink px-5 py-3 text-sm font-semibold shadow-soft hover:bg-soft">Aktivér planlægning</a>
+                <a href="#guides" class="rounded-xl2 border border-white/80 px-5 py-3 text-sm font-semibold hover:bg-white/10">Få organiseringstips</a>
+              </div>
             </div>
           </div>
         </div>
@@ -141,125 +178,159 @@
     </div>
   </section>
 
+  <!-- Hero quick filters -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-wrap gap-2 text-xs">
+      <button class="chip active" data-chip="all">Alt udvalg</button>
+      <button class="chip" data-chip="tech">Tech &amp; Elektronik</button>
+      <button class="chip" data-chip="home">Hjem &amp; Livsstil</button>
+      <button class="chip" data-chip="care">Personlig pleje</button>
+      <button class="chip" data-chip="car">Bil &amp; Transport</button>
+      <button class="chip" data-chip="fast">Hurtig levering</button>
+    </div>
+  </div>
+
+  <!-- Behovsboks -->
+  <section id="behov" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+    <div class="flex justify-center mb-6">
+      <div class="flex items-center gap-1 bg-soft rounded-full p-1 text-sm">
+        <span class="px-4 py-2 rounded-full bg-ink text-white font-medium">1. Størrelse</span>
+        <span class="px-4 py-2 rounded-full text-ink/60">2. Præferencer</span>
+        <span class="px-4 py-2 rounded-full text-ink/60">3. Levering</span>
+      </div>
+    </div>
+    <div class="rounded-3xl border border-line bg-white shadow-soft p-6 sm:p-10 text-center">
+      <p class="text-[11px] sm:text-xs uppercase tracking-wide text-muted">Mystery box</p>
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Behovsboks</h2>
+      <p class="mt-3 text-sm sm:text-base text-muted max-w-2xl mx-auto">Vores team matcher dine ønsker med kvalitetstestede produkter og leverer i dit tempo. Vælg størrelse og få typisk 15–20% mere værdi end enkeltkøb.</p>
+
+      <div class="mt-6 grid md:grid-cols-3 gap-4 text-left" id="planOptions">
+        <label class="cursor-pointer">
+          <input type="radio" name="boxplan" value="299" class="sr-only">
+          <div class="rounded-2xl ring-2 ring-transparent hover:ring-accent/20 p-5 bg-white transition-all duration-200 h-full">
+            <p class="text-sm uppercase tracking-wide text-muted mb-1">Lille boks</p>
+            <h3 class="text-2xl font-extrabold mb-3">299 kr.</h3>
+            <div class="space-y-2 mb-4 text-sm">
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>1-2 nøje udvalgte produkter</span></div>
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>Enhedspris: 150-300 kr.</span></div>
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>Perfekt til at prøve konceptet</span></div>
+            </div>
+            <div class="text-xs text-accent font-medium bg-accent/10 rounded-lg p-2">Spar op til 20% vs. enkeltkøb</div>
+          </div>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="boxplan" value="799" class="sr-only">
+          <div class="rounded-2xl ring-2 ring-transparent hover:ring-accent/20 p-5 bg-white transition-all duration-200 h-full">
+            <p class="text-sm uppercase tracking-wide text-muted mb-1">Mellem boks</p>
+            <h3 class="text-2xl font-extrabold mb-3">799 kr.</h3>
+            <div class="space-y-2 mb-4 text-sm">
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>2-4 produkter i mix af kategorier</span></div>
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>Enhedspris: 200-400 kr.</span></div>
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>Inkl. mindst ét premium fund</span></div>
+            </div>
+            <div class="text-xs text-accent font-medium bg-accent/10 rounded-lg p-2">Vores mest populære valg</div>
+          </div>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="boxplan" value="1299" class="sr-only">
+          <div class="rounded-2xl ring-2 ring-transparent hover:ring-accent/20 p-5 bg-white transition-all duration-200 h-full">
+            <p class="text-sm uppercase tracking-wide text-muted mb-1">Stor boks</p>
+            <h3 class="text-2xl font-extrabold mb-3">1299 kr.</h3>
+            <div class="space-y-2 mb-4 text-sm">
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>4-6 produkter med wow-faktor</span></div>
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>Enhedspris: 350-700 kr.</span></div>
+              <div class="flex items-center gap-2"><span class="w-2 h-2 bg-accent rounded-full"></span><span>Perfekt til planlagt levering</span></div>
+            </div>
+            <div class="text-xs text-accent font-medium bg-accent/10 rounded-lg p-2">Inkl. personlig leveringstjek</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="mt-6 grid gap-4 sm:grid-cols-3 text-left">
+        <div class="rounded-xl border border-line bg-soft p-4">
+          <h4 class="text-sm font-semibold">Mere værdi</h4>
+          <p class="text-sm text-muted mt-1">Kuraterede valg der typisk giver 15-20% mere indhold end enkeltkøb.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-soft p-4">
+          <h4 class="text-sm font-semibold">Variation &amp; kvalitet</h4>
+          <p class="text-sm text-muted mt-1">Alle bokse balancerer hurtig levering og unikke fund fra verden.</p>
+        </div>
+        <div class="rounded-xl border border-line bg-soft p-4">
+          <h4 class="text-sm font-semibold">Fleksibel levering</h4>
+          <p class="text-sm text-muted mt-1">Vælg levering nu eller planlæg senere – vi holder dig opdateret.</p>
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
+        <a href="#" class="rounded-full bg-ink text-white px-6 py-3 font-semibold shadow-soft">Aktivér din behovsboks</a>
+        <button class="rounded-full bg-white px-6 py-3 font-semibold border border-line hover:border-accent" id="planHelp">Tal med en rådgiver</button>
+      </div>
+    </div>
+  </section>
+
   <!-- Categories Section (placed before Udvalgte) -->
   <section id="categories" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
-    <div class="flex items-end justify-between">
-      <h3 class="text-2xl sm:text-3xl font-bold">Kategorier</h3>
+    <div class="flex items-end justify-between flex-wrap gap-4">
+      <div>
+        <h3 class="text-2xl sm:text-3xl font-bold">Kategorier</h3>
+        <p class="mt-3 text-sm text-muted max-w-2xl">Vi har samlet de mest efterspurgte temaer i fire klare kategorier, så du hurtigt finder det, der passer til din hverdag.</p>
+      </div>
+      <a href="#favorites" class="text-sm text-accent hover:underline">Se udvalgte produkter</a>
     </div>
-    <p class="mt-3 text-sm text-muted">Opdag vores univers af smarte løsninger – organiseret i overskuelige kategorier.</p>
 
-    <div class="grid gap-6 mt-8 md:grid-cols-4 sm:grid-cols-2">
-      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
-        <h4 class="font-semibold text-sm">Organisering</h4>
-        <p class="mt-1 text-xs text-muted">Fra kabler til skabe</p>
-      </a>
-      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
-        <h4 class="font-semibold text-sm">Køkken</h4>
-        <p class="mt-1 text-xs text-muted">Smartere madlavning</p>
-      </a>
-      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
-        <h4 class="font-semibold text-sm">Rengøring</h4>
-        <p class="mt-1 text-xs text-muted">Effektive gadgets</p>
-      </a>
-      <a href="#" class="rounded-xl2 border border-line bg-white p-6 text-center shadow-soft hover:shadow-lg transition">
-        <h4 class="font-semibold text-sm">Teknologi</h4>
-        <p class="mt-1 text-xs text-muted">Praktiske tech‑løsninger</p>
-      </a>
-    </div>
+    <div class="grid gap-6 mt-8 md:grid-cols-4 sm:grid-cols-2" id="categoryGrid"></div>
   </section>
 
   <!-- Favorites Section -->
   <section id="favorites" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 bg-white rounded-t-3xl shadow-soft">
-    <div class="flex items-end justify-between">
-      <h3 class="text-2xl sm:text-3xl font-bold">Udvalgte</h3>
-      <a href="#" class="text-sm text-accent hover:underline">Se alle</a>
+    <div class="flex items-end justify-between flex-wrap gap-4">
+      <div>
+        <h3 class="text-2xl sm:text-3xl font-bold">Udvalgte</h3>
+        <p class="mt-3 text-sm text-muted">Et håndplukket udvalg med korte forklaringer, så du straks ser hvorfor de er elsket af vores community.</p>
+      </div>
+      <a href="#offers" class="text-sm text-accent hover:underline">Se aktuelle tilbud</a>
     </div>
-    <p class="mt-3 text-sm text-muted">Et håndplukket udvalg af produkter, som vi guider dig i at bruge bedst muligt.</p>
 
-    <div class="grid gap-8 mt-10 md:grid-cols-3">
-      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1593767146711-6c5262dcf3ae?q=80&w=1200&auto=format&fit=crop" alt="Mini håndstøvsuger" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
-        <div class="p-5">
-          <h4 class="text-sm font-semibold">Mini håndstøvsuger</h4>
-          <p class="mt-2 text-xs text-muted">Et stilrent valg til bilen eller kontoret – praktisk og effektiv.</p>
-          <a href="#guides" class="mt-4 inline-block text-xs font-semibold text-accent hover:underline">Se hvordan den bruges</a>
+    <div class="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div>
+        <p class="text-sm text-muted">Din rejse mod levering</p>
+        <div class="flex items-center gap-3 mt-2">
+          <div class="flex-1 h-1.5 bg-soft rounded-full overflow-hidden">
+            <div class="h-full bg-ink rounded-full" id="journeyProgress" style="width: 33%"></div>
+          </div>
+          <span class="text-xs text-muted" id="journeyLabel">1/3</span>
         </div>
-      </article>
-      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1582588678413-dbf45f4823e9?q=80&w=1200&auto=format&fit=crop" alt="Magnetisk kabelorganizer" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
-        <div class="p-5">
-          <h4 class="text-sm font-semibold">Magnetisk kabelorganizer</h4>
-          <p class="mt-2 text-xs text-muted">Et elegant organiseringsværktøj til et ryddeligt skrivebord.</p>
-          <a href="#guides" class="mt-4 inline-block text-xs font-semibold text-accent hover:underline">Få tips til organisering</a>
-        </div>
-      </article>
-      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1557518012-686c2a4a07fb?q=80&w=1200&auto=format&fit=crop" alt="Automatisk sæbedispenser" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
-        <div class="p-5">
-          <h4 class="text-sm font-semibold">Auto‑sæbedispenser</h4>
-          <p class="mt-2 text-xs text-muted">Berøringsfri hygiejne i et moderne design – perfekt til køkken eller bad.</p>
-          <a href="#guides" class="mt-4 inline-block text-xs font-semibold text-accent hover:underline">Læs vores guide</a>
-        </div>
-      </article>
+      </div>
+      <button class="rounded-full bg-white border border-line px-4 py-2 text-sm hover:border-accent" id="journeyNext">Næste skridt</button>
     </div>
+
+    <div class="grid gap-8 mt-10 md:grid-cols-3" id="favoritesGrid"></div>
   </section>
 
   <!-- Offers Section -->
   <section id="offers" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
-    <div class="flex items-end justify-between">
-      <h3 class="text-2xl sm:text-3xl font-bold text-offer">Tilbud</h3>
-      <a href="#" class="text-sm text-offer hover:underline">Se alle</a>
+    <div class="flex items-end justify-between flex-wrap gap-4">
+      <div>
+        <h3 class="text-2xl sm:text-3xl font-bold text-offer">Tilbud</h3>
+        <p class="mt-3 text-sm text-muted max-w-xl">Eksklusive kampagner og tidsbegrænsede tilbud – vi gør det tydeligt hvad du sparer, og hvornår du skal slå til.</p>
+      </div>
+      <a href="#chat" class="text-sm text-offer hover:underline" id="offerAlert">Få tilbuds-alert</a>
     </div>
-    <p class="mt-3 text-sm text-muted">Eksklusive kampagner og tidsbegrænsede tilbud – gå ikke glip af muligheden for at spare på smarte hverdagsløsninger.</p>
 
-    <div class="grid gap-8 mt-10 md:grid-cols-3">
-      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1607082349566-187342845f9d?q=80&w=1200&auto=format&fit=crop" alt="Smart køkkenredskab" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
-        <div class="p-5">
-          <h4 class="text-sm font-semibold">Smart køkkenredskab</h4>
-          <p class="mt-2 text-xs text-muted line-through">399 kr</p>
-          <p class="text-offer font-semibold">249 kr</p>
-          <a href="#" class="mt-4 inline-block text-xs font-semibold text-offer hover:underline">Køb nu</a>
-        </div>
-      </article>
-      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1524594154908-edd74e95d173?q=80&w=1200&auto=format&fit=crop" alt="Multifunktionel gadget" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
-        <div class="p-5">
-          <h4 class="text-sm font-semibold">Multifunktionel gadget</h4>
-          <p class="mt-2 text-xs text-muted line-through">599 kr</p>
-          <p class="text-offer font-semibold">399 kr</p>
-          <a href="#" class="mt-4 inline-block text-xs font-semibold text-offer hover:underline">Køb nu</a>
-        </div>
-      </article>
-      <article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=1200&auto=format&fit=crop" alt="Minimalistisk lampe" class="h-56 w-full object-cover" loading="lazy" decoding="async"/>
-        <div class="p-5">
-          <h4 class="text-sm font-semibold">Minimalistisk lampe</h4>
-          <p class="mt-2 text-xs text-muted line-through">899 kr</p>
-          <p class="text-offer font-semibold">699 kr</p>
-          <a href="#" class="mt-4 inline-block text-xs font-semibold text-offer hover:underline">Køb nu</a>
-        </div>
-      </article>
-    </div>
+    <div class="grid gap-8 mt-10 md:grid-cols-3" id="offersGrid"></div>
   </section>
 
   <!-- Guides Section -->
   <section id="guides" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
-    <div class="flex items-end justify-between">
-      <h3 class="text-xl sm:text-2xl font-semibold">Guides & inspiration</h3>
+    <div class="flex items-end justify-between flex-wrap gap-4">
+      <div>
+        <h3 class="text-xl sm:text-2xl font-semibold">Guides &amp; inspiration</h3>
+        <p class="mt-2 text-sm text-muted">Se hvordan vores værktøjer gør hverdagen lettere. Vi viser trin-for-trin og giver dig en klar idé om tidsforbrug.</p>
+      </div>
       <a href="#" class="text-sm text-accent hover:underline">Læs alle</a>
     </div>
-    <p class="mt-2 text-sm text-muted">Se hvordan vores værktøjer og produkter kan bruges i hverdagen – korte hacks, før/efter‑billeder og tips.</p>
-    <div class="mt-6 grid gap-6 md:grid-cols-2">
-      <div class="rounded-xl2 border border-line bg-white p-5 shadow-soft">
-        <h4 class="text-sm font-semibold">Sådan rydder du dit skrivebord på 30 sekunder</h4>
-        <p class="mt-2 text-xs text-muted">Med en simpel kabelorganizer kan du få et clean setup uden rod.</p>
-      </div>
-      <div class="rounded-xl2 border border-line bg-white p-5 shadow-soft">
-        <h4 class="text-sm font-semibold">Hold bilen ren med en mini håndstøvsuger</h4>
-        <p class="mt-2 text-xs text-muted">Et af vores favorit hacks – nemt at vise i en kort video.</p>
-      </div>
-    </div>
+
+    <div class="mt-6 grid gap-6 md:grid-cols-2" id="guideGrid"></div>
   </section>
 
   <!-- About -->
@@ -273,15 +344,6 @@
       © <span id="y"></span> Sway – Less effort. More life.
     </div>
   </footer>
-
-  <!-- Trust bar -->
-  <section aria-label="Handelsfordele" class="bg-white/80 border-t border-line">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 grid gap-4 sm:grid-cols-3 text-sm text-muted">
-      <div>✓ 30 dages returret</div>
-      <div>✓ Hurtig levering</div>
-      <div>✓ Sikker checkout</div>
-    </div>
-  </section>
 
   <!-- Chatbot: Sway Assistant (minimal) -->
   <style>
@@ -321,14 +383,30 @@
         <span class="chat-avatar">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12c5-8 11-8 16 0-5 8-11 8-16 0Z" stroke="currentColor" stroke-width="2"/></svg>
         </span>
-        <div class="chat-bubble">Hej 👋 Hvad vil du gerne gøre nemmere i dag?</div>
+        <div class="chat-bubble">Hej 👋 Skal vi finde næste favorit til dig?</div>
       </div>
-      <div class="quick-replies" id="qrStep1">
-        <button data-step="1" data-value="Organisering">Organisering</button>
-        <button data-step="1" data-value="Rengøring">Rengøring</button>
-        <button data-step="1" data-value="Køkken">Køkken</button>
-        <button data-step="1" data-value="Teknologi">Teknologi</button>
-        <button data-link="#offers">Se tilbud</button>
+      <div class="space-y-2" id="qrStep1">
+        <button class="assist-card" data-step="1" data-value="Gave">
+          <span class="assist-icon">🎁</span>
+          <div>
+            <div class="assist-title">Find en gave</div>
+            <div class="assist-desc">Vi matcher anledning og budget</div>
+          </div>
+        </button>
+        <button class="assist-card" data-step="1" data-value="Inspiration">
+          <span class="assist-icon">💡</span>
+          <div>
+            <div class="assist-title">Få inspiration</div>
+            <div class="assist-desc">Opdag nye produkter på få sekunder</div>
+          </div>
+        </button>
+        <button class="assist-card" data-step="1" data-value="Specifikt">
+          <span class="assist-icon">🔍</span>
+          <div>
+            <div class="assist-title">Jeg ved hvad jeg vil have</div>
+            <div class="assist-desc">Få hurtig hjælp til at finde det rigtige</div>
+          </div>
+        </button>
       </div>
     </div>
     <div id="chatInput">
@@ -364,6 +442,201 @@
       if(e.key === 'Escape' && !mobileMenu?.classList.contains('hidden')) closeMenu();
     });
 
+    // Content data
+    const CATEGORY_DATA = {
+      tech: { label:'Tech & Elektronik', description:'Smarthome, opladning og små gadgets der letter hverdagen.', sub:['Mobil & tablet','Arbejd smartere','Lyd & streaming','Smarthome'] },
+      home: { label:'Hjem & Livsstil', description:'Organisering, køkken og hyggelige detaljer i ét overblik.', sub:['Køkken','Organisering','Dekoration','Rengøring'] },
+      care: { label:'Personlig pleje', description:'Selvforkælelse og velvære, der er nem at gøre til vane.', sub:['Hår','Ansigt','Krop','Velvære'] },
+      car: { label:'Bil & Transport', description:'Hold styr på bilen – fra sikkerhed til smarte tilbehør.', sub:['Interiør','Sikkerhed','Vedligehold','Navigation'] }
+    };
+
+    const FAVORITES = [
+      { title:'Magnetisk telefonholder til bil', subtitle:'Stabil holder med én-hånds montering', description:'Holder fast – også på bumpede danske veje. Anbefalet af 500+ kunder.', img:'https://images.unsplash.com/photo-1533236897111-3e94666b2edf?auto=format&fit=crop&w=1200&q=80', link:'#', category:'car', delivery:'fast' },
+      { title:'Multifunktionel køkkenstation', subtitle:'Klip, hak og opbevar på ét bræt', description:'Gør madlavningen hurtig og ryddelig. Perfekt til små køkkener.', img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80', link:'#', category:'home', delivery:'fast' },
+      { title:'Skånsom ansigtsrens i gel-form', subtitle:'Balancér huden på 60 sekunder', description:'Mild, parfumefri og udviklet til nordisk klima.', img:'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=1200&q=80', link:'#', category:'care', delivery:'plan' },
+      { title:'Arbejd-uden-rod kabelpakke', subtitle:'Holder styr på alle opladere', description:'Selvklæbende clips og tasker til tasken – farvel til kabelspaghetti.', img:'https://images.unsplash.com/photo-1583224333762-47a4bf5b9f59?auto=format&fit=crop&w=1200&q=80', link:'#', category:'tech', delivery:'fast' }
+    ];
+
+    const OFFERS = [
+      { title:'Trådløs oplader med hurtig-lås', subtitle:'Drop kabler på natbordet', img:'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=1200&q=80', before:'399 kr', price:'279 kr', saving:'Spar 120 kr', category:'tech', delivery:'fast' },
+      { title:'Organizer-sæt til garderoben', subtitle:'Modulære bokse der skaber ro', img:'https://images.unsplash.com/photo-1617093727343-374698b39b1b?auto=format&fit=crop&w=1200&q=80', before:'349 kr', price:'249 kr', saving:'Spar 100 kr', category:'home', delivery:'plan' },
+      { title:'Premium hårpleje duo', subtitle:'Glansfuldt hår uden frizz', img:'https://images.unsplash.com/photo-1616394584738-fc6e612f5f10?auto=format&fit=crop&w=1200&q=80', before:'429 kr', price:'329 kr', saving:'Spar 100 kr', category:'care', delivery:'plan' }
+    ];
+
+    const GUIDES = [
+      { title:'Sådan planlægger du din behovsboks', summary:'Få mest værdi på 3 trin – fra størrelse til levering.', duration:'5 min læsning', link:'#behov' },
+      { title:'Organisér skrivebordet på under 10 minutter', summary:'Vores favorit hacks til et roligt arbejdsrum.', duration:'3 min læsning', link:'#favorites' }
+    ];
+
+    const JOURNEY_STEPS = [
+      { label:'1/3', percent:33 },
+      { label:'2/3', percent:66 },
+      { label:'3/3', percent:100 }
+    ];
+
+    const categoryGrid = document.getElementById('categoryGrid');
+    const favoritesGrid = document.getElementById('favoritesGrid');
+    const offersGrid = document.getElementById('offersGrid');
+    const guideGrid = document.getElementById('guideGrid');
+    const chips = document.querySelectorAll('.chip');
+    const journeyProgress = document.getElementById('journeyProgress');
+    const journeyLabel = document.getElementById('journeyLabel');
+    const journeyNext = document.getElementById('journeyNext');
+    const planCards = document.querySelectorAll('#planOptions label');
+
+    let currentFilter = 'all';
+    let journeyIndex = 0;
+
+    function renderCategories(){
+      if(!categoryGrid) return;
+      categoryGrid.innerHTML = Object.entries(CATEGORY_DATA).map(([key, value])=>{
+        const bullets = value.sub.map(item=>`<li>• ${item}</li>`).join('');
+        return `<article class="rounded-xl2 border border-line bg-white p-6 shadow-soft hover:shadow-lg transition">
+          <h4 class="font-semibold text-base">${value.label}</h4>
+          <p class="mt-2 text-sm text-muted">${value.description}</p>
+          <ul class="mt-3 text-xs text-muted space-y-1">${bullets}</ul>
+        </article>`;
+      }).join('');
+    }
+
+    function renderEmptyState(type){
+      const configs = {
+        favorites:{ icon:'💝', title:'Ingen produkter matcher filtret', message:'Prøv at nulstille filtreringen eller se hele udvalget.', actions:[{ text:'Nulstil filtrering', onClick:()=> setFilter('all') }, { text:'Se kategorier', onClick:()=> location.hash='categories' }] },
+        offers:{ icon:'🔍', title:'Ingen tilbud her lige nu', message:'Vi har ikke kampagner i denne kategori endnu. Tilmeld dig alerts og få besked først.', actions:[{ text:'Få tilbuds-alert', onClick:()=> document.getElementById('offerAlert')?.click() }, { text:'Vis alle tilbud', onClick:()=>{ currentFilter='all'; setFilter('all'); } }] },
+        guides:{ icon:'📘', title:'Ingen guides fundet', message:'Vi arbejder på nye artikler. Kig forbi lidt senere.', actions:[{ text:'Tilbage til forsiden', onClick:()=> window.scrollTo({top:0, behavior:'smooth'}) }] }
+      };
+      const cfg = configs[type];
+      if(!cfg) return document.createElement('div');
+      const wrapper = document.createElement('div');
+      wrapper.className = 'col-span-full text-center py-12 border border-line bg-white rounded-2xl shadow-soft';
+      wrapper.innerHTML = `<div class="text-4xl mb-3">${cfg.icon}</div><h3 class="text-lg font-semibold">${cfg.title}</h3><p class="mt-2 text-sm text-muted max-w-md mx-auto">${cfg.message}</p>`;
+      const actions = document.createElement('div');
+      actions.className = 'mt-4 flex flex-wrap justify-center gap-3';
+      cfg.actions.forEach(action=>{
+        const btn = document.createElement('button');
+        btn.className = 'px-4 py-2 rounded-full bg-ink text-white text-sm';
+        btn.textContent = action.text;
+        btn.addEventListener('click', action.onClick);
+        actions.appendChild(btn);
+      });
+      wrapper.appendChild(actions);
+      return wrapper;
+    }
+
+    function renderFavorites(){
+      if(!favoritesGrid) return;
+      const filtered = FAVORITES.filter(item=>{
+        if(currentFilter === 'all') return true;
+        if(currentFilter === 'fast') return item.delivery === 'fast';
+        return item.category === currentFilter;
+      });
+      favoritesGrid.innerHTML = '';
+      if(filtered.length === 0){
+        favoritesGrid.appendChild(renderEmptyState('favorites'));
+        return;
+      }
+      favoritesGrid.innerHTML = filtered.map(item=>`<article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+          <img src="${item.img}" alt="${item.title}" class="h-56 w-full object-cover" loading="lazy" decoding="async">
+          <div class="p-5">
+            <h4 class="text-base font-semibold">${item.title}</h4>
+            <p class="text-sm text-muted mt-1">${item.subtitle}</p>
+            <p class="text-sm text-muted mt-3">${item.description}</p>
+            <a href="${item.link}" class="mt-4 inline-block text-sm font-semibold text-accent hover:underline">Se detaljer</a>
+          </div>
+        </article>`).join('');
+    }
+
+    function renderOffers(){
+      if(!offersGrid) return;
+      const filtered = OFFERS.filter(item=>{
+        if(currentFilter === 'all') return true;
+        if(currentFilter === 'fast') return item.delivery === 'fast';
+        return item.category === currentFilter;
+      });
+      offersGrid.innerHTML='';
+      if(filtered.length === 0){
+        offersGrid.appendChild(renderEmptyState('offers'));
+        return;
+      }
+      offersGrid.innerHTML = filtered.map(item=>`<article class="rounded-xl2 overflow-hidden border border-line bg-white shadow-soft hover:shadow-lg transition">
+          <img src="${item.img}" alt="${item.title}" class="h-56 w-full object-cover" loading="lazy" decoding="async">
+          <div class="p-5">
+            <p class="text-xs uppercase tracking-wide text-muted">${CATEGORY_DATA[item.category]?.label || ''}</p>
+            <h4 class="text-base font-semibold">${item.title}</h4>
+            <p class="text-sm text-muted mt-1">${item.subtitle}</p>
+            <div class="mt-3 flex items-center gap-3 text-sm">
+              <span class="line-through text-muted">${item.before}</span>
+              <span class="font-semibold text-offer">${item.price}</span>
+            </div>
+            <p class="text-xs text-offer/80 mt-1">${item.saving}</p>
+            <a href="#" class="mt-4 inline-block text-sm font-semibold text-offer hover:underline">Læg i kurv</a>
+          </div>
+        </article>`).join('');
+    }
+
+    function renderGuides(){
+      if(!guideGrid) return;
+      if(GUIDES.length === 0){
+        guideGrid.appendChild(renderEmptyState('guides'));
+        return;
+      }
+      guideGrid.innerHTML = GUIDES.map(item=>`<article class="rounded-xl2 border border-line bg-white p-5 shadow-soft flex flex-col gap-3">
+        <div>
+          <h4 class="text-base font-semibold">${item.title}</h4>
+          <p class="text-sm text-muted mt-1">${item.summary}</p>
+        </div>
+        <div class="flex items-center justify-between text-xs text-muted">
+          <span>${item.duration}</span>
+          <a href="${item.link}" class="text-accent font-semibold hover:underline">Læs mere</a>
+        </div>
+      </article>`).join('');
+    }
+
+    function setFilter(key){
+      currentFilter = key;
+      chips.forEach(ch=> ch.classList.toggle('active', ch.dataset.chip === key));
+      renderFavorites();
+      renderOffers();
+    }
+
+    chips.forEach(ch=> ch.addEventListener('click', ()=> setFilter(ch.dataset.chip)));
+
+    renderCategories();
+    renderGuides();
+    setFilter('all');
+
+    function updateJourney(){
+      if(!journeyProgress || !journeyLabel) return;
+      const step = JOURNEY_STEPS[journeyIndex];
+      journeyProgress.style.width = `${step.percent}%`;
+      journeyLabel.textContent = step.label;
+    }
+
+    journeyNext?.addEventListener('click', ()=>{
+      journeyIndex = (journeyIndex + 1) % JOURNEY_STEPS.length;
+      updateJourney();
+    });
+    updateJourney();
+
+    planCards.forEach(label=>{
+      const card = label.querySelector('div');
+      const input = label.querySelector('input');
+      input?.addEventListener('change', ()=>{
+        planCards.forEach(l=>{
+          const box = l.querySelector('div');
+          box?.classList.remove('ring-ink');
+          box?.classList.add('ring-transparent');
+        });
+        card?.classList.remove('ring-transparent');
+        card?.classList.add('ring-ink');
+      });
+    });
+    const defaultPlan = document.querySelector('#planOptions input[value="799"]');
+    if(defaultPlan){
+      defaultPlan.checked = true;
+      defaultPlan.dispatchEvent(new Event('change'));
+    }
+
     // Chatbot logik (minimal)
     const toggleBtn = document.getElementById('chatbotToggle');
     const chat = document.getElementById('chatWindow');
@@ -377,7 +650,7 @@
       2: { q:'Vil du se forslag eller er du klar til at købe?', options:['Se forslag','Klar til at købe'] }
     };
 
-    let context = { category:null, budget:null, intent:null };
+    let context = { category:null, categoryLabel:null, budget:null, intent:null };
 
     function setOpen(v){ chat.style.display = v ? 'block' : 'none'; }
     function addBot(text){
@@ -416,8 +689,11 @@
       const link = btn.dataset.link; if(link){ location.hash = link.replace('#',''); setOpen(false); return; }
 
       const step = Number(btn.dataset.step || 0); const val = btn.dataset.value;
-      if(step===1){ // category chosen
-        context.category = val; addUser(val);
+      if(step===1){ // primary intent chosen
+        const label = btn.querySelector('.assist-title')?.textContent || val;
+        context.category = val;
+        context.categoryLabel = label;
+        addUser(label);
         addBot(steps[1].q); addOptions(101, steps[1].options); // budget step id 101
         btn.parentElement.remove(); // remove first set
       } else if(step===101){ // budget
@@ -427,10 +703,11 @@
       } else if(step===102){ // intent
         context.intent = val; addUser(val);
         // Resultat
-        const anchor = context.category === 'Organisering' ? '#categories' :
-                       context.category === 'Rengøring' ? '#favorites' :
-                       context.category === 'Køkken' ? '#offers' : '#categories';
-        addBot(`Fint — her er vores bedste ${context.category?.toLowerCase()||'valg'}. Du kan altid spørge, hvis du ønsker mere specifikke forslag.`);
+        const anchor = context.category === 'Gave' ? '#behov' :
+                       context.category === 'Inspiration' ? '#favorites' :
+                       context.category === 'Specifikt' ? '#categories' : '#categories';
+        const label = context.categoryLabel || 'dine ønsker';
+        addBot(`Fint — vi har markeret ${label}. Sig til hvis du ønsker mere præcise anbefalinger.`);
         const go = document.createElement('div'); go.className='quick-replies';
         go.innerHTML = `<button data-link='${anchor}'>Gå til ${context.category||'kategorier'}</button><button data-action='contact'>Kontakt os</button>`;
         body.appendChild(go); body.scrollTop = body.scrollHeight;
@@ -456,6 +733,11 @@
       const contact = document.createElement('div'); contact.className='quick-replies';
       contact.innerHTML = `<button data-mail='mailto:hello@sway.shop'>Email</button><button data-wa='https://wa.me/4512345678'>WhatsApp</button>`;
       body.appendChild(contact);
+    });
+
+    document.getElementById('planHelp')?.addEventListener('click', ()=>{
+      setOpen(true);
+      addBot('Fortæl os hvilken boks du overvejer, så hjælper vi dig med næste skridt.');
     });
   </script>
 </body>
