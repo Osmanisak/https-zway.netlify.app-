@@ -46,20 +46,24 @@
         <span class="text-xl font-semibold tracking-tight">Selekti</span>
       </a>
       <nav class="ml-auto hidden md:flex items-center gap-6 text-sm text-ink/80">
-        <a href="index.html#fremhaevet" class="hover:text-ink">Fremhævet</a>
-        <a href="index.html#butikker" class="hover:text-ink">Butikker</a>
-        <a href="index.html#saadan" class="hover:text-ink">Sådan virker det</a>
+        <a href="butikker.html" class="hover:text-ink">Butikker</a>
+        <a href="index.html#fremhaevet" class="hover:text-ink">Fremhævede</a>
+        <a href="index.html#selekti-plus" class="hover:text-ink">Selekti+</a>
         <a href="index.html#guides" class="hover:text-ink">Guides</a>
-        <a href="index.html#behovsboks" class="hover:text-ink">Behovsboks</a>
         <a href="om-os.html" class="hover:text-ink">Om os</a>
-        <a href="for-butikker.html" class="hover:text-ink text-ink/60">For butikker</a>
+        <a href="bliv-partner.html" class="hover:text-ink text-ink/60">Bliv partner</a>
       </nav>
       <div class="ml-2 flex items-center gap-2">
+        <button id="open-wishlist" class="relative inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium ring-1 ring-black/10" data-open="sheet-favorites">
+          <span>Ønskeliste</span>
+          <span id="wishlist-count" class="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">0</span>
+        </button>
+
         <button id="open-cart" class="relative h-10 w-10 grid place-items-center rounded-full bg-white ring-1 ring-black/10" aria-label="Kurv">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6h2l2.5 9h9l2-6H7" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
           <span id="cart-count" class="absolute -top-1 -right-1 h-5 min-w-[20px] px-1.5 rounded-full bg-ink text-white text-[11px] font-semibold grid place-items-center">0</span>
         </button>
-        <button id="open-auth" class="hidden md:inline-flex px-4 py-2 rounded-full bg-ink text-white text-sm font-medium shadow-soft">Log ind</button>
+        <button id="open-auth" class="inline-flex items-center justify-center px-3 py-2 text-xs font-medium text-white bg-ink rounded-full shadow-soft md:px-4 md:py-2 md:text-sm">Log ind</button>
       </div>
     </div>
   </header>
@@ -140,7 +144,7 @@
       <div>
         <h4 class="font-semibold">Navigation</h4>
         <ul class="mt-3 space-y-2">
-          <li><a href="index.html#butikker" class="hover:underline">Butikker</a></li>
+          <li><a href="butikker.html" class="hover:underline">Butikker</a></li>
           <li><a href="index.html#saadan" class="hover:underline">Sådan virker det</a></li>
           <li><a href="index.html#behovsboks" class="hover:underline">Behovsboks</a></li>
           <li><a href="om-os.html" class="hover:underline">Om os</a></li>
@@ -187,6 +191,21 @@
         <input required type="password" placeholder="Adgangskode" class="rounded-xl ring-1 ring-black/10 px-4 py-3">
         <button class="rounded-full bg-white ring-1 ring-black/10 py-3">Opret</button>
       </form>
+    </div>
+  </div>
+
+  <div id="sheet-favorites" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
+    <div class="p-4 border-b border-black/5 flex items-center justify-between">
+      <h3 class="font-semibold">Din ønskeliste</h3>
+      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
+    </div>
+    <div class="p-4">
+      <div id="wishlist-empty" class="text-sm text-ink/60">Din ønskeliste er tom.</div>
+      <div id="wishlist-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      <div id="wishlist-actions" class="hidden mt-4 flex flex-wrap items-center justify-between gap-2">
+        <button class="rounded-full bg-ink text-white px-5 py-2.5 font-medium shadow-soft" data-open="sheet-wishlist">Forespørg totalpris</button>
+        <button id="wishlist-clear" class="rounded-full bg-white ring-1 ring-black/10 px-4 py-2.5 text-sm">Ryd ønskeliste</button>
+      </div>
     </div>
   </div>
 
