@@ -1,245 +1,239 @@
-diff --git a/for-butikker.html b/for-butikker.html
-new file mode 100644
-index 0000000000000000000000000000000000000000..aba257901376af4b1fff7397a5a2c22cd5aae28d
---- /dev/null
-+++ b/for-butikker.html
-@@ -0,0 +1,239 @@
-+<!DOCTYPE html>
-+<html lang="da">
-+<head>
-+  <meta charset="utf-8" />
-+  <meta name="viewport" content="width=device-width, initial-scale=1" />
-+  <title>For butikker – Bliv Selekti partner og nå danske kunder</title>
-+  <meta name="description" content="Selekti hjælper internationale og danske butikker med at sælge til danske kunder. Se vores fordele, integrationsmuligheder og ansøg om partnerskab." />
-+  <meta name="author" content="Selekti" />
-+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
-+  <script src="https://cdn.tailwindcss.com"></script>
-+  <script src="app.js" defer></script>
-+  <script>
-+    tailwind.config = {
-+      theme: {
-+        extend: {
-+          colors: { ink:'#0f172a', soft:'#f6f8fb', mint:'#10b981', ocean:'#0ea5e9', grape:'#7c3aed', amber:'#f59e0b' },
-+          boxShadow: { soft:'0 12px 40px rgba(2,6,23,.10)', lift:'0 18px 60px rgba(2,6,23,.16)' },
-+          maxWidth: { app:'1180px' },
-+          fontFamily: { sans:['Inter','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
-+          borderRadius: { xl2:'1.25rem' }
-+        }
-+      }
-+    }
-+  </script>
-+  <style>
-+    html,body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif;color:#0f172a}
-+    ::selection{background:#dbeafe}
-+    .container{max-width:1180px}
-+    .glass{background:rgba(255,255,255,.75);backdrop-filter:blur(10px)}
-+  </style>
-+</head>
-+<body class="bg-gradient-to-b from-white via-soft to-soft" data-page="partners">
-+  <header class="sticky top-0 z-40 glass border-b border-black/5">
-+    <div class="container mx-auto px-4 py-3 flex items-center gap-3">
-+      <a href="index.html" class="flex items-center gap-2">
-+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
-+        <span class="text-xl font-semibold tracking-tight">Selekti</span>
-+      </a>
-+      <nav class="ml-auto hidden md:flex items-center gap-6 text-sm text-ink/80">
-+        <a href="index.html#butikker" class="hover:text-ink">Butikker</a>
-+        <a href="index.html#saadan" class="hover:text-ink">Sådan virker det</a>
-+        <a href="index.html#behovsboks" class="hover:text-ink">Behovsboks</a>
-+        <a href="om-os.html" class="hover:text-ink">Om os</a>
-+        <a href="for-butikker.html" class="hover:text-ink text-ocean font-medium">For butikker</a>
-+      </nav>
-+    </div>
-+  </header>
-+
-+  <main>
-+    <section class="container mx-auto px-4 pt-8">
-+      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10 grid md:grid-cols-[1.1fr_.9fr] gap-6 items-center">
-+        <div>
-+          <p class="text-[11px] uppercase tracking-wide text-ink/60">Partnerprogram</p>
-+          <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">Nå danske kunder – uden at bygge en dansk webshop</h1>
-+          <p class="mt-3 text-sm md:text-base text-ink/70">Selekti kombinerer marketplace-synlighed, totalpris-håndtering og lokal kundeservice. Vi arbejder med internationale brands, danske specialbutikker og webshops, der vil udvide deres rækkevidde.</p>
-+          <div class="mt-5 flex flex-wrap gap-2">
-+            <a href="#fordele" class="rounded-full bg-ink text-white px-5 py-3 text-sm font-medium">Se fordele</a>
-+            <a href="#ansog" class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 text-sm font-medium">Ansøg som partner</a>
-+          </div>
-+        </div>
-+        <div class="rounded-2xl bg-white ring-1 ring-black/5 p-5 space-y-3 text-sm">
-+          <div class="flex items-center justify-between">
-+            <div>
-+              <p class="font-semibold">Selekti i tal</p>
-+              <p class="text-ink/60 text-xs">Opdateret Q1 2025</p>
-+            </div>
-+            <div class="h-10 w-10 grid place-items-center rounded-xl bg-ocean/10 ring-1 ring-ocean/20 text-ocean">📈</div>
-+          </div>
-+          <ul class="space-y-2 text-ink/80">
-+            <li>• 180k+ registrerede kunder og 32k Selekti+ medlemmer</li>
-+            <li>• Gennemsnitlig ordre: 820 kr. • retur under 4%</li>
-+            <li>• Fremhævede kampagner booket 12 uger frem</li>
-+          </ul>
-+        </div>
-+      </div>
-+    </section>
-+
-+    <section id="fordele" class="container mx-auto px-4 py-10">
-+      <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
-+        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Hvorfor butikker vælger Selekti</h2>
-+        <div class="mt-5 grid md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm text-ink/80">
-+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
-+            <h3 class="font-semibold">Mod internationale markedspladser</h3>
-+            <p class="mt-2">Selekti holder kommissionen på 12% og deler efterspørgselsdata. På globale markedspladser ligger den typisk på 15-20% og kundedata deles sjældent.</p>
-+          </article>
-+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
-+            <h3 class="font-semibold">Mod egen dansk webshop</h3>
-+            <p class="mt-2">Ingen lokalt team nødvendig. Vi håndterer oversættelse, kundeservice, told, moms og returlogistik. Du er live på 48-72 timer.</p>
-+          </article>
-+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
-+            <h3 class="font-semibold">Mod distributører/grossister</h3>
-+            <p class="mt-2">Bevar din fulde detailpris. Vi tager os af compliance og betalinger, så du slipper for rabatter på 30% eller mere.</p>
-+          </article>
-+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
-+            <h3 class="font-semibold">Fremhævede placeringer</h3>
-+            <p class="mt-2">Invester i sponsorerede spots på forsiden og i appen. Vi reserverer uger ad gangen til partnere, der vil dominere et landesegment.</p>
-+          </article>
-+        </div>
-+        <div class="mt-6 grid md:grid-cols-2 gap-4">
-+          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/80">
-+            <h3 class="font-semibold">Services til danske butikker</h3>
-+            <ul class="mt-2 space-y-2 text-sm text-ink/80">
-+              <li>• Fælles kampagner i Selekti appen, forsiden og Behovsbokse</li>
-+              <li>• Mulighed for click & collect udvidelse og medlemsfordele til dine VIP-kunder</li>
-+              <li>• Lager- og fulfillment-partnere i Danmark for hurtig levering</li>
-+            </ul>
-+          </article>
-+          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-white">
-+            <h3 class="font-semibold">Integrationer & drift</h3>
-+            <ul class="mt-2 space-y-2 text-sm text-ink/80">
-+              <li>• Shopify, WooCommerce, Magento eller CSV-upload</li>
-+              <li>• API til ordrestatus, tracking og lagerstyring</li>
-+              <li>• Netbetalingsaftaler og valutahåndtering via Selekti</li>
-+            </ul>
-+          </article>
-+        </div>
-+      </div>
-+    </section>
-+
-+    <section class="container mx-auto px-4 pb-10">
-+      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10 grid md:grid-cols-[1fr_.85fr] gap-6 items-center">
-+        <div>
-+          <p class="text-[11px] uppercase tracking-wide text-ink/60">Vores samarbejdsmodel</p>
-+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Gennemsigtig kommission og fælles vækstplan</h2>
-+          <ul class="mt-3 space-y-2 text-sm text-ink/80">
-+            <li>• 12% kommission på gennemførte ordrer (inkl. betalingsgebyrer)</li>
-+            <li>• Selekti håndterer kundeservice, retur og chargebacks</li>
-+            <li>• Adgang til data dashboards med søgetrends og Behovsboks efterspørgsel</li>
-+          </ul>
-+          <p class="mt-4 text-xs text-ink/60">Ved høj volumen kan vi skræddersy marketingpakker og fælles kampagner. Kontakt os for enterprise-løsninger.</p>
-+        </div>
-+        <div class="rounded-2xl bg-white ring-1 ring-black/10 p-5 space-y-3 text-sm">
-+          <div class="flex items-center justify-between">
-+            <div>
-+              <p class="font-semibold">Onboarding checklist</p>
-+              <p class="text-ink/60 text-xs">Vi hjælper dig hele vejen</p>
-+            </div>
-+            <div class="h-10 w-10 grid place-items-center rounded-xl bg-grape/10 ring-1 ring-grape/20 text-grape">✅</div>
-+          </div>
-+          <ol class="list-decimal list-inside space-y-1 text-ink/80">
-+            <li>Send produktfeed eller udvalgte SKU&apos;er</li>
-+            <li>Tilpas priser & kampagner til Selekti kunder</li>
-+            <li>Gennemgå logistikopsætning (egen eller Selekti fulfillment)</li>
-+            <li>Aktivér Selekti+ tilbud og Behovsboks tilvalg</li>
-+          </ol>
-+        </div>
-+      </div>
-+    </section>
-+
-+    <section id="ansog" class="container mx-auto px-4 pb-12">
-+      <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
-+        <div class="max-w-xl">
-+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Ansøg om partnerskab</h2>
-+          <p class="mt-2 text-sm text-ink/70">Fortæl os kort om din butik. Vi vender tilbage inden for 48-72 timer med næste skridt og adgang til partnerportalen.</p>
-+        </div>
-+        <form name="partner-apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-6 grid gap-4">
-+          <input type="hidden" name="form-name" value="partner-apply" />
-+          <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-+          <div class="grid md:grid-cols-2 gap-4">
-+            <div>
-+              <label class="block text-sm font-medium mb-1">Butiksnavn</label>
-+              <input required name="store" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-+            </div>
-+            <div>
-+              <label class="block text-sm font-medium mb-1">Land</label>
-+              <input required name="country" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-+            </div>
-+          </div>
-+          <div class="grid md:grid-cols-2 gap-4">
-+            <div>
-+              <label class="block text-sm font-medium mb-1">E-mail</label>
-+              <input required type="email" name="email" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-+            </div>
-+            <div>
-+              <label class="block text-sm font-medium mb-1">Platform</label>
-+              <select name="platform" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-+                <option>Shopify</option>
-+                <option>WooCommerce</option>
-+                <option>Magento</option>
-+                <option>Andet / Ingen</option>
-+              </select>
-+            </div>
-+          </div>
-+          <div>
-+            <label class="block text-sm font-medium mb-1">Kategorier</label>
-+            <input name="cats" placeholder="fx Sneakers, Hi-Fi…" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-+          </div>
-+          <div>
-+            <label class="block text-sm font-medium mb-1">Hvordan vil du bruge Selekti?</label>
-+            <textarea name="notes" rows="3" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Kort om jeres mål, logistik og kampagneønsker"></textarea>
-+          </div>
-+          <button class="rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Send ansøgning</button>
-+        </form>
-+      </div>
-+    </section>
-+  </main>
-+
-+  <footer class="border-t border-black/5 bg-white">
-+    <div class="container mx-auto px-4 py-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
-+      <div>
-+        <div class="flex items-center gap-2">
-+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
-+          <span class="font-semibold">Selekti</span>
-+        </div>
-+        <p class="mt-3 text-ink/70">Partner med Selekti og bliv en del af danskernes foretrukne shoppinghub.</p>
-+      </div>
-+      <div>
-+        <h4 class="font-semibold">Genveje</h4>
-+        <ul class="mt-3 space-y-2">
-+          <li><a href="index.html" class="hover:underline">Forside</a></li>
-+          <li><a href="om-os.html" class="hover:underline">Om os</a></li>
-+          <li><a href="#ansog" class="hover:underline">Ansøg</a></li>
-+        </ul>
-+      </div>
-+      <div>
-+        <h4 class="font-semibold">Kontakt</h4>
-+        <ul class="mt-3 space-y-2 text-ink/70">
-+          <li>Partnerteam: <a href="mailto:partners@selekti.dk" class="underline">partners@selekti.dk</a></li>
-+          <li>Telefon: +45 89 88 77 44</li>
-+          <li>Adresse: Selekti ApS, Vesterbrogade 22, 1620 København V</li>
-+        </ul>
-+      </div>
-+      <div>
-+        <h4 class="font-semibold">Dokumenter</h4>
-+        <ul class="mt-3 space-y-2 text-ink/70">
-+          <li><a href="#" class="hover:underline">Partnerbetingelser (PDF)</a></li>
-+          <li><a href="#" class="hover:underline">API dokumentation</a></li>
-+          <li><a href="#" class="hover:underline">Selekti brandkit</a></li>
-+        </ul>
-+        <p class="mt-4 text-xs text-ink/60">© <span id="year"></span> Selekti. Alle rettigheder forbeholdes.</p>
-+      </div>
-+    </div>
-+  </footer>
-+
-+  
-+</body>
-+</html>
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For butikker – Bliv Selekti partner og nå danske kunder</title>
+  <meta name="description" content="Selekti hjælper internationale og danske butikker med at sælge til danske kunder. Se vores fordele, integrationsmuligheder og ansøg om partnerskab." />
+  <meta name="author" content="Selekti" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="app.js" defer></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { ink:'#0f172a', soft:'#f6f8fb', mint:'#10b981', ocean:'#0ea5e9', grape:'#7c3aed', amber:'#f59e0b' },
+          boxShadow: { soft:'0 12px 40px rgba(2,6,23,.10)', lift:'0 18px 60px rgba(2,6,23,.16)' },
+          maxWidth: { app:'1180px' },
+          fontFamily: { sans:['Inter','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
+          borderRadius: { xl2:'1.25rem' }
+        }
+      }
+    }
+  </script>
+  <style>
+    html,body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif;color:#0f172a}
+    ::selection{background:#dbeafe}
+    .container{max-width:1180px}
+    .glass{background:rgba(255,255,255,.75);backdrop-filter:blur(10px)}
+  </style>
+</head>
+<body class="bg-gradient-to-b from-white via-soft to-soft" data-page="partners">
+  <header class="sticky top-0 z-40 glass border-b border-black/5">
+    <div class="container mx-auto px-4 py-3 flex items-center gap-3">
+      <a href="index.html" class="flex items-center gap-2">
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
+        <span class="text-xl font-semibold tracking-tight">Selekti</span>
+      </a>
+      <nav class="ml-auto hidden md:flex items-center gap-6 text-sm text-ink/80">
+        <a href="index.html#butikker" class="hover:text-ink">Butikker</a>
+        <a href="index.html#saadan" class="hover:text-ink">Sådan virker det</a>
+        <a href="index.html#behovsboks" class="hover:text-ink">Behovsboks</a>
+        <a href="om-os.html" class="hover:text-ink">Om os</a>
+        <a href="for-butikker.html" class="hover:text-ink text-ocean font-medium">For butikker</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="container mx-auto px-4 pt-8">
+      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10 grid md:grid-cols-[1.1fr_.9fr] gap-6 items-center">
+        <div>
+          <p class="text-[11px] uppercase tracking-wide text-ink/60">Partnerprogram</p>
+          <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">Nå danske kunder – uden at bygge en dansk webshop</h1>
+          <p class="mt-3 text-sm md:text-base text-ink/70">Selekti kombinerer marketplace-synlighed, totalpris-håndtering og lokal kundeservice. Vi arbejder med internationale brands, danske specialbutikker og webshops, der vil udvide deres rækkevidde.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a href="#fordele" class="rounded-full bg-ink text-white px-5 py-3 text-sm font-medium">Se fordele</a>
+            <a href="#ansog" class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 text-sm font-medium">Ansøg som partner</a>
+          </div>
+        </div>
+        <div class="rounded-2xl bg-white ring-1 ring-black/5 p-5 space-y-3 text-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-semibold">Selekti i tal</p>
+              <p class="text-ink/60 text-xs">Opdateret Q1 2025</p>
+            </div>
+            <div class="h-10 w-10 grid place-items-center rounded-xl bg-ocean/10 ring-1 ring-ocean/20 text-ocean">📈</div>
+          </div>
+          <ul class="space-y-2 text-ink/80">
+            <li>• 180k+ registrerede kunder og 32k Selekti+ medlemmer</li>
+            <li>• Gennemsnitlig ordre: 820 kr. • retur under 4%</li>
+            <li>• Fremhævede kampagner booket 12 uger frem</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="fordele" class="container mx-auto px-4 py-10">
+      <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
+        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Hvorfor butikker vælger Selekti</h2>
+        <div class="mt-5 grid md:grid-cols-2 xl:grid-cols-4 gap-4 text-sm text-ink/80">
+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
+            <h3 class="font-semibold">Mod internationale markedspladser</h3>
+            <p class="mt-2">Selekti holder kommissionen på 12% og deler efterspørgselsdata. På globale markedspladser ligger den typisk på 15-20% og kundedata deles sjældent.</p>
+          </article>
+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
+            <h3 class="font-semibold">Mod egen dansk webshop</h3>
+            <p class="mt-2">Ingen lokalt team nødvendig. Vi håndterer oversættelse, kundeservice, told, moms og returlogistik. Du er live på 48-72 timer.</p>
+          </article>
+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
+            <h3 class="font-semibold">Mod distributører/grossister</h3>
+            <p class="mt-2">Bevar din fulde detailpris. Vi tager os af compliance og betalinger, så du slipper for rabatter på 30% eller mere.</p>
+          </article>
+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/70">
+            <h3 class="font-semibold">Fremhævede placeringer</h3>
+            <p class="mt-2">Invester i sponsorerede spots på forsiden og i appen. Vi reserverer uger ad gangen til partnere, der vil dominere et landesegment.</p>
+          </article>
+        </div>
+        <div class="mt-6 grid md:grid-cols-2 gap-4">
+          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/80">
+            <h3 class="font-semibold">Services til danske butikker</h3>
+            <ul class="mt-2 space-y-2 text-sm text-ink/80">
+              <li>• Fælles kampagner i Selekti appen, forsiden og Behovsbokse</li>
+              <li>• Mulighed for click & collect udvidelse og medlemsfordele til dine VIP-kunder</li>
+              <li>• Lager- og fulfillment-partnere i Danmark for hurtig levering</li>
+            </ul>
+          </article>
+          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-white">
+            <h3 class="font-semibold">Integrationer & drift</h3>
+            <ul class="mt-2 space-y-2 text-sm text-ink/80">
+              <li>• Shopify, WooCommerce, Magento eller CSV-upload</li>
+              <li>• API til ordrestatus, tracking og lagerstyring</li>
+              <li>• Netbetalingsaftaler og valutahåndtering via Selekti</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-10">
+      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10 grid md:grid-cols-[1fr_.85fr] gap-6 items-center">
+        <div>
+          <p class="text-[11px] uppercase tracking-wide text-ink/60">Vores samarbejdsmodel</p>
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Gennemsigtig kommission og fælles vækstplan</h2>
+          <ul class="mt-3 space-y-2 text-sm text-ink/80">
+            <li>• 12% kommission på gennemførte ordrer (inkl. betalingsgebyrer)</li>
+            <li>• Selekti håndterer kundeservice, retur og chargebacks</li>
+            <li>• Adgang til data dashboards med søgetrends og Behovsboks efterspørgsel</li>
+          </ul>
+          <p class="mt-4 text-xs text-ink/60">Ved høj volumen kan vi skræddersy marketingpakker og fælles kampagner. Kontakt os for enterprise-løsninger.</p>
+        </div>
+        <div class="rounded-2xl bg-white ring-1 ring-black/10 p-5 space-y-3 text-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-semibold">Onboarding checklist</p>
+              <p class="text-ink/60 text-xs">Vi hjælper dig hele vejen</p>
+            </div>
+            <div class="h-10 w-10 grid place-items-center rounded-xl bg-grape/10 ring-1 ring-grape/20 text-grape">✅</div>
+          </div>
+          <ol class="list-decimal list-inside space-y-1 text-ink/80">
+            <li>Send produktfeed eller udvalgte SKU&apos;er</li>
+            <li>Tilpas priser & kampagner til Selekti kunder</li>
+            <li>Gennemgå logistikopsætning (egen eller Selekti fulfillment)</li>
+            <li>Aktivér Selekti+ tilbud og Behovsboks tilvalg</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="ansog" class="container mx-auto px-4 pb-12">
+      <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
+        <div class="max-w-xl">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Ansøg om partnerskab</h2>
+          <p class="mt-2 text-sm text-ink/70">Fortæl os kort om din butik. Vi vender tilbage inden for 48-72 timer med næste skridt og adgang til partnerportalen.</p>
+        </div>
+        <form name="partner-apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-6 grid gap-4">
+          <input type="hidden" name="form-name" value="partner-apply" />
+          <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Butiksnavn</label>
+              <input required name="store" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Land</label>
+              <input required name="country" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">E-mail</label>
+              <input required type="email" name="email" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Platform</label>
+              <select name="platform" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+                <option>Shopify</option>
+                <option>WooCommerce</option>
+                <option>Magento</option>
+                <option>Andet / Ingen</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Kategorier</label>
+            <input name="cats" placeholder="fx Sneakers, Hi-Fi…" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Hvordan vil du bruge Selekti?</label>
+            <textarea name="notes" rows="3" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Kort om jeres mål, logistik og kampagneønsker"></textarea>
+          </div>
+          <button class="rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Send ansøgning</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-black/5 bg-white">
+    <div class="container mx-auto px-4 py-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
+          <span class="font-semibold">Selekti</span>
+        </div>
+        <p class="mt-3 text-ink/70">Partner med Selekti og bliv en del af danskernes foretrukne shoppinghub.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold">Genveje</h4>
+        <ul class="mt-3 space-y-2">
+          <li><a href="index.html" class="hover:underline">Forside</a></li>
+          <li><a href="om-os.html" class="hover:underline">Om os</a></li>
+          <li><a href="#ansog" class="hover:underline">Ansøg</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold">Kontakt</h4>
+        <ul class="mt-3 space-y-2 text-ink/70">
+          <li>Partnerteam: <a href="mailto:partners@selekti.dk" class="underline">partners@selekti.dk</a></li>
+          <li>Telefon: +45 89 88 77 44</li>
+          <li>Adresse: Selekti ApS, Vesterbrogade 22, 1620 København V</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold">Dokumenter</h4>
+        <ul class="mt-3 space-y-2 text-ink/70">
+          <li><a href="mailto:partners@selekti.dk?subject=Partnerbetingelser" class="hover:underline">Partnerbetingelser (PDF)</a></li>
+          <li><a href="mailto:tech@selekti.dk?subject=API%20dokumentation" class="hover:underline">API dokumentation</a></li>
+          <li><a href="mailto:marketing@selekti.dk?subject=Selekti%20brandkit" class="hover:underline">Selekti brandkit</a></li>
+        </ul>
+        <p class="mt-4 text-xs text-ink/60">© <span id="year"></span> Selekti. Alle rettigheder forbeholdes.</p>
+      </div>
+    </div>
+  </footer>
+
+  
+</body>
+</html>
