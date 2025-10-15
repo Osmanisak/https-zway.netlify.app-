@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Butikker – Find globale partnere hos Selekti</title>
+  <meta name="description" content="Filtrer blandt Selektis globale partnere. Søg efter land, kategori, pris og butik for at finde produkter med totalpris til Danmark." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { ink:'#0f172a', soft:'#f6f8fb', ocean:'#0ea5e9', mint:'#10b981' },
+          fontFamily: { sans:['Inter','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
+          boxShadow: { soft:'0 12px 40px rgba(15,23,42,0.12)' }
+        }
+      }
+    }
+  </script>
+  <script src="app.js" defer></script>
+  <style>
+    html,body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif;color:#0f172a;background:#f6f8fb}
+    ::selection{background:#dbeafe}
+    .container{max-width:1180px}
+    .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .85rem;border-radius:9999px;background:#fff;border:1px solid rgba(15,23,42,0.08);font-size:.75rem;font-weight:500;cursor:pointer}
+    .chip.active{background:#0f172a;color:#fff}
+    .wishlist-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:9999px;border:1px solid rgba(15,23,42,0.12);padding:.35rem .75rem;font-size:.75rem;background:#fff;color:#0f172a}
+    .wishlist-btn.active{background:#0f172a;color:#fff}
+    #sheet-dim{transition:opacity .2s ease}
+    #sheet-dim.hidden{display:none}
+    #sheet-dim{opacity:0}
+    #sheet-dim.visible{opacity:1}
+    [data-sheet]{transition:transform .25s ease,opacity .25s ease}
+    [data-sheet].hidden{display:none}
+    [data-sheet]{transform:translateY(40px);opacity:0}
+    [data-sheet].open{transform:translateY(0);opacity:1}
+    .toast{position:relative;margin:0.5rem auto;padding:0.75rem 1rem;border-radius:9999px;background:#0ea5e9;color:#fff;font-size:.75rem;opacity:0;transform:translateY(6px);transition:opacity .2s ease,transform .2s ease}
+    .toast.show{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body data-page="directory" class="min-h-screen bg-gradient-to-b from-white via-soft to-soft">
+  <header class="sticky top-0 z-50 border-b border-black/5 bg-white/90 backdrop-blur">
+    <div class="container mx-auto flex flex-wrap items-center gap-3 px-4 py-3">
+      <a class="flex items-center gap-2" href="index.html">
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ocean to-mint text-white font-semibold">S</span>
+        <span class="text-lg font-semibold">Selekti</span>
+      </a>
+      <form id="global-search" class="hidden flex-1 items-center gap-2 rounded-full bg-soft px-3 py-2 ring-1 ring-black/10 sm:flex">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" class="text-ink/50"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm7-1-3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <input id="global-search-input" type="search" placeholder="Søg efter butik, brand eller produkt" class="w-full bg-transparent text-sm text-ink placeholder:text-ink/40 focus:outline-none" />
+        <button class="hidden rounded-full bg-ink px-3 py-1 text-xs font-medium text-white sm:inline-flex" type="submit">Søg</button>
+      </form>
+      <nav class="ml-auto flex items-center gap-4 text-sm text-ink/70">
+        <a class="font-semibold text-ink" href="butikker.html">Butikker</a>
+        <a class="hover:text-ink" href="index.html#landing-featured-stores">Fremhævede</a>
+        <a class="hover:text-ink" href="index.html#selekti-plus">Selekti+</a>
+        <a class="hover:text-ink" href="index.html#guides">Guides</a>
+        <a class="hover:text-ink" href="om-os.html">Om os</a>
+        <a class="hover:text-ink" href="for-butikker.html">Bliv partner</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button id="wishlist-open" data-open="sheet-wishlist" class="relative inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-medium ring-1 ring-black/10">
+          <span>Ønskeliste</span>
+          <span id="wishlist-count" class="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">0</span>
+        </button>
+        <button class="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-xs font-medium text-white" data-auth-action>
+          <span data-auth-state="label">Log ind</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="pb-16">
+    <section class="container mx-auto px-4 pt-10">
+      <div class="rounded-3xl bg-white p-6 ring-1 ring-black/5 shadow-soft md:p-10">
+        <div class="grid gap-6 md:grid-cols-[1fr_.9fr]">
+          <div class="space-y-4">
+            <p class="text-xs uppercase tracking-wide text-ink/60">Butiksoversigt</p>
+            <h1 class="text-3xl font-bold md:text-4xl">Alle Selekti partnere samlet ét sted</h1>
+            <p class="max-w-xl text-sm text-ink/70">Søg på land, kategori eller butik og tilføj produkter til ønskelisten. Vi viser en vejledende totalpris, og du bestiller via vores concierge.</p>
+            <form id="directory-search" class="grid gap-3 md:grid-cols-[1fr_auto_auto]">
+              <input id="directory-search-input" type="search" placeholder="Søg butik, brand eller produkt" class="rounded-xl border border-black/10 px-4 py-3 text-sm focus:border-ocean focus:outline-none" />
+              <select id="directory-search-country" class="rounded-xl border border-black/10 px-4 py-3 text-sm focus:border-ocean focus:outline-none">
+                <option value="">Alle lande</option>
+                <option value="jp">Japan</option>
+                <option value="kr">Sydkorea</option>
+                <option value="uk">Storbritannien</option>
+                <option value="us">USA</option>
+                <option value="cn">Kina</option>
+                <option value="in">Indien</option>
+              </select>
+              <button class="rounded-xl bg-ink px-5 py-3 text-sm font-medium text-white">Opdater</button>
+            </form>
+            <div class="flex flex-wrap gap-2 text-xs" id="directory-country-chips">
+              <button class="chip" data-filter="country" data-value="jp">🇯🇵 Japan</button>
+              <button class="chip" data-filter="country" data-value="kr">🇰🇷 Sydkorea</button>
+              <button class="chip" data-filter="country" data-value="uk">🇬🇧 UK</button>
+              <button class="chip" data-filter="country" data-value="us">🇺🇸 USA</button>
+              <button class="chip" data-filter="country" data-value="cn">🇨🇳 Kina</button>
+              <button class="chip" data-filter="country" data-value="in">🇮🇳 Indien</button>
+            </div>
+          </div>
+          <div class="relative overflow-hidden rounded-3xl">
+            <img src="https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1400&q=80" alt="Butikker" class="h-full w-full object-cover" loading="lazy" />
+            <div class="absolute bottom-4 right-4 max-w-xs rounded-2xl bg-white/90 p-4 text-sm shadow-soft ring-1 ring-black/10">
+              <p class="text-[11px] uppercase tracking-wide text-ink/60">Aktiv kampagne</p>
+              <p class="mt-1 text-sm"><span class="font-semibold">Shanghai Design Market</span></p>
+              <p class="text-xs text-ink/60">Totalpris fra</p>
+              <p id="directory-hero-est" class="text-2xl font-extrabold text-ink">DKK 0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container mx-auto px-4 py-10">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-ink/60">Kampagner</p>
+          <h2 class="text-2xl font-bold">Fremhævede butikker</h2>
+        </div>
+        <div class="flex gap-2">
+          <button class="chip" data-row-prev data-target="directory-featured">‹</button>
+          <button class="chip" data-row-next data-target="directory-featured">›</button>
+        </div>
+      </div>
+      <div id="directory-featured" class="mt-4 flex gap-4 overflow-x-auto pb-2"></div>
+    </section>
+
+    <section class="container mx-auto grid gap-6 px-4 pb-12 lg:grid-cols-[280px_1fr]">
+      <aside class="space-y-6 rounded-3xl bg-white p-5 ring-1 ring-black/5 shadow-soft" aria-label="Filtre">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Filtrer</h2>
+          <button id="directory-reset" class="text-sm text-ocean" type="button">Nulstil</button>
+        </div>
+        <form id="directory-filters" class="space-y-5 text-sm text-ink/70">
+          <div>
+            <h3 class="font-semibold text-ink">Kategorier</h3>
+            <div class="mt-2 space-y-2">
+              <label class="flex items-center gap-2"><input type="checkbox" name="category" value="tøj" /> Tøj</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="category" value="sneakers" /> Sneakers</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="category" value="lyd" /> Lyd</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="category" value="gadget" /> Gadgets</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="category" value="beauty" /> Beauty</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="category" value="home" /> Bolig</label>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-ink">Lande</h3>
+            <div class="mt-2 space-y-2">
+              <label class="flex items-center gap-2"><input type="checkbox" name="country" value="jp" /> Japan</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="country" value="kr" /> Sydkorea</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="country" value="uk" /> UK</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="country" value="us" /> USA</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="country" value="cn" /> Kina</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="country" value="in" /> Indien</label>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-ink">Tags</h3>
+            <div class="mt-2 space-y-2">
+              <label class="flex items-center gap-2"><input type="checkbox" name="brand" value="limited" /> Limited</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="brand" value="premium" /> Premium</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="brand" value="gave" /> Gave</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="brand" value="sport" /> Sport</label>
+            </div>
+          </div>
+        </form>
+      </aside>
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <p id="directory-count" class="text-sm text-ink/60">0 produkter</p>
+          <div class="flex items-center gap-2 text-sm text-ink/70">
+            <label for="directory-sort">Sorter</label>
+            <select id="directory-sort" class="rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none">
+              <option value="popular">Mest populære</option>
+              <option value="price_asc">Pris stigende</option>
+              <option value="price_desc">Pris faldende</option>
+              <option value="new">Nyeste</option>
+            </select>
+          </div>
+        </div>
+        <div id="active-filters" class="flex flex-wrap gap-2 text-xs"></div>
+        <div id="directory-empty" class="hidden rounded-3xl bg-white p-6 text-sm text-ink/60 ring-1 ring-black/5">
+          Ingen produkter matcher dine filtre. Se forslagene nedenfor eller nulstil filtrene.
+          <div id="directory-suggestions" class="mt-3 flex flex-wrap gap-2"></div>
+        </div>
+        <div id="directory-grid" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"></div>
+      </div>
+    </section>
+  </main>
+
+  <aside id="sheet-wishlist" data-sheet class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white p-6 shadow-soft ring-1 ring-black/10" aria-hidden="true" role="dialog">
+    <div class="flex items-center justify-between">
+      <h2 class="text-lg font-semibold">Ønskeliste & Bestil via link</h2>
+      <button type="button" data-close class="rounded-full bg-soft px-3 py-2 text-sm">Luk</button>
+    </div>
+    <div class="mt-4 space-y-6">
+      <div>
+        <div id="wishlist-empty" class="rounded-2xl bg-soft p-6 text-sm text-ink/60">Din ønskeliste er tom. Find produkter og tilføj dem med hjertet.</div>
+        <div id="wishlist-list" class="grid gap-3"></div>
+        <div id="wishlist-actions" class="mt-3 hidden">
+          <button id="wishlist-clear" type="button" class="text-sm text-ocean">Ryd ønskeliste</button>
+        </div>
+      </div>
+      <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3">
+        <input type="hidden" name="form-name" value="wishlist" />
+        <input type="hidden" name="items_json" value="[]" />
+        <p class="hidden"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+        <label class="text-sm font-medium">Produktlink
+          <input name="product_url" type="url" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="https://butik.com/vare" />
+        </label>
+        <label class="text-sm font-medium">Variant / størrelse
+          <input name="variant" type="text" class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="fx Medium" />
+        </label>
+        <label class="text-sm font-medium">Noter
+          <textarea name="notes" rows="3" class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="Fortæl os hvad du ønsker"></textarea>
+        </label>
+        <label class="text-sm font-medium">E-mail
+          <input name="email" type="email" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="din@email.dk" />
+        </label>
+        <button type="submit" class="rounded-full bg-ink px-5 py-3 text-sm font-medium text-white">Send forespørgsel</button>
+        <p class="text-xs text-ink/60">Vi vender tilbage inden for 24 timer med din endelige totalpris.</p>
+      </form>
+    </div>
+  </aside>
+
+  <button id="chatbot-toggle" type="button" aria-controls="chatbot-panel" class="fixed bottom-6 right-6 z-30 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-medium text-white shadow-soft">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.525.49 2.944 1.33 4.117L5 19l2.352-.588A8.68 8.68 0 0 0 12 19Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Chat med Selekti</span>
+  </button>
+  <section id="chatbot-panel" aria-hidden="true" role="dialog" class="hidden fixed bottom-24 right-6 z-30 flex w-[320px] max-w-[calc(100%-3rem)] flex-col rounded-3xl bg-white shadow-soft ring-1 ring-black/10">
+    <header class="flex items-start justify-between gap-2 border-b border-black/10 p-4">
+      <div>
+        <p class="text-[11px] uppercase tracking-wide text-ink/60">AI guide</p>
+        <h2 class="text-sm font-semibold text-ink">Spørg Selekti</h2>
+      </div>
+      <button id="chatbot-close" type="button" class="rounded-full bg-soft px-3 py-1 text-xs text-ink/70">Luk</button>
+    </header>
+    <div class="flex flex-wrap gap-2 border-b border-black/10 px-4 py-3 text-xs text-ink/70">
+      <button type="button" class="chip inline-flex items-center gap-2 rounded-full bg-soft px-3 py-1 text-xs font-medium ring-1 ring-black/10" data-chat-suggestion="Hvilke butikker har I i Japan?">Japan</button>
+      <button type="button" class="chip inline-flex items-center gap-2 rounded-full bg-soft px-3 py-1 text-xs font-medium ring-1 ring-black/10" data-chat-suggestion="Hvordan fungerer levering?">Levering</button>
+      <button type="button" class="chip inline-flex items-center gap-2 rounded-full bg-soft px-3 py-1 text-xs font-medium ring-1 ring-black/10" data-chat-suggestion="Hvordan bliver min butik partner?">Bliv partner</button>
+    </div>
+    <div id="chatbot-messages" role="log" aria-live="polite" class="flex-1 space-y-3 overflow-y-auto px-4 py-4"></div>
+    <form id="chatbot-form" class="grid gap-2 border-t border-black/10 p-4">
+      <label class="text-xs font-medium text-ink">Din besked
+        <textarea id="chatbot-input" rows="2" class="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="Spørg om et land, levering eller Selekti+"></textarea>
+      </label>
+      <button type="submit" class="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-xs font-medium text-white">Send</button>
+    </form>
+  </section>
+
+  <div id="sheet-dim" class="hidden fixed inset-0 z-40 bg-black/40"></div>
+  <div id="toasts" class="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex flex-col items-center gap-2 px-4"></div>
+</body>
+</html>
