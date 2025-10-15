@@ -3,22 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Selekti – Smartere valg, mindre besvær</title>
-  <meta name="description" content="Udforsk unikke produkter fra hele verden. Tilføj til ønskeliste, køb med hurtig levering fra EU-lager, eller planlæg levering for særlige fund. Behovsboksen skaber personlige drops efter dine behov." />
+  <title>Selekti – Shop fra dit favoritland med én totalpris.</title>
+  <meta name="description" content="Selekti gør global shopping enkel for danskere. Søg efter et land, se totalprisen på produktet, og lås fri fragt samt Behovsboks-fordele med Selekti+." />
   <meta name="author" content="Selekti" />
 
-  <!-- Safe social preview -->
-  <meta property="og:title" content="Selekti – Smartere valg, mindre besvær" />
-  <meta property="og:description" content="Global shopping for danske privatkunder. Hurtig levering fra EU-lager og planlagt levering for unikke verdensfund." />
+  <!-- Social -->
+  <meta property="og:title" content="Selekti – Shop fra dit favoritland." />
+  <meta property="og:description" content="Skriv hvor du vil shoppe, se totalprisen på produktet, og få fri fragt med Selekti+." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://selekti.dk/" />
-  <meta property="og:image" content="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%230ea5e9'/><stop offset='1' stop-color='%2310b981'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g)'/></svg>" />
+  <meta property="og:image" content="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%230ea5e9'/><stop offset='1' stop-color='%2310b981'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g)'/><text x='50%25' y='55%25' font-family='Inter' font-size='60' text-anchor='middle' fill='white'>Selekti</text></svg>' />
 
   <!-- Fonts & Tailwind -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="app.js" defer></script>
   <script>
     tailwind.config = {
       theme: {
@@ -42,50 +43,33 @@
     .row-card{scroll-snap-align:start}
     .card-hover{transition:transform .25s ease,box-shadow .25s ease}
     .card-hover:hover{transform:translateY(-2px);box-shadow:0 18px 60px rgba(2,6,23,.16)}
-    .chip{padding:.5rem .85rem;border-radius:9999px;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);white-space:nowrap}
+    .chip{padding:.5rem .85rem;border-radius:9999px;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);white-space:nowrap;border:0;cursor:pointer}
     .chip.active{background:#0f172a;color:#fff}
-    .chip.sm{padding:.25rem .6rem;font-size:11px}
-    .tab{padding:.45rem .85rem;border-radius:9999px;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
-    .tab.active{background:#0f172a;color:#fff}
-    [data-route]{display:none}
-    [data-route].active{display:block}
-    .hero-dot{width:8px;height:8px;border-radius:9999px;background:#cbd5e1;opacity:.7}
-    .hero-dot.active{background:#0f172a;opacity:1}
     .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
     .line-clamp-2{-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
-    #heroTextTrack .t-slide,#heroImageTrack .i-slide{transition:transform .65s cubic-bezier(.22,.7,.25,1)}
-    .sheet{transform:translateY(100%);transition:transform .35s ease}
-    .sheet.open{transform:translateY(0%)}
-
-    /* --- Mikro-interaktioner & quick actions --- */
-    .product-card{transition:all .3s cubic-bezier(.4,0,.2,1)}
-    .product-card:active{transform:scale(.96)}
-    .long-press{animation:pulse .5s ease}
-    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(.95)}100%{transform:scale(1)}}
-    .quick-add{position:absolute;bottom:8px;right:8px;opacity:0;transition:opacity .2s ease}
-    .product-card:hover .quick-add,.product-card:active .quick-add{opacity:1}
   </style>
 </head>
 
-<body class="bg-gradient-to-b from-white via-soft to-soft">
+<body class="bg-gradient-to-b from-white via-soft to-soft" data-page="landing">
   <!-- HEADER -->
   <header class="sticky top-0 z-50 glass border-b border-black/5">
     <div class="container mx-auto px-4 py-3 flex items-center gap-3">
-      <a href="#home" class="flex items-center gap-2">
+      <a href="#" class="flex items-center gap-2">
         <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white font-semibold"
               style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
         <span class="text-xl font-semibold tracking-tight">Selekti</span>
       </a>
       <nav class="ml-auto hidden md:flex items-center gap-6 text-sm text-ink/80">
-        <a href="#home" class="hover:text-ink">Forside</a>
-        <a href="#products" class="hover:text-ink">Produkter</a>
-        <a href="#behov" class="hover:text-ink">Behovsboks</a>
+        <a href="#fremhaevet" class="hover:text-ink">Fremhævet</a>
+        <a href="#butikker" class="hover:text-ink">Butikker</a>
+        <a href="#saadan" class="hover:text-ink">Sådan virker det</a>
+        <a href="#sjældne" class="hover:text-ink">Tilbud</a>
+        <a href="#behovsboks" class="hover:text-ink">Behovsboks</a>
+        <a href="#guides" class="hover:text-ink">Guides</a>
+        <a href="om-os.html" class="hover:text-ink">Om os</a>
+        <a href="for-butikker.html" class="hover:text-ink text-ink/60">For butikker</a>
       </nav>
       <div class="ml-2 flex items-center gap-2">
-        <button id="open-saved" class="relative h-10 w-10 grid place-items-center rounded-full bg-white ring-1 ring-black/10" aria-label="Min ønskeliste">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.3-8.2C1 10.2 2 7 5 6c2-.6 3.5.3 4.3 1.4C10.5 6.3 12 5.4 14 6c3 .9 4 4.2 2.3 6.8C19 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.6"/></svg>
-          <span id="wish-count" class="absolute -top-1 -right-1 h-5 min-w-[20px] px-1.5 rounded-full bg-ink text-white text-[11px] font-semibold grid place-items-center">0</span>
-        </button>
         <button id="open-cart" class="relative h-10 w-10 grid place-items-center rounded-full bg-white ring-1 ring-black/10" aria-label="Kurv">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6h2l2.5 9h9l2-6H7" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
           <span id="cart-count" class="absolute -top-1 -right-1 h-5 min-w-[20px] px-1.5 rounded-full bg-ink text-white text-[11px] font-semibold grid place-items-center">0</span>
@@ -95,275 +79,215 @@
     </div>
     <div class="border-t border-black/5">
       <div class="container mx-auto px-4 py-2 text-xs flex flex-wrap gap-2 md:gap-3">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.6" d="M12 3l9 4v6c0 5-4 8-9 8s-9-3-9-8V7l9-4z"/><path stroke="currentColor" stroke-width="1.6" d="M8 12l2.5 2.5L16 9"/></svg> Globalt udvalg · Dansk tryghed</span>
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 4l8 4-8 4-8-4 8-4zM4 12l8 4 8-4" stroke="currentColor" stroke-width="1.6"/></svg> Prisoptimeret & kvalitetssikret</span>
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7-11-7z" stroke="currentColor" stroke-width="1.6"/></svg> Dansk videoguide</span>
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M6 6v12a2 2 0 002 2h8a2 2 0 002-2V6" stroke="currentColor" stroke-width="1.6"/></svg> Nem retur</span>
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10">✔︎ Én totalpris på produktet</span>
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10">🛒 Danskernes shoppinghub</span>
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10">✨ Selekti+ giver fri fragt & Behovsbokse</span>
       </div>
     </div>
   </header>
 
-  <!-- ROUTES -->
-  <main id="route-home" data-route class="active">
-    <!-- HERO: synkron tekst+billede slider -->
-    <section id="hero-dual" class="relative">
-      <div class="container mx-auto px-4 pt-6 md:pt-10">
-        <div class="relative overflow-hidden rounded-3xl ring-1 ring-black/5 shadow-soft bg-white/60">
-          <!-- Tekst (→) -->
-          <div id="heroTextTrack" class="relative h-[230px] md:h-[300px]">
-            <div class="t-slide absolute inset-0 p-6 md:p-10 grid content-end">
-              <div class="max-w-2xl">
-                <p class="text-[11px] md:text-xs uppercase tracking-wide text-ink/60">Sammensæt dine behov</p>
-                <h1 class="text-2xl md:text-5xl font-extrabold leading-tight">Behovsboks – <span class="text-ocean">dit udvalg,</span> vores levering</h1>
-                <p class="mt-2 md:mt-3 text-sm md:text-base text-ink/70">Aktivér og få personlige drops baseret på dine ønsker.</p>
-                <div class="mt-3 md:mt-4 flex flex-wrap gap-2">
-                  <a href="#behov" class="px-4 py-2 rounded-full bg-ink text-white text-sm font-medium">Aktivér Behovsboks</a>
-                  <button data-open="sheet-wishlist" class="px-4 py-2 rounded-full bg-white ring-1 ring-black/10 text-sm font-medium">Bestil via link</button>
-                </div>
-              </div>
-            </div>
-            <div class="t-slide absolute inset-0 p-6 md:p-10 grid content-end">
-              <div class="max-w-2xl">
-                <p class="text-[11px] md:text-xs uppercase tracking-wide text-ink/60">Hurtig levering</p>
-                <h2 class="text-2xl md:text-4xl font-extrabold">2–3 hverdage fra EU-lager</h2>
-                <p class="mt-2 text-sm md:text-base text-ink/70">Testet i DK + dansk videoguide. Klar til kurv.</p>
-              </div>
-            </div>
-            <div class="t-slide absolute inset-0 p-6 md:p-10 grid content-end">
-              <div class="max-w-2xl">
-                <p class="text-[11px] md:text-xs uppercase tracking-wide text-ink/60">Verdensfund</p>
-                <h2 class="text-2xl md:text-4xl font-extrabold">Planlæg leveringen</h2>
-                <p class="mt-2 text-sm md:text-base text-ink/70">Vælg dato – vi samler smartest, så tiden arbejder for dig.</p>
-              </div>
-            </div>
+  <!-- HERO -->
+  <section class="container mx-auto px-4 pt-6 md:pt-10">
+    <div class="rounded-3xl ring-1 ring-black/5 shadow-soft overflow-hidden bg-gradient-to-br from-white to-soft">
+      <div class="grid md:grid-cols-2">
+        <div class="p-6 md:p-10">
+          <p class="text-[11px] md:text-xs uppercase tracking-wide text-ink/60">Danmarks shoppinghub</p>
+          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Hvor vil du shoppe <span class="text-ocean">i dag?</span></h1>
+          <p class="mt-3 text-ink/70">Søg på et land, se produktets totalpris med det samme, og lad os håndtere told, moms og papirarbejde for dig.</p>
+          <div class="mt-4 grid grid-cols-2 gap-2">
+            <a href="#butikker" class="rounded-full bg-ink text-white px-5 py-3 font-medium text-center">Find butik</a>
+            <button class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium" data-open="sheet-estimator">Få totalpris</button>
           </div>
-          <!-- Billeder (←) -->
-          <div id="heroImageTrack" class="relative h-[180px] md:h-[240px]">
-            <img class="i-slide absolute inset-0 w-full h-full object-cover" alt="Behovsboks"
-                 src="https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1600&q=80"
-                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%271920%27 height=%27400%27><defs><linearGradient id=%27g1%27 x1=%270%27 y1=%270%27 x2=%271%27 y2=%271%27><stop offset=%270%27 stop-color=%270ea5e9%27/><stop offset=%271%27 stop-color=%2710b981%27/></linearGradient></defs><rect width=%27100%25%27 height=%27100%25%27 fill=%27url(%23g1)%27/></svg>';">
-            <img class="i-slide absolute inset-0 w-full h-full object-cover" alt="Hurtig levering"
-                 src="https://images.unsplash.com/photo-1586015555751-63bb77f432e4?auto=format&fit=crop&w=1600&q=80"
-                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%271920%27 height=%27400%27><defs><linearGradient id=%27g2%27 x1=%270%27 y1=%270%27 x2=%271%27 y2=%271%27><stop offset=%270%27 stop-color=%270ea5e9%27/><stop offset=%271%27 stop-color=%237c3aed%27/></linearGradient></defs><rect width=%27100%25%27 height=%27100%25%27 fill=%27url(%23g2)%27/></svg>';">
-            <img class="i-slide absolute inset-0 w-full h-full object-cover" alt="Planlæg levering"
-                 src="https://images.unsplash.com/photo-1520975661595-645e1f2f5e2b?auto=format&fit=crop&w=1600&q=80"
-                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%271920%27 height=%27400%27><defs><linearGradient id=%27g3%27 x1=%270%27 y1=%270%27 x2=%271%27 y2=%271%27><stop offset=%270%27 stop-color=%2710b981%27/><stop offset=%271%27 stop-color=%23f59e0b%27/></linearGradient></defs><rect width=%27100%25%27 height=%27100%25%27 fill=%27url(%23g3)%27/></svg>';">
+          <p class="mt-2 text-xs text-ink/60">Tilmeld dig Selekti+, hent appen og invitér en ven – så modtager I begge jeres første Mini Behovsboks uden beregning.</p>
+          <form id="search-form" class="mt-4 grid grid-cols-[1fr_auto] gap-2" action="#butikker">
+            <input id="search-input" type="search" placeholder="Hvor ønsker du at shoppe? fx Japan" class="rounded-xl ring-1 ring-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200" aria-label="Hvor ønsker du at shoppe?">
+            <button class="px-4 py-3 rounded-xl bg-white ring-1 ring-black/10">Find</button>
+          </form>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs" id="country-chips">
+            <button class="chip" type="button" data-country="japan">🇯🇵 Japan</button>
+            <button class="chip" type="button" data-country="usa">🇺🇸 USA</button>
+            <button class="chip" type="button" data-country="uk">🇬🇧 UK</button>
+            <button class="chip" type="button" data-country="kina">🇨🇳 Kina</button>
+            <button class="chip" type="button" data-country="sydkorea">🇰🇷 Sydkorea</button>
+            <button class="chip" type="button" data-country="indien">🇮🇳 Indien</button>
           </div>
-          <div class="absolute right-4 bottom-4 flex items-center gap-2 glass rounded-full px-2 py-1">
-            <button class="hero-prev px-3 py-2">‹</button>
-            <div class="flex gap-1" id="heroDots"></div>
-            <button class="hero-next px-3 py-2">›</button>
-          </div>
+          <div id="country-link" class="mt-3"></div>
         </div>
-
-        <!-- Forside-søgning -->
-        <form id="heroSearch" class="mt-5 grid grid-cols-[1fr_auto] gap-2" action="#products">
-          <input id="searchInputHome" type="search" placeholder="Søg efter produkter eller behov…" class="rounded-xl ring-1 ring-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200">
-          <button class="px-4 py-3 rounded-xl bg-ink text-white">Søg</button>
-        </form>
-
-        <!-- Hurtig navigation -->
-        <div class="mt-3 flex flex-wrap gap-2 text-xs">
-          <button class="chip" data-chip="cars">Biler</button>
-          <button class="chip" data-chip="home">Husholdning</button>
-          <button class="chip" data-chip="media">Medier & Skabere</button>
-          <button class="chip" data-chip="care">Plej & Velvære</button>
-          <button class="chip" data-chip="mobile">Mobil & Tablet</button>
-          <button class="chip" data-chip="fast">Hurtig levering</button>
+        <div class="relative min-h-[260px] md:min-h-[420px]">
+          <img alt="Global shopping" class="absolute inset-0 w-full h-full object-cover"
+               src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80">
+          <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur rounded-2xl shadow-soft ring-1 ring-black/10 p-4 max-w-xs">
+            <p class="text-[11px] uppercase tracking-wide text-ink/60">Live estimat</p>
+            <div class="mt-1 text-sm"><span class="font-semibold">NYC Camera Store</span> • Totalpris beregnet</div>
+            <div class="text-xs text-ink/60">Produktets totalpris fra</div>
+            <div id="hero-est" class="text-2xl font-extrabold mt-1">DKK 1.602</div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- BEHOVSBOKS -->
-    <section id="behov" class="container mx-auto px-4 py-8 md:py-12">
-      <div class="rounded-3xl ring-1 ring-black/5 shadow-soft bg-white p-6 md:p-10 text-center">
-        <p class="text-[11px] md:text-xs uppercase tracking-wide text-ink/60">Mystery boks</p>
-        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight">Behovsboks</h2>
-        <p class="mt-3 text-ink/70 max-w-2xl mx-auto">Vores algoritme matcher dine ønsker med prisoptimerede, kvalitetssikrede varer—leveret i dit tempo.</p>
+  <!-- FREMHÆVEDE BUTIKKER -->
+  <section id="fremhaevet" class="container mx-auto px-4 py-10">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="text-[11px] uppercase tracking-wide text-ink/60">Udvalgt af Selekti</p>
+        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Fremhævede butikker med eksklusive tilbud</h2>
+        <p class="mt-2 text-ink/70 text-sm">Butikker, der investerer i ekstra synlighed, deler deres bedste drops og rabatter direkte på forsiden.</p>
+      </div>
+      <a href="#butikker" class="inline-flex items-center gap-2 text-sm font-medium text-ocean">Se alle butikker →</a>
+    </div>
+    <div id="featured-grid" class="mt-6 grid gap-4 md:grid-cols-2"></div>
+  </section>
 
-        <!-- Transparens: det får du -->
-        <div class="mt-4 grid sm:grid-cols-3 gap-3 text-left">
-          <div class="rounded-xl ring-1 ring-black/10 p-3 bg-soft/60">
-            <p class="text-sm font-semibold">Mere værdi</p>
-            <p class="text-xs text-ink/70 mt-1">Kuraterede valg med typisk bedre samlet pris end enkeltkøb.</p>
-          </div>
-          <div class="rounded-xl ring-1 ring-black/10 p-3 bg-soft/60">
-            <p class="text-sm font-semibold">Variation & kvalitet</p>
-            <p class="text-xs text-ink/70 mt-1">Min. 2 kategorier pr. boks, kvalitet og funktion i fokus.</p>
-          </div>
-          <div class="rounded-xl ring-1 ring-black/10 p-3 bg-soft/60">
-            <p class="text-sm font-semibold">Fleksibel levering</p>
-            <p class="text-xs text-ink/70 mt-1">Vælg tempo: hurtig fra EU eller planlagt “verdensfund”.</p>
-          </div>
+  <!-- SÅDAN VIRKER DET -->
+  <section id="saadan" class="container mx-auto px-4 py-10">
+    <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
+      <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Sådan virker Selekti</h2>
+      <div class="grid md:grid-cols-3 gap-4 mt-5 text-sm">
+        <div class="rounded-xl ring-1 ring-black/10 p-4">
+          <p class="font-semibold">1) Vælg land eller produkt</p>
+          <p class="text-ink/70 mt-1">Fortæl os hvor du vil shoppe, eller indsæt et produktlink fra din favoritbutik.</p>
         </div>
-
-        <div class="mt-5 grid md:grid-cols-3 gap-3 text-left">
-          <label class="cursor-pointer">
-            <input type="radio" name="boxplan" value="299" class="sr-only">
-            <div class="rounded-2xl ring-1 ring-black/10 p-4 hover:ring-black/20">
-              <p class="text-sm uppercase tracking-wide text-ink/60">Lille</p>
-              <h3 class="text-2xl font-extrabold">299 kr.</h3>
-              <p class="text-sm text-ink/70">1–2 produkter · enhed 150–300 kr. · <span class="font-medium">få mere for prisen</span></p>
-            </div>
-          </label>
-          <label class="cursor-pointer">
-            <input type="radio" name="boxplan" value="799" class="sr-only">
-            <div class="rounded-2xl ring-1 ring-black/10 p-4 hover:ring-black/20">
-              <p class="text-sm uppercase tracking-wide text-ink/60">Mellem</p>
-              <h3 class="text-2xl font-extrabold">799 kr.</h3>
-              <p class="text-sm text-ink/70">2–4 produkter · enhed 200–400 kr. · <span class="font-medium">få mere for prisen</span></p>
-            </div>
-          </label>
-          <label class="cursor-pointer">
-            <input type="radio" name="boxplan" value="1299" class="sr-only">
-            <div class="rounded-2xl ring-1 ring-black/10 p-4 hover:ring-black/20">
-              <p class="text-sm uppercase tracking-wide text-ink/60">Stor</p>
-              <h3 class="text-2xl font-extrabold">1299 kr.</h3>
-              <p class="text-sm text-ink/70">4–6 produkter · enhed 350–700 kr. · <span class="font-medium">få mere for prisen</span></p>
-            </div>
-          </label>
+        <div class="rounded-xl ring-1 ring-black/10 p-4">
+          <p class="font-semibold">2) Bekræft totalprisen</p>
+          <p class="text-ink/70 mt-1">Vi beregner produktets totalpris inkl. told, moms og Selekti service, så du kan godkende med ro i maven.</p>
         </div>
-        <div class="mt-5">
-          <button data-open="sheet-auth" class="rounded-full bg-ink text-white px-6 py-3 font-medium shadow-soft">Aktivér Behovsboks</button>
-          <p class="mt-2 text-xs text-ink/60">Du kan altid købe frit uden abonnement.</p>
+        <div class="rounded-xl ring-1 ring-black/10 p-4">
+          <p class="font-semibold">3) Modtag i Danmark</p>
+          <p class="text-ink/70 mt-1">Butikken pakker, vi klarer logistik og told – du vælger levering i checkout.</p>
         </div>
       </div>
-    </section>
+      <div class="mt-5 flex flex-wrap gap-2">
+        <button class="rounded-full bg-ink text-white px-5 py-2.5 font-medium" data-open="sheet-wishlist">Bestil via link</button>
+        <button class="rounded-full bg-white ring-1 ring-black/10 px-5 py-2.5 font-medium" data-open="sheet-estimator">Se prisestimat</button>
+      </div>
+    </div>
+  </section>
 
-    <!-- HURTIG LEVERING – billedslides -->
-    <section class="container mx-auto px-4 pt-2 md:pt-4">
-      <div class="flex items-end justify-between">
+  <!-- BUTIKKER -->
+  <section id="butikker" class="container mx-auto px-4">
+    <div class="flex items-end justify-between">
+      <div>
+        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Populære partnerbutikker</h3>
+        <p class="mt-1 text-ink/70 text-sm">Shop fra officielle butikker. Vi står for alt det besværlige.</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="row-prev px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-stores" aria-label="Scroll tilbage">‹</button>
+        <button class="row-next px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-stores" aria-label="Scroll frem">›</button>
+      </div>
+    </div>
+    <div id="row-stores" class="row-track no-scrollbar mt-3 flex gap-3 pb-1"></div>
+  </section>
+
+  <!-- SJÆLDNE FUNDS -->
+  <section id="sjældne" class="container mx-auto px-4 py-10">
+    <div class="flex items-end justify-between">
+      <div>
+        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Sjældne fund i DK</h3>
+        <p class="mt-1 text-ink/70 text-sm">Udvalgt fra nichebutikker – ofte udsolgt eller slet ikke lanceret her.</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="row-prev px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-rare">‹</button>
+        <button class="row-next px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-rare">›</button>
+      </div>
+    </div>
+    <div id="row-rare" class="row-track no-scrollbar mt-3 flex gap-3 pb-1"></div>
+  </section>
+
+  <!-- GUIDES -->
+  <section id="guides" class="container mx-auto px-4 pb-10">
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="text-[11px] uppercase tracking-wide text-ink/60">Video guides</p>
+        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Lær af vores verificerede partnere</h3>
+        <p class="mt-2 text-ink/70 text-sm">Se korte walkthroughs, før du lægger limited produkter i kurven.</p>
+      </div>
+      <a href="om-os.html" class="inline-flex items-center gap-2 text-sm font-medium text-ocean">Læs mere om processen →</a>
+    </div>
+    <div id="video-guides" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+  </section>
+
+  <!-- SELEKTI+ -->
+  <section class="container mx-auto px-4 pb-10" id="selekti-plus">
+    <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
+      <div class="grid md:grid-cols-[1.1fr_.9fr] gap-6 items-center">
         <div>
-          <h3 class="text-xl md:text-2xl font-bold tracking-tight">Klar til hurtig levering (2–3 hverdage)</h3>
-          <p class="mt-1 text-ink/70 text-sm flex items-center gap-2">
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-mint/10 text-mint ring-1 ring-mint/20 text-[12px]">Testet i DK</span>
-            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white ring-1 ring-black/10 text-[12px]">Dansk videoguide</span>
-          </p>
-        </div>
-        <div class="flex gap-2">
-          <button class="row-prev px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-fast">‹</button>
-          <button class="row-next px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-fast">›</button>
-        </div>
-      </div>
-      <div id="row-fast" class="row-track mt-3 flex gap-3 pb-1"></div>
-    </section>
-
-    <!-- TRENDING / TILPASSET -->
-    <section id="section-trend" class="container mx-auto px-4 py-8 md:py-10">
-      <div class="flex items-end justify-between">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold tracking-tight" id="trend-title">Trending nu</h3>
-          <p class="mt-1 text-ink/70 text-sm" id="trend-sub">Populære valg, der hitter – klar til at blive din næste favorit.</p>
-        </div>
-        <div class="flex gap-2">
-          <button class="row-prev px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-trend">‹</button>
-          <button class="row-next px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-trend">›</button>
-        </div>
-      </div>
-      <div id="row-trend" class="row-track mt-3 flex gap-3 pb-1"></div>
-    </section>
-
-    <!-- VERDENSFUND – planlagt levering -->
-    <section class="container mx-auto px-4 pb-10">
-      <div class="rounded-3xl bg-white ring-1 ring-black/5 p-5 md:p-6 flex items-start gap-4">
-        <div class="shrink-0 h-10 w-10 rounded-xl grid place-items-center text-amber-600 ring-1 ring-amber-200 bg-amber-50">⏳</div>
-        <div class="flex-1">
-          <h3 class="text-xl md:text-2xl font-bold tracking-tight">Verdensfund – planlagt levering</h3>
-          <p class="text-sm text-ink/70 mt-1">Vælg leveringsdato – vi samler smartest. Ventetid bliver til forventning.</p>
-        </div>
-        <button class="rounded-full bg-white ring-1 ring-black/10 px-4 py-2 text-sm" data-open="sheet-planner">Planlæg</button>
-      </div>
-
-      <div class="mt-4 flex items-end justify-between">
-        <div>
-          <h4 class="text-lg md:text-xl font-semibold">Estimeret tidsrum</h4>
-          <p class="mt-1 text-ink/70 text-sm">Tilføj ønskerne nu – vi matcher dem løbende.</p>
-        </div>
-        <div class="flex gap-2">
-          <button class="row-prev px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-slow">‹</button>
-          <button class="row-next px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-slow">›</button>
-        </div>
-      </div>
-      <div id="row-slow" class="row-track mt-3 flex gap-3 pb-1"></div>
-
-      <!-- CTA: Se alle Verdensfund -->
-      <div class="mt-4 flex justify-center">
-        <button id="btn-view-all-slow" class="rounded-full bg-ink text-white px-5 py-2.5 font-medium shadow-soft">Se alle Verdensfund</button>
-      </div>
-    </section>
-
-    <!-- ØNSKELISTE VIA LINK -->
-    <section class="container mx-auto px-4 pb-12">
-      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-8 grid md:grid-cols-[1fr_.8fr] gap-6 items-center">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold">Har du et link? Få én totalpris</h3>
-        </div>
-        <div>
-          <button data-open="sheet-wishlist" class="w-full rounded-full bg-ink text-white py-3 font-medium shadow-soft">Bestil via link</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- PRODUKTER -->
-  <section id="route-products" data-route>
-    <div class="container mx-auto px-4 py-8 md:py-10">
-      <div class="flex items-end justify-between flex-wrap gap-3">
-        <div>
-          <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Produkter</h1>
-          <p class="text-ink/70 text-sm mt-1">Søg & filtrer, gem til ønskeliste eller køb nu. Planlæg levering for Verdensfund.</p>
-        </div>
-        <a href="#home" class="text-sm underline">Tilbage</a>
-      </div>
-
-      <div class="mt-4 grid lg:grid-cols-[300px_1fr] gap-4">
-        <aside class="bg-white rounded-2xl p-4 ring-1 ring-black/5 shadow-soft h-fit">
-          <div>
-            <label class="block text-sm font-medium text-ink mb-1">Søg</label>
-            <div class="grid grid-cols-[1fr_auto_auto] gap-2">
-              <input id="searchInputProducts" type="search" placeholder="Søg i produkter eller behov…" class="rounded-xl ring-1 ring-black/10 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">
-              <button id="btnSaveSearchProducts" class="px-3 py-2 rounded-xl bg-white ring-1 ring-black/10">Gem</button>
-              <button id="clearSearchProducts" class="px-3 py-2 rounded-xl bg-white ring-1 ring-black/10">Ryd</button>
-            </div>
+          <h3 class="text-xl md:text-2xl font-bold tracking-tight">Selekti+ låser fri fragt og din første Mini Behovsboks</h3>
+          <p class="mt-2 text-ink/70 text-sm">Abonnementet til dig, der shopper globalt. Vi dækker leveringen, kuraterer overraskelser og giver dig førsteret til kampagner fra verificerede partnere.</p>
+          <ul class="mt-4 space-y-2 text-sm text-ink/80">
+            <li>• Fri fragt på alle leveringer i vores zoner</li>
+            <li>• Første Mini Behovsboks til dig og den inviterede ven efter app-login</li>
+            <li>• Eksklusive kampagner fra danske og internationale butikker</li>
+          </ul>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a href="#behovsboks" class="rounded-full bg-ink text-white px-5 py-3 font-medium">Udforsk Behovsboks</a>
+            <a href="om-os.html" class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium">Se hvordan det virker</a>
           </div>
-
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-ink mb-1">Behovs-kategorier</label>
-            <div class="flex flex-wrap gap-2">
-              <button class="tab active" data-tab="all">Alle</button>
-              <button class="tab" data-tab="cars">Biler</button>
-              <button class="tab" data-tab="home">Husholdning</button>
-              <button class="tab" data-tab="media">Medier & Skabere</button>
-              <button class="tab" data-tab="care">Plej & Velvære</button>
-              <button class="tab" data-tab="mobile">Mobil & Tablet</button>
-            </div>
+        </div>
+        <div class="rounded-2xl bg-soft/70 ring-1 ring-black/10 p-5">
+          <p class="text-[11px] uppercase tracking-wide text-ink/60">Medlemskab</p>
+          <h4 class="text-2xl font-extrabold mt-1">Selekti+ fra 249 kr./md</h4>
+          <p class="text-sm text-ink/70 mt-2">Start med 30 dages prøveperiode. Download Selekti appen, invitér en ven, og få begge den første Mini Behovsboks uden beregning.</p>
+          <div class="mt-4 grid gap-3 text-sm">
+            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Standard: Fri fragt i EU/UK & to Mini Behovsbokse årligt</div>
+            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Global: Fri fragt på USA/Asien & ekstra kampagner (329 kr./md)</div>
+            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Familiedeling med op til fire profiler og prioriteret support</div>
           </div>
-
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-ink mb-1">Underbehov</label>
-            <div class="grid grid-cols-2 gap-2 text-sm" id="subneeds"></div>
-          </div>
-
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-ink mb-1">Hurtigfilter</label>
-            <label class="inline-flex items-center gap-2 text-sm"><input id="filterStock" type="checkbox"> Kun “På lager (2–3 hverdage)”</label>
-            <label class="inline-flex items-center gap-2 text-sm"><input id="filterSlow" type="checkbox"> Kun “Planlagt levering”</label>
-          </div>
-
-          <div class="mt-4">
-            <div class="flex items-center justify-between">
-              <label class="block text-sm font-medium text-ink">Gemte søgninger</label>
-              <button id="btnClearSaved" class="text-xs underline">Ryd alle</button>
-            </div>
-            <div id="savedSearches" class="mt-2 flex flex-wrap gap-2"></div>
-          </div>
-        </aside>
-
-        <div>
-          <div id="resultsProducts" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-          <div id="emptyProducts" class="hidden mt-8 text-center text-ink/60 text-sm">Ingen resultater. Prøv at fjerne nogle filtre.</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- BEHOVSBOKS -->
+  <section id="behovsboks" class="container mx-auto px-4 pb-10">
+    <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10">
+      <div class="grid md:grid-cols-2 gap-6 items-center">
+        <div>
+          <p class="text-[11px] uppercase tracking-wide text-ink/60">Behovsboks by Selekti</p>
+          <h3 class="text-2xl md:text-3xl font-bold tracking-tight">Behovsboks følger dine søgninger og ønsker</h3>
+          <p class="mt-3 text-sm text-ink/70">Som Selekti+ medlem får du kuraterede bokse baseret på dine landesøgninger, ønskelister og tidligere køb. Du kan til enhver tid vælge tema og størrelse.</p>
+          <ul class="mt-4 space-y-2 text-sm text-ink/80">
+            <li>• Temaer som sneakers, K-beauty, Hi-Fi og dansk design</li>
+            <li>• Størrelser fra Mini til Maxi afhængigt af behov og budget</li>
+          </ul>
+          <p class="mt-3 text-xs text-ink/60">Vil du overraske andre? Brug gaveboks-flowet til at sende en personlig hilsen.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <button class="rounded-full bg-ink text-white px-5 py-3 font-medium" data-open="sheet-wishlist">Byg din næste boks</button>
+            <a href="om-os.html#levering" class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium">Læs om størrelserne</a>
+            <button class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium" data-open="sheet-gift">Send gaveboks</button>
+          </div>
+        </div>
+        <div class="rounded-2xl bg-white ring-1 ring-black/10 p-5 grid gap-4">
+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/80">
+            <p class="text-xs uppercase tracking-wide text-ink/60">Mini</p>
+            <h4 class="text-lg font-semibold">Til nysgerrige</h4>
+            <p class="text-sm text-ink/70 mt-1">3-4 curatede produkter, perfekt som første Behovsboks eller gave.</p>
+          </article>
+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/90">
+            <p class="text-xs uppercase tracking-wide text-ink/60">Favorit</p>
+            <h4 class="text-lg font-semibold">Din faste overraskelse</h4>
+            <p class="text-sm text-ink/70 mt-1">5-7 håndplukkede fund efter dine præferencer – udskift tema når du vil.</p>
+          </article>
+          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft">
+            <p class="text-xs uppercase tracking-wide text-ink/60">Maxi</p>
+            <h4 class="text-lg font-semibold">Del glæden</h4>
+            <p class="text-sm text-ink/70 mt-1">Udvidet Behovsboks med limited drops og mulighed for at sende til flere adresser.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNER CTA -->
+  <section class="container mx-auto px-4 pb-12">
+    <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <p class="text-[11px] uppercase tracking-wide text-ink/60">Til butikker og webshops</p>
+        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Driver du butik? Bliv synlig for danske shoppere</h3>
+        <p class="mt-2 text-sm text-ink/70">Vi hjælper både internationale og danske butikker med at nå nye kunder. Læs mere om kommission, integrationer og fælles kampagner på vores partner-side.</p>
+      </div>
+      <a href="for-butikker.html" class="inline-flex items-center justify-center rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Til partneruniverset</a>
     </div>
   </section>
 
@@ -375,22 +299,23 @@
           <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
           <span class="font-semibold">Selekti</span>
         </div>
-        <p class="mt-3 text-ink/70">Smartere valg, mindre besvær. Prisoptimeret globalt & kvalitetssikret.</p>
+        <p class="mt-3 text-ink/70">Globale favoritter, lokale priser og personlige Behovsbokse.</p>
       </div>
       <div>
         <h4 class="font-semibold">Navigation</h4>
         <ul class="mt-3 space-y-2">
-          <li><a href="#home" class="hover:underline">Forside</a></li>
-          <li><a href="#products" class="hover:underline">Produkter</a></li>
-          <li><a href="#behov" class="hover:underline">Behovsboks</a></li>
+          <li><a href="#butikker" class="hover:underline">Butikker</a></li>
+          <li><a href="#saadan" class="hover:underline">Sådan virker det</a></li>
+          <li><a href="#behovsboks" class="hover:underline">Behovsboks</a></li>
+          <li><a href="om-os.html" class="hover:underline">Om os</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="font-semibold">Kontakt</h4>
+        <h4 class="font-semibold">Juridisk</h4>
         <ul class="mt-3 space-y-2">
-          <li><a href="#" class="hover:underline">Kontakt os</a></li>
           <li><a href="#" class="hover:underline">Privatliv</a></li>
           <li><a href="#" class="hover:underline">Handelsbetingelser</a></li>
+          <li><a href="#" class="hover:underline">Kontakt</a></li>
         </ul>
       </div>
       <div>
@@ -406,58 +331,19 @@
     </div>
   </footer>
 
-  <!-- MOBILE sticky actions -->
+  <!-- FLOATING ACTION (mobil) -->
   <div class="fixed md:hidden z-[60] bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-black/5 p-3">
     <div class="container mx-auto px-1">
       <div class="flex gap-2">
-        <button data-open="sheet-planner" class="flex-1 rounded-full bg-white ring-1 ring-black/10 text-ink py-3 font-medium">Planlæg</button>
-        <a href="#products" class="flex-1 rounded-full bg-ink text-white py-3 font-medium text-center">Udforsk</a>
+        <button data-open="sheet-estimator" class="flex-1 rounded-full bg-white ring-1 ring-black/10 text-ink py-3 font-medium">Totalpris</button>
+        <button data-open="sheet-wishlist" class="flex-1 rounded-full bg-ink text-white py-3 font-medium">Bestil via link</button>
       </div>
     </div>
   </div>
 
-  <!-- STICKY “Udforsk” (Swipe) FAB -->
-  <button id="explore-btn" class="fixed bottom-16 right-4 z-[70] h-12 w-12 rounded-full bg-gradient-to-r from-ocean to-mint shadow-lift grid place-items-center md:hidden" aria-label="Udforsk">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke="white" stroke-width="2"/></svg>
-  </button>
-
-  <!-- Needs Assistant -->
-  <div id="needs-assistant" class="fixed bottom-20 right-4 z-[75] hidden">
-    <div class="bg-white rounded-2xl shadow-lift p-4 max-w-xs border border-black/10">
-      <h4 class="font-semibold">Hvad leder du efter? 🤔</h4>
-      <div class="mt-3 space-y-2">
-        <button class="needs-quick-btn w-full text-left p-3 rounded-xl bg-soft hover:bg-blue-100 text-sm" data-need="gift">🎁 Jeg skal finde en gave</button>
-        <button class="needs-quick-btn w-full text-left p-3 rounded-xl bg-soft hover:bg-blue-100 text-sm" data-need="inspiration">💡 Jeg søger inspiration</button>
-        <button class="needs-quick-btn w-full text-left p-3 rounded-xl bg-soft hover:bg-blue-100 text-sm" data-need="specific">🔍 Jeg ved præcis hvad jeg vil have</button>
-      </div>
-    </div>
-  </div>
-  <button id="assistant-toggle" class="fixed bottom-4 right-4 z-[75] h-14 w-14 rounded-full bg-ink text-white shadow-lift grid place-items-center">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm3 0h-2V7h2v10z" fill="currentColor"/></svg>
-  </button>
-
-  <!-- Swipe Explore Overlay -->
-  <div id="swipe-explore" class="fixed inset-0 z-[80] hidden bg-white">
-    <div class="relative h-full w-full">
-      <div class="absolute top-3 right-3">
-        <button class="h-10 w-10 grid place-items-center rounded-full ring-1 ring-black/10 bg-white" onclick="closeSwipe()" aria-label="Luk">✕</button>
-      </div>
-      <div id="swipe-card" class="absolute inset-4 m-auto max-w-sm h-[80vh] bg-white rounded-2xl shadow-lift overflow-hidden product-card">
-        <img id="swipe-img" class="h-2/3 w-full object-cover" src="" alt="">
-        <div class="p-4 h-[34%] flex flex-col">
-          <h3 id="swipe-title" class="text-xl font-bold"></h3>
-          <p id="swipe-desc" class="text-ink/70 mt-2"></p>
-          <div class="mt-auto flex gap-2">
-            <button class="swipe-dislike flex-1 py-3 rounded-xl border border-red-300 text-red-500">Spring over</button>
-            <button class="swipe-like flex-1 py-3 rounded-xl bg-ink text-white">Synes godt om</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SHEETS (auth, wishlist, saved, video, gift, cart, planner, delivery) -->
-  <div id="sheet-auth" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
+  <!-- SHEETS -->
+  <!-- Auth -->
+  <div id="sheet-auth" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
     <div class="p-4 border-b border-black/5 flex items-center justify-between">
       <h3 class="font-semibold">Log ind / Opret profil</h3>
       <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
@@ -479,9 +365,10 @@
     </div>
   </div>
 
-  <div id="sheet-wishlist" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
+  <!-- Bestil via link (kunde) -->
+  <div id="sheet-wishlist" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
     <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Bestil via link</h3>
+      <h3 class="font-semibold">Bestil via produktlink</h3>
       <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
     </div>
     <form id="wishlist-quick-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="p-4">
@@ -490,109 +377,149 @@
       <div class="grid gap-3">
         <div>
           <label class="block text-sm font-medium mb-1">Produktlink (URL)</label>
-          <input required type="url" name="product_url" placeholder="https://…" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+          <input required type="url" name="product_url" placeholder="https://butik.com/vare…" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Butiksland</label>
+            <select name="country" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+              <option>USA</option><option>Japan</option><option>UK</option><option>EU</option><option>Andre</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Estimeret pris hos butik (DKK)</label>
+            <input type="number" name="price_hint" min="0" step="1" placeholder="fx 850" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
+          </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-sm font-medium mb-1">Kategori</label>
             <select name="category" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-              <option>Biler</option><option>Husholdning</option><option>Medier & Skabere</option><option>Plej & Velvære</option><option>Mobil & Tablet</option>
+              <option>Elektronik</option><option>Accessories</option><option>Tøj & Sneakers</option><option>Skønhed</option><option>Hobby/Hi-Fi</option>
             </select>
           </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Budget (DKK)</label>
-            <input type="number" name="budget_dkk" min="0" step="1" placeholder="fx 500" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-sm font-medium mb-1">Postnr.</label>
             <input required type="text" name="zip" placeholder="fx 2100" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
           </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Kommentar</label>
-            <input type="text" name="notes" placeholder="Variant, antal eller ekstra links" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-          </div>
-        </div>
-        <div class="flex items-center gap-3 text-sm">
-          <input id="consent" type="checkbox" required class="h-4 w-4" />
-          <label for="consent">Jeg accepterer behandling af oplysninger jf. Privatliv.</label>
         </div>
         <button type="submit" class="mt-2 rounded-full bg-ink text-white py-3 font-medium shadow-soft">Få totalpris</button>
-        <p class="text-xs text-ink/60">Svar inden 24–48 t. Betal først ved godkendelse.</p>
+        <p class="text-xs text-ink/60">Du betaler først ved godkendelse. Estimatet viser produktets totalpris.</p>
       </div>
     </form>
   </div>
 
-  <div id="sheet-saved" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
+  <!-- Gaveboks -->
+  <div id="sheet-gift" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
     <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Min ønskeliste</h3>
+      <h3 class="font-semibold">Send en gaveboks</h3>
       <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
     </div>
-    <div class="p-4">
-      <div id="saved-empty" class="text-sm text-ink/60">Ingen produkter endnu. Tilføj fra kortene eller via link.</div>
-      <div id="saved-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      <div class="mt-4 flex justify-end gap-2">
-        <button id="saved-to-cart" class="hidden rounded-full bg-white ring-1 ring-black/10 px-4 py-2 text-sm">Flyt alle til kurv</button>
-        <button id="saved-plan" class="hidden rounded-full bg-ink text-white px-4 py-2 text-sm">Planlæg levering</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="sheet-video" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Dansk videoguide</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <div class="p-4">
-      <video id="video-el" controls class="w-full rounded-xl ring-1 ring-black/10 bg-black">
-        <source id="video-src" src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-      </video>
-      <p class="mt-2 text-xs text-ink/60">Demo – erstat med danske produktvideoer.</p>
-    </div>
-  </div>
-
-  <div id="sheet-gift" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Giv som gave</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <form name="gift-order" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="p-4 grid gap-3">
-      <input type="hidden" name="form-name" value="gift-order" />
+    <form name="gift-box" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="p-4 grid gap-3">
+      <input type="hidden" name="form-name" value="gift-box" />
       <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-      <input type="hidden" name="product_title" id="gift_product_title" />
-      <input type="hidden" name="product_url" id="gift_product_url" />
-      <input type="hidden" name="product_img" id="gift_product_img" />
       <div class="grid md:grid-cols-2 gap-3">
         <div>
-          <label class="block text-sm font-medium mb-1">Modtagerens navn</label>
-          <input required type="text" name="recipient_name" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+          <label class="block text-sm font-medium mb-1">Modtager</label>
+          <input required type="text" name="recipient" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Navn">
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1">E-mail til gavekort</label>
-          <input required type="email" name="recipient_email" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+          <label class="block text-sm font-medium mb-1">E-mail</label>
+          <input required type="email" name="recipient_email" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="mail@example.com">
         </div>
       </div>
       <div class="grid md:grid-cols-2 gap-3">
         <div>
-          <label class="block text-sm font-medium mb-1">Ønsket leveringsdato</label>
-          <input type="date" name="delivery_date" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-          <p id="gift_eta" class="text-xs text-ink/60 mt-1"></p>
+          <label class="block text-sm font-medium mb-1">Tema</label>
+          <select name="theme" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+            <option>Sneakers</option>
+            <option>K-Beauty</option>
+            <option>Hi-Fi</option>
+            <option>Design</option>
+            <option>Overrask mig</option>
+          </select>
         </div>
-        <div class="flex items-center gap-2 mt-6 md:mt-8">
-          <input id="hide_price" type="checkbox" name="hide_price" class="h-4 w-4" />
-          <label for="hide_price" class="text-sm">Skjul pris for modtager</label>
+        <div>
+          <label class="block text-sm font-medium mb-1">Anledning</label>
+          <input type="text" name="occasion" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Fødselsdag, takkegave…">
         </div>
       </div>
       <div>
-        <label class="block text-sm font-medium mb-1">Hilsen (valgfri)</label>
-        <textarea name="message" rows="3" placeholder="Skriv en personlig hilsen…" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3"></textarea>
+        <label class="block text-sm font-medium mb-1">Hilsen</label>
+        <textarea name="message" rows="3" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Skriv en kort besked"></textarea>
       </div>
-      <button class="rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Planlæg gave</button>
-      <p class="text-xs text-ink/60">Vi bekræfter estimeret levering før betaling.</p>
+      <button class="rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Send forespørgsel</button>
+      <p class="text-xs text-ink/60">Vi bekræfter indhold og leveringstidspunkt, inden gaveboksen sendes.</p>
     </form>
   </div>
 
+  <!-- Estimator -->
+  <div id="sheet-estimator" class="fixed inset-x-0 bottom-0 z-[72] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
+    <div class="p-4 border-b border-black/5 flex items-center justify-between">
+      <h3 class="font-semibold">Totalpris-estimator (vejledende)</h3>
+      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
+    </div>
+    <div class="p-4 grid md:grid-cols-2 gap-4">
+      <form id="est-form" class="grid gap-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Pris hos butik</label>
+            <input id="est-price" type="number" min="0" step="1" placeholder="fx 100" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Valuta</label>
+            <select id="est-currency" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+              <option value="DKK">DKK</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="JPY">JPY</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Kategori</label>
+            <select id="est-cat" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+              <option value="electronics">Elektronik</option>
+              <option value="accessories">Accessories</option>
+              <option value="apparel">Tøj & Sneakers</option>
+              <option value="beauty">Skønhed</option>
+              <option value="hifi">Hobby/Hi-Fi</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Vægt (kg)</label>
+            <input id="est-weight" type="number" step="0.1" min="0" placeholder="fx 0.7" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Butiksland</label>
+          <select id="est-country" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
+            <option value="EU">EU</option>
+            <option value="US">USA</option>
+            <option value="UK">UK</option>
+            <option value="JP">Japan</option>
+            <option value="OTHER">Andre</option>
+          </select>
+        </div>
+        <button class="rounded-full bg-ink text-white py-3">Beregn</button>
+        <p class="text-xs text-ink/60">Estimat er vejledende. Endelig pris vises ved check-out og kan afvige ved specialvarer.</p>
+      </form>
+      <div class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/60">
+        <p class="text-[11px] uppercase tracking-wide text-ink/60">Estimeret totalpris</p>
+        <div id="est-total" class="text-3xl font-extrabold mt-1">–</div>
+        <p id="est-note" class="text-sm text-ink/70 mt-1">Totalpris dækker produkt, afgifter og Selekti service.</p>
+        <ul id="est-highlights" class="mt-3 space-y-2 text-xs text-ink/70">
+          <li id="est-highlight-main">• Levering tilvælges i checkout – fri fragt med Selekti+</li>
+          <li>• Se detaljer om levering på <a href="om-os.html#levering" class="underline">Om os</a></li>
+        </ul>
+        <button class="w-full mt-4 rounded-full bg-white ring-1 ring-black/10 py-3 text-sm" data-open="sheet-wishlist">Fortsæt via link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart (simple demo) -->
   <div id="sheet-cart" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
     <div class="p-4 border-b border-black/5 flex items-center justify-between">
       <h3 class="font-semibold">Din kurv</h3>
@@ -601,726 +528,16 @@
     <div class="p-4">
       <div id="cart-empty" class="text-sm text-ink/60">Kurven er tom.</div>
       <div id="cart-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      <div id="cart-actions" class="hidden mt-4 flex items-center justify-between flex-wrap gap-2">
-        <div class="text-xs text-ink/60"><span id="cart-eta-label"></span></div>
-        <div class="flex gap-2">
-          <button id="cart-plan" class="rounded-full bg-white ring-1 ring-black/10 px-4 py-2 text-sm">Planlæg levering</button>
-          <button id="go-checkout" class="rounded-full bg-ink text-white px-5 py-2.5 font-medium shadow-soft">Fortsæt til login</button>
-        </div>
+      <div id="cart-actions" class="hidden mt-4 flex items-center justify-between">
+        <div class="text-xs text-ink/60">Totalpris vises ved login.</div>
+        <button id="go-checkout" class="rounded-full bg-ink text-white px-5 py-2.5 font-medium shadow-soft">Fortsæt til login</button>
       </div>
     </div>
   </div>
 
-  <div id="sheet-planner" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Planlæg min måned</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <form id="planner-form" class="p-4 grid gap-4">
-      <p class="text-sm text-ink/70">Markér dine behov – vi matcher løbende.</p>
-      <div class="grid md:grid-cols-5 gap-4">
-        <fieldset class="rounded-xl ring-1 ring-black/10 p-3"><legend class="text-sm font-semibold">Biler</legend>
-          <label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" name="need" value="bilpleje"> Bilpleje</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="holder"> Telefonholder</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="vinterkit"> Vinterkit</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="oplader12v"> Oplader (12V/USB-C)</label>
-        </fieldset>
-        <fieldset class="rounded-xl ring-1 ring-black/10 p-3"><legend class="text-sm font-semibold">Husholdning</legend>
-          <label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" name="need" value="rengøring"> Rengøring</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="køkken"> Køkken</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="organisering"> Organisering</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="vask"> Vask & pleje</label>
-        </fieldset>
-        <fieldset class="rounded-xl ring-1 ring-black/10 p-3"><legend class="text-sm font-semibold">Medier & Skabere</legend>
-          <label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" name="need" value="tvbox"> TV-boks</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="fjernbetjening"> Fjernbetjening</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="kabler"> HDMI/kabler</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="lys"> Lys</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="stativ"> Stativ</label>
-        </fieldset>
-        <fieldset class="rounded-xl ring-1 ring-black/10 p-3"><legend class="text-sm font-semibold">Plej & Velvære</legend>
-          <label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" name="need" value="hår"> Hår</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="ansigt"> Ansigt</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="tænder"> Tænder</label>
-        </fieldset>
-        <fieldset class="rounded-xl ring-1 ring-black/10 p-3"><legend class="text-sm font-semibold">Mobil & Tablet</legend>
-          <label class="flex items-center gap-2 text-sm mt-2"><input type="checkbox" name="need" value="cover"> Covers</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="skærm"> Skærmbeskytter</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="charger"> Oplader/powerbank</label>
-          <label class="flex items-center gap-2 text-sm mt-1"><input type="checkbox" name="need" value="stativ_mobil"> Stativ/holder</label>
-        </fieldset>
-      </div>
-      <div class="grid md:grid-cols-2 gap-3">
-        <select id="planner-size" class="rounded-xl ring-1 ring-black/10 px-4 py-3">
-          <option value="299">Lille – 299 kr. (1–2 stk · enhed 150–300)</option>
-          <option value="799">Mellem – 799 kr. (2–4 stk · enhed 200–400)</option>
-          <option value="1299">Stor – 1299 kr. (4–6 stk · enhed 350–700)</option>
-        </select>
-        <button class="rounded-xl bg-ink text-white px-4 py-3">Foreslå produkter</button>
-      </div>
-      <div id="planner-suggest" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      <p class="text-xs text-ink/60">Forslag er vejledende – vi optimerer for værdi og relevans.</p>
-    </form>
-  </div>
-
-  <div id="sheet-delivery" class="fixed inset-x-0 bottom-0 z-[75] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Planlæg levering</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <div class="p-4 grid gap-3">
-      <p id="delivery-info" class="text-sm text-ink/70"></p>
-      <div class="grid md:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-sm font-medium mb-1">Tidligste dato</label>
-          <input id="delivery-date" type="date" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-          <p id="delivery-hint" class="text-xs text-ink/60 mt-1"></p>
-        </div>
-        <div class="rounded-xl ring-1 ring-black/10 p-3">
-          <label class="flex items-center gap-2 text-sm"><input id="split-ship" type="checkbox"> Del leveringen (hurtige varer først)</label>
-          <p class="text-xs text-ink/60 mt-1">Sender lagerførte varer (2–3 hverdage) separat.</p>
-        </div>
-      </div>
-      <div class="flex justify-end gap-2">
-        <button class="rounded-full bg-white ring-1 ring-black/10 px-4 py-2" data-close>Annuller</button>
-        <button id="confirm-delivery" class="rounded-full bg-ink text-white px-4 py-2">Gem plan</button>
-      </div>
-      <p class="text-xs text-ink/60">Planen gemmes på din profil ved checkout (login kræves).</p>
-    </div>
-  </div>
-
+  <!-- DIM for sheets -->
   <div id="sheet-dim" class="fixed inset-0 z-[65] hidden bg-black/50"></div>
 
-  <script>
-    const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
-    $$('#year').forEach(y=>y.textContent=new Date().getFullYear());
-
-    // Routing
-    const routes={ home:$('#route-home'), products:$('#route-products') };
-    function setRoute(hash){
-      const k=(hash||'#home').replace('#','');
-      Object.values(routes).forEach(e=>e?.classList.remove('active'));
-      (k==='home'||k==='behov'?routes.home:routes[k])?.classList.add('active');
-      window.scrollTo({top:0,behavior:'smooth'});
-      if(k==='products') $('#searchInputProducts')?.focus();
-    }
-    window.addEventListener('hashchange',()=>setRoute(location.hash)); setRoute(location.hash||'#home');
-
-    // Sheets
-    const dim=$('#sheet-dim');
-    function openSheet(id){const el=document.getElementById(id); if(!el) return; el.classList.remove('hidden'); setTimeout(()=>el.classList.add('open'),10); dim.classList.remove('hidden');}
-    function closeSheet(){ $$('.sheet').forEach(s=>{s.classList.remove('open'); setTimeout(()=>s.classList.add('hidden'),250)}); dim.classList.add('hidden'); }
-    dim?.addEventListener('click',closeSheet);
-    document.addEventListener('click',e=>{ if(e.target?.matches('[data-close]')) closeSheet(); if(e.target?.matches('[data-open]')) openSheet(e.target.getAttribute('data-open')); });
-    $('#open-auth')?.addEventListener('click',()=>openSheet('sheet-auth'));
-    $('#go-checkout')?.addEventListener('click',()=>openSheet('sheet-auth'));
-    $('#open-saved')?.addEventListener('click',()=>openSheet('sheet-saved'));
-    $('#open-cart')?.addEventListener('click',()=>openSheet('sheet-cart'));
-
-    // Auth (demo)
-    const hasProfile=()=>!!localStorage.getItem('selekti_profile');
-    $('#form-login')?.addEventListener('submit',e=>{ e.preventDefault(); localStorage.setItem('selekti_profile','1'); closeSheet(); });
-    $('#form-register')?.addEventListener('submit',e=>{ e.preventDefault(); localStorage.setItem('selekti_profile','1'); closeSheet(); });
-
-    // Plan budget ranges
-    const BOX_RANGES={299:[150,300],799:[200,400],1299:[350,700]};
-    function setPlan(v){ localStorage.setItem('selekti_box_plan',String(v)); $$('#behov input[name="boxplan"]').forEach(r=> r.checked = (r.value===String(v))); renderProductsPage(); renderSaved(); }
-    function getPlan(){ return Number(localStorage.getItem('selekti_box_plan')||0)||0; }
-    $$('#behov input[name="boxplan"]').forEach(r=> r.addEventListener('change',()=> setPlan(r.value)));
-
-    // Local JSON helpers
-    const getJSON=(k,def)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(def))}catch{return def}};
-    const setJSON=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-
-    const IMG_FALLBACK="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><rect width='100%25' height='100%25' fill='%23f6f8fb'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2364748b' font-family='Inter' font-size='32'>Selekti</text></svg>";
-
-    // Demo produkter (opdateret med mere specifikke navne + hvorfor-tekst)
-    const PRODUCTS=[
-      // Hurtig (EU-lager)
-      {id:'p11', title:'Magnetisk bilholder (360° greb, anti-ryst)', price:179, cat:'cars', needs:['holder','bilpleje'], img:'https://images.unsplash.com/photo-1533236897111-3e94666b2edf?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, videoUrl:'https://www.w3schools.com/html/mov_bbb.mp4',  minDays:2, maxDays:3, tags:['unik','billig','trend'], why:'Stabil i danske vejtests og nem én-hånds montering.'},
-      {id:'p12', title:'12V/USB-C hurtiglader (dual port, 36W)', price:229, cat:'cars', needs:['oplader12v'], img:'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, videoUrl:'https://www.w3schools.com/html/mov_bbb.mp4',  minDays:2, maxDays:3, tags:['hurtig','trend'], why:'Samtidig opladning af to enheder – kompatibel med nye iPhones/Android.'},
-      {id:'p13', title:'Mikrofiber-kit til bilpleje (5 stk, ridsefri)',    price:129, cat:'cars', needs:['bilpleje'], img:'https://images.unsplash.com/photo-1616811746067-6ec9d7020f99?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, minDays:2, maxDays:3, tags:['billig'], why:'Høj sugeevne og skånsom overflade – perfekt til hurtig shine.'},
-
-      {id:'p21', title:'4K streaming-boks m. fjernbetjening (HDR, eARC)',   price:499, cat:'media', needs:['tvbox','fjernbetjening'], img:'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, videoUrl:'https://www.w3schools.com/html/mov_bbb.mp4', minDays:2, maxDays:3, tags:['hit','trend'], why:'Skarp 4K + stabil app-oplevelse. Plug-and-play til stuen.'},
-      {id:'p22', title:'HDMI 2.1 kabel (3 m, ARC/eARC, 48Gbps)',        price:149, cat:'media', needs:['kabler'], img:'https://images.unsplash.com/photo-1583224333762-47a4bf5b9f59?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, minDays:2, maxDays:3, tags:['billig'], why:'Fremtidssikret til konsoller og nye TV – ingen billed-dropouts.'},
-
-      {id:'p31', title:'MagSafe-kompatibel trådløs oplader (15W hurtig)',     price:299, cat:'mobile', needs:['charger'], img:'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, videoUrl:'https://www.w3schools.com/html/mov_bbb.mp4', minDays:2, maxDays:3, tags:['hurtig','trend'], why:'Klik-på opladning – perfekt på skrivebord eller natbord.'},
-      {id:'p32', title:'Panserglas sæt m. påføringsramme (2-pak)',    price:189, cat:'mobile', needs:['skærm'], img:'https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, minDays:2, maxDays:3, tags:['hit'], why:'Boblefri montage på 30 sek. – inkl. guide på dansk.'},
-
-      {id:'p33', title:'RGB LED-panellys til creators (justerbar CCT)',        price:649, cat:'media', needs:['lys'], img:'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, minDays:2, maxDays:3, tags:['creator','trend'], why:'Kompakt lys med farvetemperatur-kontrol – flot hudtone på video.'},
-      {id:'p34', title:'Bordstativ til kamera/telefon (metal, foldbar)',          price:279, cat:'media', needs:['stativ'], img:'https://images.unsplash.com/photo-1535016120720-40c646be5580?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, minDays:2, maxDays:3, tags:['creator'], why:'Stabil base til live, Zoom og optagelser – pladsbesparende.'},
-
-      {id:'p35', title:'Universel kabelholder (6-pak, nano-gel)',          price:89,  cat:'home', needs:['organisering'], img:'https://images.unsplash.com/photo-1498611291069-1bb3be0b91a2?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, minDays:2, maxDays:3, tags:['billig'], why:'Holder kabler på plads – nul rod på skrivebordet.'},
-      {id:'p36', title:'Køkkensvamp sæt (anti-ridse, langtidsholdbar)',          price:59,  cat:'home', needs:['køkken','rengøring'], img:'https://images.unsplash.com/photo-1581578017423-509a2a7b762d?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:true, verified:true, minDays:2, maxDays:3, tags:['billig'], why:'Effektiv på pander/gryder uden at ridse belægningen.'},
-
-      // Verdensfund (planlagt)
-      {id:'p41', title:'Vinterkit – isskraber + anti-dug spray',       price:169, cat:'cars', needs:['vinterkit'], img:'https://images.unsplash.com/photo-1483721310020-03333e577078?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:false, verified:false, minDays:14, maxDays:21, tags:['kurateret'], why:'Sæt klar til kolde morgener – mindre is, mere udsyn.'},
-      {id:'p51', title:'Rengøringsgel til tastatur & airvents',  price:119, cat:'home', needs:['rengøring','organisering'], img:'https://images.unsplash.com/photo-1508873696983-2dfd5898f375?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:false, verified:false, minDays:14, maxDays:21, tags:['smart'], why:'Kommer ind i alle kroge – tilfredsstillende at bruge.'},
-      {id:'p52', title:'Skuffeorganizer – modulært sæt (12 stk)',         price:239, cat:'home', needs:['organisering'], img:'https://images.unsplash.com/photo-1617093727343-374698b39b1b?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:false, verified:false, minDays:14, maxDays:21, tags:['orden'], why:'Byg layouts der passer til dine ting – farvel til rodet.'},
-      {id:'p61', title:'Smart lærende fjernbetjening (IR/BT)',     price:259, cat:'media', needs:['fjernbetjening'], img:'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:false, verified:false, minDays:14, maxDays:21, tags:['komfort'], why:'Én fjernbetjening til alt – nem opsætning.'},
-      {id:'p71', title:'Argan + Keratin hårserum (varmebeskyttelse)',    price:219, cat:'care', needs:['hår'], img:'https://images.unsplash.com/photo-1616394584738-fc6e612f5f10?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:false, verified:false, minDays:14, maxDays:21, tags:['pleje'], why:'Glans, mindre frizz – let duft.'},
-      {id:'p72', title:'Skånsom ansigtsrens (daglig pH-balanceret)',           price:179, cat:'care', needs:['ansigt'], img:'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:false, verified:false, minDays:14, maxDays:21, tags:['pleje'], why:'Mild på huden – stærk mod snavs.'},
-      {id:'p73', title:'Tandpleje-kit – whitening strips (14 dage)',       price:299, cat:'care', needs:['tænder'], img:'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=1200&q=80', url:'#', readyNow:false, verified:false, minDays:14, maxDays:21, tags:['pleje'], why:'Synlig opfriskning – god til events og fotos.'}
-    ];
-
-    const SUBNEEDS={cars:['bilpleje','holder','vinterkit','oplader12v'],home:['rengøring','køkken','organisering','vask'],media:['tvbox','fjernbetjening','kabler','lys','stativ'],care:['hår','ansigt','tænder'],mobile:['cover','skærm','charger','stativ_mobil']};
-    const labelCat=k=>({cars:'Biler',home:'Husholdning',media:'Medier & Skabere',care:'Plej & Velvære',mobile:'Mobil & Tablet'}[k]||k);
-
-    // Counters & local lists
-    const wishCountEl=$('#wish-count'), cartCountEl=$('#cart-count');
-    const getWishes=()=>getJSON('selekti_wishes',[]);
-    const setWishes=a=>{setJSON('selekti_wishes',a); updateWishCount(); renderSaved();};
-    const addWish=w=>{
-      const all=getWishes();
-      if(!all.some(x=>x.url===w.url && x.title===w.title)){all.push(w); setWishes(all);}
-    };
-    const removeWish=(url,title)=> setWishes(getWishes().filter(x=>!(x.url===url&&x.title===title)));
-    const updateWishCount=()=>{if(wishCountEl) wishCountEl.textContent=String(getWishes().length);};
-    const getCart=()=>getJSON('selekti_cart',[]);
-    const setCart=a=>{setJSON('selekti_cart',a); updateCartCount(); renderCart();};
-    const updateCartCount=()=>{ if(cartCountEl) cartCountEl.textContent=String(getCart().length); };
-
-    // Helpers
-    function estDateRange(minDays,maxDays){ const o={day:'2-digit',month:'2-digit',year:'numeric'}; const s=new Date(); s.setDate(s.getDate()+minDays); const e=new Date(); e.setDate(e.getDate()+maxDays); return `${s.toLocaleDateString('da-DK',o)} – ${e.toLocaleDateString('da-DK',o)}`; }
-    function hasSlow(items){ return items.some(p=>!p.readyNow); }
-    function earliestDateFor(items){ const d=new Date(); const min = hasSlow(items) ? 14 : 2; d.setDate(d.getDate()+min); return d; }
-
-    // Budget note (Behovsboks)
-    function budgetNote(p){
-      const plan=getPlan(); if(!plan || !BOX_RANGES[plan] || !p.price) return '';
-      const [,max]=BOX_RANGES[plan]; if(p.price>max){
-        return `<div class="mt-1 text-[11px] text-ink/50">Ikke med i mystery-boks (over enhedspris)</div>`;
-      }
-      return '';
-    }
-
-    // Card badges
-    function cardBadges(p){
-      const price = p.price ? `<span class="inline-flex items-center px-2 py-1 rounded-full bg-white/90 ring-1 ring-black/10 text-[11px]">DKK ${p.price}</span>` : '';
-      const etaFast = `<span class="inline-flex items-center px-2 py-1 rounded-full bg-mint/10 text-mint ring-1 ring-mint/20 text-xs">2–3 hverdage</span>`;
-      const etaSlow = `<span class="inline-flex items-center px-2 py-1 rounded-full bg-white/90 ring-1 ring-black/10 text-xs">Est.: ${estDateRange(p.minDays,p.maxDays)}</span>`;
-      const quality = `<span class="inline-flex items-center px-2 py-1 rounded-full bg-white/90 ring-1 ring-black/10 text-[11px]">Prisoptimeret</span>`;
-      if(p.readyNow){
-        return `<div class="absolute top-2 left-2 flex flex-wrap gap-2">${etaFast}${p.verified?`<span class="inline-flex items-center px-2 py-1 rounded-full bg-white/90 ring-1 ring-black/10 text-[11px]">Testet & video</span>`:''}${price}${quality}</div>`;
-      }
-      return `<div class="absolute top-2 left-2 flex flex-wrap gap-2">${etaSlow}${price}${quality}</div>`;
-    }
-
-    // Product card (med "Hvorfor udvalgt" + quick add)
-    function productCard(p,compact=false){
-      const img=p.img||IMG_FALLBACK;
-      const why = p.why ? `<button class="why-btn text-xs underline mt-2" data-id="${p.id}">Hvorfor udvalgt?</button><div class="why-text hidden text-xs text-ink/60 mt-1" id="why_${p.id}">${p.why}</div>` : '';
-      const quickAdd = `<button class="quick-add qa-trigger rounded-full bg-ink text-white px-3 py-1.5 text-xs" data-id="${p.id}">Hurtig</button>`;
-
-      const actions=p.readyNow
-        ? `<button class="buy-now rounded-full bg-ink text-white px-3 py-1.5 text-xs" data-id="${p.id}">Køb nu</button>
-           ${p.videoUrl?`<button class="video-btn rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-video="${p.videoUrl}">Video (da)</button>`:''}
-           <button class="gift-btn rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-id="${p.id}">Gave</button>
-           <button class="plan-btn rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-id="${p.id}">Planlæg</button>
-           <button class="wish-add rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-id="${p.id}">Ønske</button>`
-        : `<button class="wish-add rounded-full bg-ink text-white px-3 py-1.5 text-xs" data-id="${p.id}">Til ønskeliste</button>
-           <button class="gift-btn rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-id="${p.id}">Gave</button>
-           <button class="plan-btn rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-id="${p.id}">Planlæg</button>
-           <a href="${p.url}" target="_blank" class="rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs">Detaljer</a>`;
-
-      if(compact){
-        return `
-        <article class="row-card product-card min-w-[220px] max-w-[240px] bg-white rounded-xl ring-1 ring-black/5 shadow-soft overflow-hidden card-hover relative">
-          <div class="relative">
-            <img src="${img}" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" alt="${p.title}" class="h-36 w-full object-cover">
-            ${cardBadges(p)}
-            ${quickAdd}
-          </div>
-          <div class="p-3">
-            <p class="text-[10px] uppercase tracking-wide text-ink/60">${labelCat(p.cat)}</p>
-            <h4 class="font-semibold text-sm line-clamp-2">${p.title}</h4>
-            ${budgetNote(p)}
-            ${why}
-            <div class="mt-2 flex gap-2 items-center flex-wrap">
-              ${p.readyNow ? `<button class="buy-now rounded-full bg-ink text-white px-3 py-1.5 text-xs" data-id="${p.id}">Køb nu</button>` : `<button class="wish-add rounded-full bg-ink text-white px-3 py-1.5 text-xs" data-id="${p.id}">Ønske</button>`}
-              <button class="plan-btn rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-id="${p.id}">Planlæg</button>
-              <button class="gift-btn rounded-full bg-white ring-1 ring-black/10 px-3 py-1.5 text-xs" data-id="${p.id}">Gave</button>
-            </div>
-          </div>
-        </article>`;
-      }
-      return `
-      <article class="product-card bg-white rounded-2xl ring-1 ring-black/5 shadow-soft overflow-hidden card-hover relative">
-        <div class="relative">
-          <img src="${img}" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" alt="${p.title}" class="h-48 w-full object-cover">
-          ${cardBadges(p)}
-          ${quickAdd}
-        </div>
-        <div class="p-4">
-          <p class="text-xs uppercase tracking-wide text-ink/60">${labelCat(p.cat)}</p>
-          <h3 class="text-lg font-semibold">${p.title}</h3>
-          ${budgetNote(p)}
-          ${why}
-          <div class="mt-3 flex flex-wrap gap-2">${actions}</div>
-        </div>
-      </article>`;
-    }
-
-    // Rows
-    function renderRow(id, items){ const el=document.getElementById(id); if(!el) return; el.innerHTML = items.map(p=>productCard(p,true)).join(''); wireProductButtons(); }
-    function bindRowScrollers(){
-      $$('.row-prev').forEach(b=> b.addEventListener('click', ()=>{ const t=document.getElementById(b.dataset.row); t?.scrollBy({left:-360,behavior:'smooth'}); }));
-      $$('.row-next').forEach(b=> b.addEventListener('click', ()=>{ const t=document.getElementById(b.dataset.row); t?.scrollBy({left: 360,behavior:'smooth'}); }));
-    }
-    function autoScrollRow(rowId, interval=3500){
-      const el=document.getElementById(rowId); if(!el) return; let stop=false; let dir=1;
-      function step(){ if(stop) return; el.scrollBy({left: dir*320, behavior:'smooth'}); if(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) dir=-1; if(el.scrollLeft <= 4) dir=1; setTimeout(step, interval); }
-      const media=window.matchMedia('(prefers-reduced-motion: reduce)');
-      if(!media.matches) setTimeout(step, interval);
-      el.addEventListener('mouseenter',()=>stop=true); el.addEventListener('mouseleave',()=>{stop=false; setTimeout(step, interval)});
-    }
-
-    // HERO dual slider
-    (function heroDual(){
-      const wrap = document.getElementById('hero-dual');
-      const textSlides = [...document.querySelectorAll('#heroTextTrack .t-slide')];
-      const imgSlides  = [...document.querySelectorAll('#heroImageTrack .i-slide')];
-      const dotsWrap   = document.getElementById('heroDots');
-      const btnPrev    = document.querySelector('.hero-prev');
-      const btnNext    = document.querySelector('.hero-next');
-      const N = Math.min(textSlides.length, imgSlides.length);
-      let i = 0, paused = false;
-      function layout(){ textSlides.forEach((s, idx)=> s.style.transform = `translateX(${(i - idx) * 100}%)`); imgSlides.forEach((s, idx)=>  s.style.transform = `translateX(${(idx - i) * 100}%)`); markDots(); }
-      function go(n){ i = (n + N) % N; layout(); }
-      function markDots(){ if(!dotsWrap) return; dotsWrap.innerHTML=''; for(let d=0; d<N; d++){ const dot=document.createElement('div'); dot.className='hero-dot'+(d===i?' active':''); dot.addEventListener('click',()=>go(d)); dotsWrap.appendChild(dot); } }
-      btnPrev?.addEventListener('click', ()=> go(i-1));
-      btnNext?.addEventListener('click', ()=> go(i+1));
-      function loop(){ if(paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; go(i+1); setTimeout(loop, 4500); }
-      wrap?.addEventListener('mouseenter', ()=> paused = true);
-      wrap?.addEventListener('mouseleave', ()=> { paused = false; setTimeout(loop, 4500); });
-      layout(); setTimeout(loop, 4500);
-    })();
-
-    // HOME rows init
-    function bootHomeRows(){
-      const fast = PRODUCTS.filter(p=>p.readyNow);
-      const slow = PRODUCTS.filter(p=>!p.readyNow);
-      const trend = PRODUCTS.filter(p=>p.tags?.includes('trend') || p.tags?.includes('hit'));
-      renderRow('row-fast', fast);
-      renderRow('row-slow', slow);
-      renderRow('row-trend', trend);
-      bindRowScrollers();
-      autoScrollRow('row-fast', 3200);
-      autoScrollRow('row-slow', 3400);
-      autoScrollRow('row-trend', 3000);
-    }
-
-    // Hero search → products
-    const heroSearch=$('#heroSearch'), searchInputHome=$('#searchInputHome');
-    heroSearch?.addEventListener('submit',()=>{ const val=searchInputHome.value.trim(); if(val) localStorage.setItem('selekti_q_prefill',val); });
-
-    // Quick chips → products
-    $$('.chip').forEach(ch=> ch.addEventListener('click', ()=>{
-      const key=ch.dataset.chip;
-      if(key==='fast'){ localStorage.setItem('selekti_tab_prefill','all'); localStorage.setItem('selekti_stock_only','1'); }
-      else { localStorage.setItem('selekti_tab_prefill', key); localStorage.removeItem('selekti_stock_only'); }
-      location.hash='#products';
-    }));
-
-    // PRODUCTS page
-    const resultsProducts=$('#resultsProducts'), emptyProducts=$('#emptyProducts'), searchInputProducts=$('#searchInputProducts'), clearSearchProducts=$('#clearSearchProducts'), stockFilter=$('#filterStock'), slowFilter=$('#filterSlow'), subneedsBox=$('#subneeds');
-    const tabsProducts=document.querySelectorAll('#route-products .tab');
-    let currentTab='all', qProducts=''; let selectedSubneeds=new Set();
-
-    function drawSubneeds(cat){
-      subneedsBox.innerHTML='';
-      const list = SUBNEEDS[cat] || [];
-      list.forEach(sn=>{
-        const id='sn_'+sn;
-        const wrap=document.createElement('label');
-        wrap.className='inline-flex items-center gap-2 text-sm';
-        wrap.innerHTML=`<input type="checkbox" data-sn="${sn}" id="${id}"> ${sn.charAt(0).toUpperCase()+sn.slice(1)}`;
-        subneedsBox.appendChild(wrap);
-      });
-      subneedsBox.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
-        cb.addEventListener('change',()=>{
-          const key=cb.getAttribute('data-sn');
-          if(cb.checked) selectedSubneeds.add(key); else selectedSubneeds.delete(key);
-          renderProductsPage();
-        });
-      });
-    }
-
-    function readPrefill(){
-      const pf=localStorage.getItem('selekti_q_prefill');
-      if(pf && location.hash==='#products'){ searchInputProducts.value=pf; qProducts=pf; localStorage.removeItem('selekti_q_prefill'); }
-
-      const t=localStorage.getItem('selekti_tab_prefill');
-      if(t && location.hash==='#products'){ currentTab=t; tabsProducts.forEach(x=>x.classList.remove('active')); document.querySelector(`#route-products .tab[data-tab="${t}"]`)?.classList.add('active'); drawSubneeds(t); localStorage.removeItem('selekti_tab_prefill'); }
-
-      const sOnly=localStorage.getItem('selekti_stock_only');
-      if(sOnly && location.hash==='#products'){ stockFilter.checked=true; slowFilter.checked=false; localStorage.removeItem('selekti_stock_only'); }
-
-      const slowOnly=localStorage.getItem('selekti_slow_only');
-      if(slowOnly && location.hash==='#products'){ slowFilter.checked=true; stockFilter.checked=false; localStorage.removeItem('selekti_slow_only'); }
-    }
-
-    function renderProductsPage(){
-      const term=(qProducts||'').toLowerCase().trim();
-      const list=PRODUCTS.filter(p=>{
-        const inCat=currentTab==='all'||p.cat===currentTab;
-        const inQ=!term||[p.title,labelCat(p.cat),(p.needs||[]).join(' '),(p.tags||[]).join(' ')].join(' ').toLowerCase().includes(term);
-        const inStock = stockFilter?.checked ? p.readyNow : true;
-        const inSlow  = slowFilter?.checked  ? !p.readyNow : true;
-        const inSub = selectedSubneeds.size===0 || (p.needs||[]).some(n=>selectedSubneeds.has(n));
-        return inCat&&inQ&&inStock&&inSlow&&inSub;
-      });
-      resultsProducts.innerHTML=''; if(list.length===0){ emptyProducts.classList.remove('hidden'); return; }
-      emptyProducts.classList.add('hidden');
-      resultsProducts.innerHTML=list.map(p=>productCard(p,false)).join('');
-      wireProductButtons();
-    }
-
-    searchInputProducts?.addEventListener('input',()=>{ qProducts=searchInputProducts.value; renderProductsPage(); });
-    clearSearchProducts?.addEventListener('click',()=>{ qProducts=''; searchInputProducts.value=''; renderProductsPage(); });
-    stockFilter?.addEventListener('change',()=>{ if(stockFilter.checked) slowFilter.checked=false; renderProductsPage(); });
-    slowFilter?.addEventListener('change',()=>{ if(slowFilter.checked) stockFilter.checked=false; renderProductsPage(); });
-    tabsProducts.forEach(t=> t.addEventListener('click', ()=>{ tabsProducts.forEach(x=>x.classList.remove('active')); t.classList.add('active'); currentTab=t.dataset.tab; selectedSubneeds.clear(); drawSubneeds(currentTab); renderProductsPage(); }));
-
-    // Buttons on cards
-    function requireProfileOr(fn){ return (...args)=>{ if(!hasProfile()){ openSheet('sheet-auth'); return; } fn(...args); }; }
-
-    function wireProductButtons(){
-      $$('.wish-add').forEach(btn=> btn.onclick = requireProfileOr(()=>{
-        const p=PRODUCTS.find(x=>x.id===btn.dataset.id); if(!p) return;
-        addWish({title:p.title,url:p.url,img:p.img||IMG_FALLBACK,cat:labelCat(p.cat),eta:p.readyNow?'2–3 hverdage':estDateRange(p.minDays,p.maxDays),price:p.price});
-        openSheet('sheet-saved');
-      }));
-      $$('.buy-now').forEach(btn=> btn.onclick = requireProfileOr(()=>{ const p=PRODUCTS.find(x=>x.id===btn.dataset.id); if(!p) return; addToCart({id:p.id,title:p.title,img:p.img||IMG_FALLBACK,cat:labelCat(p.cat),readyNow:p.readyNow,minDays:p.minDays,maxDays:p.maxDays}); }));
-      $$('.video-btn').forEach(btn=> btn.onclick = ()=>{ const src=btn.dataset.video; const el=$('#video-el'); const s=$('#video-src'); if(s && el){ s.src=src||s.src; el.load(); } openSheet('sheet-video'); });
-      $$('.gift-btn').forEach(btn=> btn.onclick = requireProfileOr(()=>{ const p=PRODUCTS.find(x=>x.id===btn.dataset.id); if(!p) return; const eta=p.readyNow?'2–3 hverdage':estDateRange(p.minDays,p.maxDays); openGiftWith({title:p.title,url:p.url,img:p.img||IMG_FALLBACK,eta}); }));
-      $$('.plan-btn').forEach(btn=> btn.onclick = requireProfileOr(()=>{ const p=PRODUCTS.find(x=>x.id===btn.dataset.id); if(!p) return; openDeliveryPlanner([p]); }));
-
-      // Why toggler
-      $$('.why-btn').forEach(btn=> btn.onclick = ()=>{ const id='why_'+btn.dataset.id; const el=document.getElementById(id); if(el) el.classList.toggle('hidden'); });
-
-      // Quick actions trigger
-      $$('.qa-trigger').forEach(btn=> btn.onclick = ()=>{ const p=PRODUCTS.find(x=>x.id===btn.dataset.id); if(!p) return; showQuickActions(p); });
-    }
-
-    // Home rows + auto scroll boot
-    function boot(){ bootHomeRows(); if(location.hash==='#products') bootProducts(); updateWishCount(); renderSaved(); updateCartCount(); renderCart(); renderSavedSearches(); maybeShowPersonalized(); }
-    function bootProducts(){ readPrefill(); drawSubneeds(currentTab); renderProductsPage(); }
-
-    // Wishlist rendering + Insights
-    const savedListEl=$('#saved-list'), savedEmptyEl=$('#saved-empty');
-    function renderSaved(){
-      const items=getWishes(); if(!savedListEl||!savedEmptyEl) return;
-      savedListEl.innerHTML='';
-      if(items.length===0){ savedEmptyEl.classList.remove('hidden'); $('#saved-to-cart')?.classList.add('hidden'); $('#saved-plan')?.classList.add('hidden'); return; }
-      savedEmptyEl.classList.add('hidden');
-      $('#saved-to-cart')?.classList.remove('hidden');
-      $('#saved-plan')?.classList.remove('hidden');
-      const plan=getPlan(), range=BOX_RANGES[plan]||null;
-      items.forEach(it=>{
-        const over = range && it.price && it.price>range[1];
-        const card=document.createElement('article'); card.className='bg-white rounded-xl ring-1 ring-black/5 shadow-soft overflow-hidden card-hover';
-        card.innerHTML=`<img src="${it.img||IMG_FALLBACK}" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" alt="${it.title}" class="h-32 w-full object-cover"><div class="p-3"><p class="text-[10px] uppercase tracking-wide text-ink/60">${it.cat||''}</p><h4 class="font-semibold text-sm">${it.title}</h4><div class="mt-1 text-[12px] text-ink/60">${it.eta||''}${it.price?` · DKK ${it.price}`:''}</div>${over?`<div class="mt-1 text-[11px] text-ink/50">Ikke med i mystery-boks (over enhedspris)</div>`:''}<div class="mt-3 flex flex-wrap gap-2"><button class="px-3 py-1.5 rounded-full bg-white ring-1 ring-black/10 text-xs" data-act="remove" data-url="${it.url}" data-title="${it.title}">Fjern</button></div></div>`;
-        savedListEl.appendChild(card);
-      });
-      savedListEl.querySelectorAll('button[data-act="remove"]').forEach(btn=>{
-        const url=btn.getAttribute('data-url'), title=btn.getAttribute('data-title');
-        btn.addEventListener('click',()=> removeWish(url,title));
-      });
-
-      renderWishlistInsights(); // ⬅️ indsæt insights øverst
-    }
-
-    // Insights
-    function getWishlistInsights(){
-      const wishes = getWishes(); if(wishes.length===0) return {totalItems:0};
-      const categories = {};
-      let totalPrice=0;
-      wishes.forEach(w=>{ categories[w.cat]= (categories[w.cat]||0)+1; totalPrice += (w.price||0); });
-      const avgPrice = wishes.length ? totalPrice / wishes.length : 0;
-      const mainCategory = Object.keys(categories).sort((a,b)=>categories[b]-categories[a])[0];
-      const recs = PRODUCTS.filter(p=> !wishes.some(w=>w.title===p.title) && (categories[labelCat(p.cat)]>1 || (p.price||0) <= avgPrice*1.5)).slice(0,6);
-      return {mainCategory, avgPrice, totalItems:wishes.length, recommendations:recs};
-    }
-    function renderWishlistInsights(){
-      const insights=getWishlistInsights(); if(!insights || !insights.totalItems || insights.totalItems<3) return;
-      const savedList = document.getElementById('saved-list');
-      const html = `
-        <div class="col-span-full bg-gradient-to-r from-soft to-blue-50 rounded-2xl p-4 mb-4">
-          <h4 class="font-semibold">💡 Baseret på dine ønsker</h4>
-          <p class="text-sm text-ink/70 mt-1">Du har ${insights.totalItems} ønsker i ${insights.mainCategory||'flere kategorier'}</p>
-          <div class="mt-3 grid grid-cols-2 gap-2">
-            ${insights.recommendations.map(p=>`
-              <button class="text-left p-2 rounded-lg bg-white/80 hover:bg-white qa-rec" data-id="${p.id}">
-                <img src="${p.img}" class="h-12 w-full object-cover rounded" alt="">
-                <p class="text-xs mt-1 line-clamp-2">${p.title}</p>
-              </button>
-            `).join('')}
-          </div>
-        </div>`;
-      savedList.insertAdjacentHTML('afterbegin', html);
-      savedList.querySelectorAll('.qa-rec').forEach(btn=>{
-        btn.addEventListener('click', requireProfileOr(()=>{
-          const p=PRODUCTS.find(x=>x.id===btn.dataset.id); if(!p) return;
-          addWish({title:p.title,url:p.url,img:p.img||IMG_FALLBACK,cat:labelCat(p.cat),eta:p.readyNow?'2–3 hverdage':estDateRange(p.minDays,p.maxDays),price:p.price});
-        }));
-      });
-    }
-
-    // Cart
-    const cartListEl=$('#cart-list'), cartEmptyEl=$('#cart-empty'), cartActionsEl=$('#cart-actions'), cartEtaLabel=$('#cart-eta-label');
-    function addToCart(item){ const all=getCart(); if(!all.some(x=>x.id===item.id)){ all.push(item); setCart(all); } openSheet('sheet-cart'); }
-    function removeFromCart(id){ setCart(getCart().filter(x=>x.id!==id)); }
-    function renderCart(){
-      const items=getCart(); if(!cartListEl||!cartEmptyEl||!cartActionsEl) return;
-      cartListEl.innerHTML='';
-      if(items.length===0){ cartEmptyEl.classList.remove('hidden'); cartActionsEl.classList.add('hidden'); return; }
-      cartEmptyEl.classList.add('hidden'); cartActionsEl.classList.remove('hidden');
-      items.forEach(p=>{
-        const card=document.createElement('article'); card.className='bg-white rounded-xl ring-1 ring-black/5 shadow-soft overflow-hidden card-hover';
-        card.innerHTML = `
-          <img src="${p.img}" onerror="this.onerror=null;this.src='${IMG_FALLBACK}'" alt="${p.title}" class="h-32 w-full object-cover">
-          <div class="p-3">
-            <p class="text-[10px] uppercase tracking-wide text-ink/60">${p.cat}</p>
-            <h4 class="font-semibold text-sm">${p.title}</h4>
-            <div class="mt-1 text-[12px] text-ink/60">${p.readyNow?'Levering: 2–3 hverdage':'Est.: '+estDateRange(p.minDays,p.maxDays)}</div>
-            <div class="mt-3 flex flex-wrap gap-2">
-              <button class="px-3 py-1.5 rounded-full bg-white ring-1 ring-black/10 text-xs" data-remove="${p.id}">Fjern</button>
-            </div>
-          </div>`;
-        cartListEl.appendChild(card);
-      });
-      cartListEl.querySelectorAll('button[data-remove]').forEach(b=> b.addEventListener('click',()=> removeFromCart(b.getAttribute('data-remove'))));
-      const eta = hasSlow(items) ? 'Planlagt levering: se valgte dato' : 'Alle varer: 2–3 hverdage';
-      cartEtaLabel.textContent = eta;
-    }
-
-    // Saved → cart / plan
-    $('#saved-to-cart')?.addEventListener('click', ()=>{
-      const wishes=getWishes(); if(wishes.length===0) return;
-      const current=getCart();
-      wishes.forEach(w=>{
-        const p = PRODUCTS.find(x=>x.title===w.title);
-        const item = p ? {id:p.id,title:p.title,img:p.img||IMG_FALLBACK,cat:labelCat(p.cat),readyNow:p.readyNow,minDays:p.minDays,maxDays:p.maxDays} : {id:'wish_'+Date.now(),title:w.title,img:w.img||IMG_FALLBACK,cat:w.cat,readyNow:false,minDays:14,maxDays:21};
-        if(!current.some(c=>c.id===item.id)) current.push(item);
-      });
-      setCart(current);
-      openSheet('sheet-cart');
-    });
-
-    $('#saved-plan')?.addEventListener('click', ()=>{
-      const wishes=getWishes(); if(wishes.length===0) return;
-      const enrich = wishes.map(w=> PRODUCTS.find(x=>x.title===w.title) || {title:w.title, readyNow:false, minDays:14, maxDays:21});
-      openDeliveryPlanner(enrich);
-    });
-
-    $('#cart-plan')?.addEventListener('click', ()=>{
-      const items=getCart(); if(items.length===0) return;
-      const enrich = items.map(i=> PRODUCTS.find(p=>p.id===i.id) || i);
-      openDeliveryPlanner(enrich);
-    });
-
-    // Gift helper
-    function openGiftWith(obj){
-      const {title,url,img,eta} = obj||{};
-      $('#gift_product_title').value = title||'';
-      $('#gift_product_url').value = url||'';
-      $('#gift_product_img').value = img||'';
-      $('#gift_eta').textContent = eta? `Aktuel ETA: ${eta}` : '';
-      openSheet('sheet-gift');
-    }
-
-    // Delivery Planner
-    function openDeliveryPlanner(items){
-      if(!hasProfile()){ openSheet('sheet-auth'); return; }
-      const info=$('#delivery-info'), input=$('#delivery-date'), hint=$('#delivery-hint'), split=$('#split-ship');
-      const earliest = earliestDateFor(items);
-      const y=earliest.getFullYear(), m=String(earliest.getMonth()+1).padStart(2,'0'), d=String(earliest.getDate()).padStart(2,'0');
-      input.min = `${y}-${m}-${d}`; input.value = input.min;
-      const anySlow = hasSlow(items);
-      info.textContent = anySlow
-        ? 'Der er Verdensfund i din ordre. Vælg leveringsdato – eller del leveringen.'
-        : 'Alle valgte varer er på lager. Levering kan ske allerede om 2–3 hverdage.';
-      hint.textContent = anySlow ? 'Tip: Vælg en dato ≥ 14 dage. “Del leveringen” sender lagerførte varer først.' : 'Tip: Vælg en dato fra om 2 dage for pluk & pak.';
-      split.checked = !anySlow ? false : true;
-      openSheet('sheet-delivery');
-      $('#confirm-delivery').onclick = ()=>{ closeSheet(); alert('Leveringsplan gemt. Fuldfør checkout ved login.'); };
-    }
-
-    // Saved searches
-    const savedSearchesBox = $('#savedSearches');
-    const btnSaveSearchProducts = $('#btnSaveSearchProducts');
-    const btnClearSaved = $('#btnClearSaved');
-    function getSavedSearches(){ return getJSON('selekti_saved_searches',[]); }
-    function setSavedSearches(list){ setJSON('selekti_saved_searches', list); renderSavedSearches(); }
-    function makeLabel({q,tab,stockOnly,slowOnly,subneeds}){ const parts=[]; parts.push(tab==='all'?'Alle':labelCat(tab)); if(q) parts.push('“'+q+'”'); if(stockOnly) parts.push('Hurtig'); if(slowOnly) parts.push('Planlagt'); if((subneeds||[]).length) parts.push(subneeds.join(', ')); return parts.join(' · '); }
-    function addSavedSearch(obj){ const list=getSavedSearches(); const id='ss_'+Date.now(); list.unshift({id, ...obj, createdAt:new Date().toISOString()}); setSavedSearches(list.slice(0,20)); }
-    function removeSavedSearch(id){ setSavedSearches(getSavedSearches().filter(s=>s.id!==id)); }
-    function applySavedSearch(s){
-      localStorage.setItem('selekti_q_prefill', s.q||'');
-      localStorage.setItem('selekti_tab_prefill', s.tab||'all');
-      if(s.stockOnly) localStorage.setItem('selekti_stock_only','1'); else localStorage.removeItem('selekti_stock_only');
-      if(s.slowOnly)  localStorage.setItem('selekti_slow_only','1');  else localStorage.removeItem('selekti_slow_only');
-      location.hash='#products';
-    }
-    function renderSavedSearches(){
-      if(!savedSearchesBox) return; savedSearchesBox.innerHTML='';
-      const list=getSavedSearches();
-      list.forEach(s=>{
-        const el=document.createElement('button'); el.className='chip sm flex items-center gap-2'; el.innerHTML=`${makeLabel(s)} <span data-x="${s.id}" title="Slet" class="ml-1 rounded-full px-1.5 ring-1 ring-black/10 text-[11px]">×</span>`;
-        el.addEventListener('click',(e)=>{ if(e.target.dataset.x){ removeSavedSearch(s.id); e.preventDefault(); return; } applySavedSearch(s); });
-        savedSearchesBox.appendChild(el);
-      });
-      if(list.length===0) savedSearchesBox.innerHTML='<span class="text-xs text-ink/60">Ingen gemte søgninger endnu.</span>';
-    }
-    btnSaveSearchProducts?.addEventListener('click', ()=>{
-      const obj={ q:qProducts, tab:currentTab, stockOnly: !!stockFilter?.checked, slowOnly: !!slowFilter?.checked, subneeds:[...selectedSubneeds] };
-      addSavedSearch(obj);
-    });
-    btnClearSaved?.addEventListener('click', ()=> setSavedSearches([]));
-
-    // Personalized feed
-    function getPersonalizedFeed(){
-      const wishes = getWishes();
-      const cart = getCart();
-      const interestCats = [...new Set([...wishes.map(i=>i.cat), ...cart.map(i=>i.cat)].filter(Boolean))];
-      const personalized = PRODUCTS.filter(p=> interestCats.includes(labelCat(p.cat)) && !wishes.some(w=>w.title===p.title) && !cart.some(c=>c.id===p.id)).slice(0,12);
-      return personalized;
-    }
-    function maybeShowPersonalized(){
-      if(hasProfile() && (getWishes().length + getCart().length) >= 2){
-        const personalized = getPersonalizedFeed();
-        if(personalized.length>0){
-          $('#trend-title').textContent='Tilpasset til dig 💫';
-          $('#trend-sub').textContent='Baseret på dine ønsker og tidligere kig';
-          renderRow('row-trend', personalized);
-        }
-      }
-    }
-
-    // CTA "Se alle Verdensfund"
-    $('#btn-view-all-slow')?.addEventListener('click', ()=>{
-      localStorage.setItem('selekti_tab_prefill','all');
-      localStorage.setItem('selekti_slow_only','1');
-      location.hash='#products';
-    });
-
-    // Needs Assistant logic
-    $('#assistant-toggle')?.addEventListener('click', (e)=>{ const a=$('#needs-assistant'); a.classList.toggle('hidden'); e.stopPropagation(); });
-    document.addEventListener('click', ()=> $('#needs-assistant')?.classList.add('hidden'));
-    document.querySelectorAll('.needs-quick-btn').forEach(btn=>{
-      btn.addEventListener('click', (e)=>{
-        const need = e.currentTarget.dataset.need;
-        $('#needs-assistant')?.classList.add('hidden');
-        switch(need){
-          case 'gift': if(!hasProfile()){ openSheet('sheet-auth'); } else { openGiftWith({}); } break;
-          case 'inspiration': openSwipeInterface(); break;
-          case 'specific': document.getElementById('searchInputHome')?.focus(); break;
-        }
-      });
-    });
-
-    // Swipe Explore
-    let swipeQueue=[], currentSwipeIndex=0;
-    function initSwipeExplore(){
-      document.getElementById('explore-btn')?.addEventListener('click', openSwipeInterface);
-      const likeBtn = document.querySelector('#swipe-explore .swipe-like');
-      const dislikeBtn = document.querySelector('#swipe-explore .swipe-dislike');
-      likeBtn?.addEventListener('click', handleLike);
-      dislikeBtn?.addEventListener('click', handleDislike);
-    }
-    function openSwipeInterface(){
-      // fyld køen (filtrér allerede ønskede)
-      swipeQueue = PRODUCTS.filter(p => !getWishes().some(w => w.title === p.title));
-      currentSwipeIndex = 0;
-      const container = document.getElementById('swipe-explore');
-      container.classList.remove('hidden');
-      showNextSwipeCard();
-    }
-    function closeSwipe(){ document.getElementById('swipe-explore')?.classList.add('hidden'); }
-    function showNextSwipeCard(){
-      const card=document.getElementById('swipe-card');
-      if(currentSwipeIndex >= swipeQueue.length){
-        card.innerHTML = `
-          <div class="h-full grid place-items-center p-8 text-center">
-            <h3 class="text-xl font-bold">Du har set alt! 👀</h3>
-            <p class="mt-2 text-ink/70">Kom tilbage for nye anbefalinger</p>
-            <button onclick="closeSwipe()" class="mt-4 px-6 py-3 rounded-full bg-ink text-white">Fortsæt til hjemmesiden</button>
-          </div>`;
-        return;
-      }
-      const product = swipeQueue[currentSwipeIndex];
-      $('#swipe-img').src = product.img;
-      $('#swipe-title').textContent = product.title;
-      $('#swipe-desc').textContent = `${labelCat(product.cat)} • ${product.readyNow ? '2–3 hverdage' : 'Planlagt levering'}`;
-      setupSwipeGestures();
-    }
-    function setupSwipeGestures(){
-      const card=document.getElementById('swipe-card'); if(!card) return;
-      let startX=0;
-      function ts(e){ startX = e.touches[0].clientX; }
-      function te(e){
-        const endX=e.changedTouches[0].clientX; const diff=startX-endX;
-        if(Math.abs(diff)>50){ if(diff>0) handleDislike(); else handleLike(); }
-      }
-      card.addEventListener('touchstart', ts, {once:true});
-      card.addEventListener('touchend', te, {once:true});
-    }
-    function handleLike(){
-      if(!hasProfile()){ openSheet('sheet-auth'); return; }
-      const product = swipeQueue[currentSwipeIndex];
-      addWish({ title:product.title, url:product.url, img:product.img, cat:labelCat(product.cat), source:'swipe_like', price:product.price, eta:product.readyNow?'2–3 hverdage':estDateRange(product.minDays,product.maxDays) });
-      currentSwipeIndex++; showNextSwipeCard(); updateWishCount();
-    }
-    function handleDislike(){ currentSwipeIndex++; showNextSwipeCard(); }
-
-    // Long-press → quick actions (mobil) + overlay
-    function setupLongPress(){
-      let pressTimer=null;
-      document.addEventListener('touchstart', e=>{
-        const card = e.target.closest('.product-card, .row-card');
-        if(card){
-          pressTimer = setTimeout(()=>{ card.classList.add('long-press'); const id = card.querySelector('[data-id]')?.dataset.id; const p=PRODUCTS.find(x=>x.id===id); if(p) showQuickActions(p); }, 500);
-        }
-      });
-      document.addEventListener('touchend', ()=>{ clearTimeout(pressTimer); document.querySelectorAll('.long-press').forEach(el=>el.classList.remove('long-press')); });
-    }
-    function showQuickActions(product){
-      const overlay=document.createElement('div');
-      overlay.className='fixed inset-0 z-[90] bg-black/50 grid place-items-center';
-      overlay.innerHTML=`
-        <div class="bg-white rounded-2xl p-4 mx-4 w-full max-w-sm">
-          <h4 class="font-semibold">Hurtig handling</h4>
-          <div class="mt-3 grid gap-2">
-            <button class="p-3 rounded-xl bg-soft text-left qa-add-cart">🛒 Tilføj til kurv</button>
-            <button class="p-3 rounded-xl bg-soft text-left qa-add-wish">💝 Tilføj til ønskeliste</button>
-            <button class="p-3 rounded-xl bg-soft text-left qa-share">📤 Del produkt</button>
-          </div>
-          <button class="w-full mt-3 p-3 rounded-xl border border-black/10 qa-cancel">Annuller</button>
-        </div>`;
-      document.body.appendChild(overlay);
-      overlay.querySelector('.qa-cancel').addEventListener('click', ()=> overlay.remove());
-      overlay.querySelector('.qa-add-cart').addEventListener('click', requireProfileOr(()=>{ addToCart({id:product.id,title:product.title,img:product.img||IMG_FALLBACK,cat:labelCat(product.cat),readyNow:product.readyNow,minDays:product.minDays,maxDays:product.maxDays}); overlay.remove(); }));
-      overlay.querySelector('.qa-add-wish').addEventListener('click', requireProfileOr(()=>{ addWish({title:product.title,url:product.url,img:product.img||IMG_FALLBACK,cat:labelCat(product.cat),eta:product.readyNow?'2–3 hverdage':estDateRange(product.minDays,product.maxDays),price:product.price}); overlay.remove(); }));
-      overlay.querySelector('.qa-share').addEventListener('click', ()=>{
-        const data={ title:'Se dette på Selekti', text:product.title, url: product.url && product.url!=='#' ? product.url : location.href };
-        if(navigator.share){ navigator.share(data).catch(()=>{}); } else { navigator.clipboard?.writeText(`${data.title}\n${data.text}\n${data.url}`); alert('Kopieret til udklipsholder'); }
-        overlay.remove();
-      });
-    }
-
-    // Swipe CTA placement (already added in HTML) – done.
-
-    // INIT
-    (function init(){
-      const plan = Number(localStorage.getItem('selekti_box_plan')||0); if(plan) setPlan(plan);
-      bootHomeRows(); if(location.hash==='#products') bootProducts();
-      updateWishCount(); renderSaved(); updateCartCount(); renderCart(); renderSavedSearches();
-      // hero slider already started
-      initSwipeExplore();
-      setupLongPress();
-      maybeShowPersonalized();
-    })();
-  </script>
+  
 </body>
 </html>
