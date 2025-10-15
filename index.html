@@ -60,21 +60,23 @@
         <span class="text-xl font-semibold tracking-tight">Selekti</span>
       </a>
       <nav class="ml-auto hidden md:flex items-center gap-6 text-sm text-ink/80">
-        <a href="#fremhaevet" class="hover:text-ink">Fremhævet</a>
-        <a href="#butikker" class="hover:text-ink">Butikker</a>
-        <a href="#saadan" class="hover:text-ink">Sådan virker det</a>
-        <a href="#sjældne" class="hover:text-ink">Tilbud</a>
-        <a href="#behovsboks" class="hover:text-ink">Behovsboks</a>
+        <a href="butikker.html" class="hover:text-ink">Butikker</a>
+        <a href="#fremhaevet" class="hover:text-ink">Fremhævede</a>
+        <a href="#selekti-plus" class="hover:text-ink">Selekti+</a>
         <a href="#guides" class="hover:text-ink">Guides</a>
         <a href="om-os.html" class="hover:text-ink">Om os</a>
-        <a href="for-butikker.html" class="hover:text-ink text-ink/60">For butikker</a>
+        <a href="bliv-partner.html" class="hover:text-ink text-ink/60">Bliv partner</a>
       </nav>
       <div class="ml-2 flex items-center gap-2">
+        <button id="open-wishlist" class="relative inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium ring-1 ring-black/10" data-open="sheet-favorites">
+          <span>Ønskeliste</span>
+          <span id="wishlist-count" class="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">0</span>
+        </button>
         <button id="open-cart" class="relative h-10 w-10 grid place-items-center rounded-full bg-white ring-1 ring-black/10" aria-label="Kurv">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6h2l2.5 9h9l2-6H7" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
           <span id="cart-count" class="absolute -top-1 -right-1 h-5 min-w-[20px] px-1.5 rounded-full bg-ink text-white text-[11px] font-semibold grid place-items-center">0</span>
         </button>
-        <button id="open-auth" class="hidden md:inline-flex px-4 py-2 rounded-full bg-ink text-white text-sm font-medium shadow-soft">Log ind</button>
+        <button id="open-auth" class="inline-flex items-center justify-center px-3 py-2 text-xs font-medium text-white bg-ink rounded-full shadow-soft md:px-4 md:py-2 md:text-sm">Log ind</button>
       </div>
     </div>
     <div class="border-t border-black/5">
@@ -95,7 +97,7 @@
           <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Hvor vil du shoppe <span class="text-ocean">i dag?</span></h1>
           <p class="mt-3 text-ink/70">Søg på et land, se produktets totalpris med det samme, og lad os håndtere told, moms og papirarbejde for dig.</p>
           <div class="mt-4 grid grid-cols-2 gap-2">
-            <a href="#butikker" class="rounded-full bg-ink text-white px-5 py-3 font-medium text-center">Find butik</a>
+            <a href="butikker.html" class="rounded-full bg-ink text-white px-5 py-3 font-medium text-center">Find butik</a>
             <button class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium" data-open="sheet-estimator">Få totalpris</button>
           </div>
           <p class="mt-2 text-xs text-ink/60">Tilmeld dig Selekti+, hent appen og invitér en ven – så modtager I begge jeres første Mini Behovsboks uden beregning.</p>
@@ -104,14 +106,14 @@
             <button class="px-4 py-3 rounded-xl bg-white ring-1 ring-black/10">Find</button>
           </form>
           <div class="mt-3 flex flex-wrap gap-2 text-xs" id="country-chips">
-            <button class="chip" type="button" data-country="japan">🇯🇵 Japan</button>
-            <button class="chip" type="button" data-country="usa">🇺🇸 USA</button>
-            <button class="chip" type="button" data-country="uk">🇬🇧 UK</button>
-            <button class="chip" type="button" data-country="kina">🇨🇳 Kina</button>
-            <button class="chip" type="button" data-country="sydkorea">🇰🇷 Sydkorea</button>
-            <button class="chip" type="button" data-country="indien">🇮🇳 Indien</button>
+            <button class="chip" type="button" data-country="japan" title="Vis resultater fra Japan">🇯🇵 Japan</button>
+            <button class="chip" type="button" data-country="usa" title="Vis resultater fra USA">🇺🇸 USA</button>
+            <button class="chip" type="button" data-country="uk" title="Vis resultater fra Storbritannien">🇬🇧 UK</button>
+            <button class="chip" type="button" data-country="kina" title="Vis resultater fra Kina">🇨🇳 Kina</button>
+            <button class="chip" type="button" data-country="sydkorea" title="Vis resultater fra Sydkorea">🇰🇷 Sydkorea</button>
+            <button class="chip" type="button" data-country="indien" title="Vis resultater fra Indien">🇮🇳 Indien</button>
           </div>
-          <div id="country-link" class="mt-3"></div>
+          <div id="country-link" class="mt-3" aria-live="polite"></div>
         </div>
         <div class="relative min-h-[260px] md:min-h-[420px]">
           <img alt="Global shopping" class="absolute inset-0 w-full h-full object-cover"
@@ -135,7 +137,7 @@
         <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Fremhævede butikker med eksklusive tilbud</h2>
         <p class="mt-2 text-ink/70 text-sm">Butikker, der investerer i ekstra synlighed, deler deres bedste drops og rabatter direkte på forsiden.</p>
       </div>
-      <a href="#butikker" class="inline-flex items-center gap-2 text-sm font-medium text-ocean">Se alle butikker →</a>
+      <a href="butikker.html" class="inline-flex items-center gap-2 text-sm font-medium text-ocean">Se alle butikker →</a>
     </div>
     <div id="featured-grid" class="mt-6 grid gap-4 md:grid-cols-2"></div>
   </section>
@@ -287,7 +289,7 @@
         <h3 class="text-xl md:text-2xl font-bold tracking-tight">Driver du butik? Bliv synlig for danske shoppere</h3>
         <p class="mt-2 text-sm text-ink/70">Vi hjælper både internationale og danske butikker med at nå nye kunder. Læs mere om kommission, integrationer og fælles kampagner på vores partner-side.</p>
       </div>
-      <a href="for-butikker.html" class="inline-flex items-center justify-center rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Til partneruniverset</a>
+      <a href="bliv-partner.html" class="inline-flex items-center justify-center rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Til partneruniverset</a>
     </div>
   </section>
 
@@ -304,7 +306,7 @@
       <div>
         <h4 class="font-semibold">Navigation</h4>
         <ul class="mt-3 space-y-2">
-          <li><a href="#butikker" class="hover:underline">Butikker</a></li>
+          <li><a href="butikker.html" class="hover:underline">Butikker</a></li>
           <li><a href="#saadan" class="hover:underline">Sådan virker det</a></li>
           <li><a href="#behovsboks" class="hover:underline">Behovsboks</a></li>
           <li><a href="om-os.html" class="hover:underline">Om os</a></li>
@@ -366,6 +368,21 @@
   </div>
 
   <!-- Bestil via link (kunde) -->
+  <div id="sheet-favorites" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
+    <div class="p-4 border-b border-black/5 flex items-center justify-between">
+      <h3 class="font-semibold">Din ønskeliste</h3>
+      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
+    </div>
+    <div class="p-4">
+      <div id="wishlist-empty" class="text-sm text-ink/60">Din ønskeliste er tom.</div>
+      <div id="wishlist-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      <div id="wishlist-actions" class="hidden mt-4 flex flex-wrap items-center justify-between gap-2">
+        <button class="rounded-full bg-ink text-white px-5 py-2.5 font-medium shadow-soft" data-open="sheet-wishlist">Forespørg totalpris</button>
+        <button id="wishlist-clear" class="rounded-full bg-white ring-1 ring-black/10 px-4 py-2.5 text-sm">Ryd ønskeliste</button>
+      </div>
+    </div>
+  </div>
+
   <div id="sheet-wishlist" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
     <div class="p-4 border-b border-black/5 flex items-center justify-between">
       <h3 class="font-semibold">Bestil via produktlink</h3>
