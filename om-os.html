@@ -1,0 +1,252 @@
+diff --git a/om-os.html b/om-os.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..2c5755422fb8a8b3bdb7e6f558f2c010c2cf0923
+--- /dev/null
++++ b/om-os.html
+@@ -0,0 +1,246 @@
++<!DOCTYPE html>
++<html lang="da">
++<head>
++  <meta charset="utf-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1" />
++  <title>Om Selekti – Levering, totalpriser og Selekti+</title>
++  <meta name="description" content="Lær hvordan Selekti beregner totalpriser, håndterer levering og hvad du får med Selekti+. Se fragtzoner, Behovsboks-størrelser og vores kundeløfte." />
++  <meta name="author" content="Selekti" />
++  <link rel="preconnect" href="https://fonts.googleapis.com"/>
++  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
++  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
++  <script src="https://cdn.tailwindcss.com"></script>
++  <script src="app.js" defer></script>
++  <script>
++    tailwind.config = {
++      theme: {
++        extend: {
++          colors: { ink:'#0f172a', soft:'#f6f8fb', mint:'#10b981', ocean:'#0ea5e9', grape:'#7c3aed', amber:'#f59e0b' },
++          boxShadow: { soft:'0 12px 40px rgba(2,6,23,.10)', lift:'0 18px 60px rgba(2,6,23,.16)' },
++          maxWidth: { app:'1180px' },
++          fontFamily: { sans:['Inter','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
++          borderRadius: { xl2:'1.25rem' }
++        }
++      }
++    }
++  </script>
++  <style>
++    html,body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif;color:#0f172a}
++    ::selection{background:#dbeafe}
++    .container{max-width:1180px}
++    .glass{background:rgba(255,255,255,.75);backdrop-filter:blur(10px)}
++  </style>
++</head>
++<body class="bg-gradient-to-b from-white via-soft to-soft" data-page="info">
++  <header class="sticky top-0 z-40 glass border-b border-black/5">
++    <div class="container mx-auto px-4 py-3 flex items-center gap-3">
++      <a href="index.html" class="flex items-center gap-2">
++        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
++        <span class="text-xl font-semibold tracking-tight">Selekti</span>
++      </a>
++      <nav class="ml-auto hidden md:flex items-center gap-6 text-sm text-ink/80">
++        <a href="index.html#butikker" class="hover:text-ink">Butikker</a>
++        <a href="index.html#saadan" class="hover:text-ink">Sådan virker det</a>
++        <a href="index.html#sjældne" class="hover:text-ink">Tilbud</a>
++        <a href="index.html#behovsboks" class="hover:text-ink">Behovsboks</a>
++        <a href="om-os.html" class="hover:text-ink text-ocean font-medium">Om os</a>
++        <a href="for-butikker.html" class="hover:text-ink text-ink/60">For butikker</a>
++      </nav>
++    </div>
++  </header>
++
++  <main>
++    <section class="container mx-auto px-4 pt-8">
++      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10">
++        <p class="text-[11px] uppercase tracking-wide text-ink/60">Om Selekti</p>
++        <h1 class="text-3xl md:text-4xl font-extrabold leading-tight">Totalpris, fri fragt med Selekti+ og Behovsbokse forklaret</h1>
++        <p class="mt-3 text-ink/70 max-w-2xl text-sm md:text-base">Vi gør global shopping enkelt for danske kunder. På denne side finder du detaljer om vores leveringszoner, hvordan vi beregner totalpriser, og hvilke fordele Selekti+ samt Behovsboks giver dig.</p>
++        <div class="mt-5 flex flex-wrap gap-2">
++          <a href="index.html" class="rounded-full bg-ink text-white px-5 py-3 text-sm font-medium">Tilbage til forsiden</a>
++          <a href="#levering" class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 text-sm font-medium">Hop til levering</a>
++        </div>
++      </div>
++    </section>
++
++    <section id="levering" class="container mx-auto px-4 py-10">
++      <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
++        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
++          <div>
++            <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Leveringszoner & takster</h2>
++            <p class="mt-2 text-ink/70 text-sm max-w-xl">Priserne her er kundens andel pr. ordre uden Selekti+. Taksterne afspejler aktuelle fly- og toldomkostninger. Selekti+ Standard (249 kr./md) dækker fri fragt i Zone 1-2, mens Selekti+ Global (329 kr./md) dækker alle zoner.</p>
++          </div>
++          <div class="text-xs text-ink/60 bg-soft px-3 py-2 rounded-full ring-1 ring-black/10">Alle priser i DKK • Oplyst pr. ordre</div>
++        </div>
++        <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4 text-sm">
++          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/60">
++            <h3 class="font-semibold">Zone 1 – EU & Norden</h3>
++            <ul class="mt-2 space-y-1 text-ink/70">
++              <li>0-0,5 kg: 79 kr.</li>
++              <li>0,5-1 kg: 99 kr.</li>
++              <li>1-2 kg: 139 kr.</li>
++            </ul>
++            <p class="mt-3 text-xs text-ink/60">Standard levering 2-4 hverdage.</p>
++          </article>
++          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/60">
++            <h3 class="font-semibold">Zone 2 – Storbritannien</h3>
++            <ul class="mt-2 space-y-1 text-ink/70">
++              <li>0-0,5 kg: 89 kr.</li>
++              <li>0,5-1 kg: 119 kr.</li>
++              <li>1-2 kg: 159 kr.</li>
++            </ul>
++            <p class="mt-3 text-xs text-ink/60">Standard levering 4-8 hverdage.</p>
++          </article>
++          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/60">
++            <h3 class="font-semibold">Zone 3 – USA & Canada</h3>
++            <ul class="mt-2 space-y-1 text-ink/70">
++              <li>0-0,5 kg: 139 kr.</li>
++              <li>0,5-1 kg: 189 kr.</li>
++              <li>1-2 kg: 239 kr.</li>
++            </ul>
++            <p class="mt-3 text-xs text-ink/60">Standard levering 5-9 hverdage.</p>
++          </article>
++          <article class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/60">
++            <h3 class="font-semibold">Zone 4 – Asien & resten</h3>
++            <ul class="mt-2 space-y-1 text-ink/70">
++              <li>0-0,5 kg: 159 kr.</li>
++              <li>0,5-1 kg: 219 kr.</li>
++              <li>1-2 kg: 279 kr.</li>
++            </ul>
++            <p class="mt-3 text-xs text-ink/60">Standard levering 6-12 hverdage.</p>
++          </article>
++        </div>
++        <div class="mt-6 rounded-2xl bg-soft/80 ring-1 ring-black/5 p-5 text-sm">
++          <p class="font-semibold">Selekti+ medlemsfordele</p>
++          <ul class="mt-2 space-y-1 text-ink/70">
++            <li>• Fri fragt på alle zoner og prioriteret behandling</li>
++            <li>• Første Mini Behovsboks gratis til dig og den ven du inviterer via appen</li>
++            <li>• Del Selekti+ med op til fire familiekonti</li>
++          </ul>
++          <div class="mt-4 grid gap-2 text-xs text-ink/60 md:text-sm md:text-ink/70">
++            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Selekti+ Standard – 249 kr./md: Fri fragt i Zone 1-2 + 2 Mini Behovsbokse pr. år</div>
++            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Selekti+ Global – 329 kr./md: Fri fragt i alle zoner + 3 Mini Behovsbokse pr. år</div>
++          </div>
++        </div>
++      </div>
++    </section>
++
++    <section class="container mx-auto px-4 pb-10">
++      <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10 grid md:grid-cols-2 gap-6 items-start">
++        <div>
++          <h2 class="text-2xl font-bold tracking-tight">Sådan sammensætter vi totalprisen</h2>
++          <p class="mt-2 text-sm text-ink/70">Når du ser totalprisen hos Selekti, inkluderer vi alt der vedrører produktet. Levering vælger du selv ved checkout – eller får den helt gratis med Selekti+.</p>
++          <ul class="mt-4 space-y-2 text-sm text-ink/80">
++            <li>• Produktpris fra butikken konverteret til DKK</li>
++            <li>• Eventuel told baseret på varekategori og oprindelsesland</li>
++            <li>• Moms og compliance-håndtering når det kræves</li>
++            <li>• Selekti servicefee (logistik, kundeservice, garanti)</li>
++          </ul>
++          <p class="mt-4 text-xs text-ink/60">Specialvarer (f.eks. meget skrøbelige produkter) kan kræve ekstra håndtering. Det oplyses altid før du bekræfter købet.</p>
++        </div>
++        <div class="rounded-2xl bg-soft/70 ring-1 ring-black/10 p-5 space-y-4 text-sm">
++          <div class="rounded-xl bg-white ring-1 ring-black/10 p-4">
++            <p class="text-[11px] uppercase tracking-wide text-ink/60">Eksempel</p>
++            <h3 class="text-lg font-semibold">Sneakers fra Tokyo Streetwear</h3>
++            <ul class="mt-2 space-y-1 text-ink/70">
++              <li>Produktpris: 1.299 kr.</li>
++              <li>Told & moms: 650 kr.</li>
++              <li>Selekti service & import: 263 kr.</li>
++              <li><span class="font-semibold">Totalpris produkt: 2.212 kr.</span></li>
++            </ul>
++          </div>
++          <div class="rounded-xl bg-white ring-1 ring-black/10 p-4">
++            <p class="text-[11px] uppercase tracking-wide text-ink/60">Behovsboks størrelser</p>
++            <ul class="mt-2 space-y-1 text-ink/70">
++              <li>Mini: 3-4 produkter – perfekt introduktion</li>
++              <li>Favorit: 5-7 produkter – kan tilpasses hver måned</li>
++              <li>Maxi: udvidet udvalg – oplagt som gave til familie/venner</li>
++            </ul>
++            <p class="mt-3 text-xs text-ink/60">Selekti+ medlemmer kan vælge Behovsbokse, der matcher deres søgninger og ønskelister.</p>
++          </div>
++        </div>
++      </div>
++    </section>
++
++    <section id="guides" class="container mx-auto px-4 pb-10">
++      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10">
++        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
++          <div>
++            <p class="text-[11px] uppercase tracking-wide text-ink/60">Video guides</p>
++            <h2 class="text-2xl font-bold tracking-tight">Partnerindsigt før du bestiller</h2>
++            <p class="mt-2 text-sm text-ink/70">Se korte guides fra vores verificerede partnere om drops, størrelser og pleje, så du kan handle med ro i maven.</p>
++          </div>
++          <a href="index.html#guides" class="inline-flex items-center gap-2 text-sm font-medium text-ocean">Tilbage til forsiden →</a>
++        </div>
++        <div id="video-guides" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
++      </div>
++    </section>
++
++    <section class="container mx-auto px-4 pb-12">
++      <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10">
++        <h2 class="text-2xl font-bold tracking-tight">FAQ – ofte stillede spørgsmål</h2>
++        <div class="mt-5 grid md:grid-cols-2 gap-4 text-sm text-ink/80">
++          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-white/80">
++            <h3 class="font-semibold">Hvornår betaler jeg for levering?</h3>
++            <p class="mt-2">Du vælger leveringsmetode i checkout. Er du Selekti+ medlem, er fragt inkluderet – ellers betaler du den takst, der passer til vægt og zone.</p>
++          </article>
++          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-white/80">
++            <h3 class="font-semibold">Hvordan fungerer retur?</h3>
++            <p class="mt-2">Kontakt vores support inden for 14 dage fra levering. Vi udsender returlabel baseret på dit valg (pakkeshop eller afhentning). Selekti+ medlemmer får gratis retur på standardvarer.</p>
++          </article>
++          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-white/80">
++            <h3 class="font-semibold">Kan jeg kombinere danske og internationale butikker?</h3>
++            <p class="mt-2">Ja, du kan lægge varer fra både danske og internationale butikker i samme kurv. Totalprisen beregnes for hvert produkt, og du vælger levering samlet.</p>
++          </article>
++          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-white/80">
++            <h3 class="font-semibold">Hvordan inviterer jeg familie til Selekti+?</h3>
++            <p class="mt-2">Efter tilmelding kan du sende invitationer fra din profil. Hver person får egen login og kan bygge deres egne ønskelister og Behovsbokse.</p>
++          </article>
++        </div>
++      </div>
++    </section>
++  </main>
++
++  <footer class="border-t border-black/5 bg-white">
++    <div class="container mx-auto px-4 py-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
++      <div>
++        <div class="flex items-center gap-2">
++          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
++          <span class="font-semibold">Selekti</span>
++        </div>
++        <p class="mt-3 text-ink/70">Danmarks shoppinghub med totalpriser, Selekti+ og Behovsbokse.</p>
++      </div>
++      <div>
++        <h4 class="font-semibold">Navigation</h4>
++        <ul class="mt-3 space-y-2">
++          <li><a href="index.html#butikker" class="hover:underline">Butikker</a></li>
++          <li><a href="index.html#behovsboks" class="hover:underline">Behovsboks</a></li>
++          <li><a href="om-os.html" class="hover:underline">Om os</a></li>
++          <li><a href="for-butikker.html" class="hover:underline">For butikker</a></li>
++        </ul>
++      </div>
++      <div>
++        <h4 class="font-semibold">Kontakt</h4>
++        <ul class="mt-3 space-y-2 text-ink/70">
++          <li>Support: <a href="mailto:hello@selekti.dk" class="underline">hello@selekti.dk</a></li>
++          <li>Telefon: +45 89 88 77 11 (hverdage 9-17)</li>
++          <li>Adresse: Selekti ApS, Vesterbrogade 22, 1620 København V</li>
++        </ul>
++      </div>
++      <div>
++        <h4 class="font-semibold">Hold dig opdateret</h4>
++        <form name="om-os-news" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-3 grid grid-cols-[1fr_auto] gap-2">
++          <input type="hidden" name="form-name" value="om-os-news" />
++          <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
++          <input required type="email" name="email" placeholder="din@email.dk" class="rounded-xl ring-1 ring-black/10 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200" />
++          <button class="px-4 py-2 rounded-full bg-ink text-white">Tilmeld</button>
++        </form>
++        <p class="mt-2 text-xs text-ink/60">© <span id="year"></span> Selekti. Alle rettigheder forbeholdes.</p>
++      </div>
++    </div>
++  </footer>
++
++  <script>
++    document.querySelectorAll('#year').forEach(el=> el.textContent = new Date().getFullYear());
++  </script>
++</body>
++</html>
