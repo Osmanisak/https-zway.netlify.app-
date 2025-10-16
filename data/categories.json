@@ -1,10 +1,14 @@
 [
-  {"id":"tøj","label":"Tøj"},
-  {"id":"sneakers","label":"Sneakers"},
-  {"id":"lyd","label":"Lyd"},
-  {"id":"gadget","label":"Gadgets"},
-  {"id":"beauty","label":"Beauty"},
-  {"id":"home","label":"Bolig"},
-  {"id":"design","label":"Design"},
-  {"id":"elektronik","label":"Elektronik"}
+  {"id":"sensor","label":"Sensor"},
+  {"id":"dimmer","label":"Dæmper"},
+  {"id":"switch","label":"Kontakt"},
+  {"id":"thermostat","label":"Termostat"},
+  {"id":"plug","label":"Smart plug"},
+  {"id":"controller","label":"Controller"},
+  {"id":"roller","label":"Rullegardin"},
+  {"id":"module","label":"I/O modul"},
+  {"id":"repeater","label":"Repeater"},
+  {"id":"siren","label":"Sirene"},
+  {"id":"keypad","label":"Keypad"},
+  {"id":"remote","label":"Fjernbetjening"}
 ]

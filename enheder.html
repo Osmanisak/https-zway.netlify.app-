@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enheder – Z-Wave Compatibility Hub</title>
+  <meta name="description" content="Filtrer Z-Wave enheder efter type, frekvens, chip og dansk kompatibilitet. Find produkter der virker i Danmark.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles/base.css">
+</head>
+<body data-page="directory">
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand-mark" href="/">
+        <img src="/assets/logo-et.svg" alt="ET logo">
+        <span>Z-Wave Compatibility Hub</span>
+      </a>
+      <nav class="primary-nav">
+        <a href="/">Hjem</a>
+        <a href="/enheder.html" class="active">Enheder</a>
+        <a href="/community.html">Community</a>
+        <a href="/om-os.html">Om os</a>
+      </nav>
+      <form id="global-search" class="input-group" role="search">
+        <input id="global-search-input" type="search" placeholder="Søg efter enhed eller kompatibilitet" aria-label="Global søgning">
+        <button class="btn ghost" type="submit">Søg</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top:3rem">
+    <header style="margin-bottom:2rem">
+      <h1>Find kompatible Z-Wave enheder</h1>
+      <p class="lead">Filtrer efter frekvens, dansk support, chip-generation og anmeldelser for at finde den rigtige enhed til dit hjem.</p>
+      <div class="tooltip-tip" data-tooltip="Filtrene opdateres live, og URL'en gemmer dine valg.">Klik for at nulstille <button id="directory-reset" class="btn ghost small" type="button">Nulstil filtre</button></div>
+    </header>
+
+    <section class="filters-panel">
+      <div class="filter-group">
+        <label for="directory-search">Søg</label>
+        <input id="directory-search" type="search" placeholder="Søg efter navn, mærke eller funktion" autocomplete="off">
+        <div class="search-suggestions" id="directory-suggestions"></div>
+      </div>
+      <div class="filter-group">
+        <span>Enhedstype</span>
+        <div class="filter-chips" id="filter-types"></div>
+      </div>
+      <div class="filter-group">
+        <span>Z-Wave chip</span>
+        <div class="filter-chips" id="filter-chip">
+          <button class="filter-chip" data-chip="100">100</button>
+          <button class="filter-chip" data-chip="200">200</button>
+          <button class="filter-chip" data-chip="300">300</button>
+          <button class="filter-chip" data-chip="500">500</button>
+          <button class="filter-chip" data-chip="700">700</button>
+          <button class="filter-chip" data-chip="800">800</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span>Frekvens</span>
+        <div class="filter-chips" id="filter-frequency">
+          <button class="filter-chip" data-frequency="eu868">EU 868.4 MHz</button>
+          <button class="filter-chip" data-frequency="us908">US 908 MHz (advarsel)</button>
+          <button class="filter-chip" data-frequency="other">Andre</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span>Dansk kompatibilitet</span>
+        <div class="filter-chips" id="filter-compatibility">
+          <button class="filter-chip" data-compat="home-assistant">Home Assistant</button>
+          <button class="filter-chip" data-compat="iobroker">IOBroker</button>
+          <button class="filter-chip" data-compat="fibaro">Fibaro HC</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span>Mærke</span>
+        <div class="filter-chips" id="filter-brand"></div>
+      </div>
+      <div class="filter-group">
+        <span>Prisniveau</span>
+        <div class="filter-chips" id="filter-price">
+          <button class="filter-chip" data-price="low">Under 400 kr.</button>
+          <button class="filter-chip" data-price="mid">400 – 800 kr.</button>
+          <button class="filter-chip" data-price="high">Over 800 kr.</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span>Bedømmelse</span>
+        <div class="filter-chips" id="filter-rating">
+          <button class="filter-chip" data-rating="4.5">4.5+ stjerner</button>
+          <button class="filter-chip" data-rating="4">4+ stjerner</button>
+          <button class="filter-chip" data-rating="3.5">3.5+ stjerner</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label for="directory-sort">Sortér</label>
+        <select id="directory-sort">
+          <option value="featured">Fremhævet først</option>
+          <option value="price-asc">Pris – lav til høj</option>
+          <option value="price-desc">Pris – høj til lav</option>
+          <option value="rating">Bedste anmeldelser</option>
+          <option value="newest">Nyeste tilføjet</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="advanced-search">Avanceret søgning</label>
+        <textarea id="advanced-search" placeholder="Skriv fx: sensor med 700-serie og dansk support"></textarea>
+        <button class="btn ghost small" id="advanced-search-btn" type="button">Anvend tekstsøgning</button>
+      </div>
+    </section>
+
+    <section style="margin-top:2rem">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+        <div><strong id="directory-count">0</strong> enheder fundet</div>
+        <button class="btn primary" id="save-search" type="button">Gem filtre som link</button>
+      </div>
+      <div id="directory-grid" class="grid cols-3" style="margin-top:1.5rem"></div>
+      <div id="directory-empty" class="empty-state" hidden>
+        <img src="/assets/illustrations/magpie.svg" alt="Magpie maskot">
+        <h3>Ingen resultater</h3>
+        <p>Prøv at justere frekvens eller pris. Populære valg:</p>
+        <div class="search-suggestions" id="empty-suggestions"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container cols">
+      <div>
+        <a class="brand-mark" href="/">
+          <img src="/assets/logo-et.svg" alt="ET logo">
+          <span>Z-Wave Compatibility Hub</span>
+        </a>
+        <p>Community-drevet guide til Z-Wave enheder, frekvenser og danske erfaringer.</p>
+      </div>
+      <div>
+        <h4>Hurtig navigation</h4>
+        <ul>
+          <li><a href="/">Hjem</a></li>
+          <li><a href="/community.html">Community</a></li>
+          <li><a href="/om-os.html">Om os</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontakt</h4>
+        <ul>
+          <li><a href="mailto:hej@zwavehub.dk">hej@zwavehub.dk</a></li>
+          <li><a href="/om-os.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toasts" class="toast-container" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

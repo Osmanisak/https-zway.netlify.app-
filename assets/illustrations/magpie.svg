@@ -1,24 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 160 120" role="img" aria-labelledby="title desc">
-  <title id="title">Selekti maskot</title>
-  <desc id="desc">Illustration af en skinnende skade, Selektis maskot</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+  <title id="title">Z-Wave Companion maskot</title>
+  <desc id="desc">Illustration af en venlig skade, der repræsenterer Z-Wave Compatibility Hub fællesskabet</desc>
   <defs>
     <linearGradient id="wing" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0ea5e9" />
-      <stop offset="100%" stop-color="#10b981" />
-    </linearGradient>
-    <linearGradient id="belly" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#f8fafc" />
-      <stop offset="100%" stop-color="#dbeafe" />
+      <stop offset="0%" stop-color="#2c5530" />
+      <stop offset="100%" stop-color="#8fb996" />
     </linearGradient>
   </defs>
-  <rect width="160" height="120" rx="24" fill="#ffffff" />
-  <g transform="translate(20 20)">
-    <ellipse cx="52" cy="64" rx="44" ry="26" fill="#0f172a" opacity="0.05" />
-    <path d="M80 18c10 6 16 16 16 28 0 20-18 36-44 36-8 0-22-3-30-8 18-12 18-34 14-45 8-5 30-6 44-11z" fill="url(#wing)" />
-    <path d="M36 12c8-8 28-12 42-8 4 1 4 6 0 7-20 5-28 12-32 22-2 4-3 9-3 14-9-8-14-22-7-35z" fill="#0f172a" />
-    <path d="M62 44c-4 14-16 26-30 32-5-5-8-12-8-20 0-14 10-26 24-30 8 4 14 10 14 18z" fill="url(#belly)" />
-    <circle cx="84" cy="24" r="10" fill="#0f172a" />
-    <circle cx="88" cy="22" r="3" fill="#f8fafc" />
-    <path d="M100 58l16 14c2 2 1 6-2 6h-6l-12-12z" fill="#0ea5e9" />
-  </g>
+  <circle cx="60" cy="60" r="58" fill="#f8f9fa" stroke="#2d3047" stroke-width="2" />
+  <path d="M32 66c10 2 24 4 34-2 12-7 20-23 16-34-5-13-22-17-33-9-6 4-10 11-11 17" fill="#2d3047" />
+  <path d="M42 70c12 10 33 18 46 6 6-5 9-15 6-22-3-7-11-9-19-6" fill="url(#wing)" />
+  <circle cx="66" cy="36" r="6" fill="#ffffff" />
+  <circle cx="64" cy="35" r="3" fill="#2d3047" />
+  <path d="M45 80c8 6 20 12 32 10" stroke="#2d3047" stroke-width="4" stroke-linecap="round" fill="none" />
+  <path d="M26 88c12 6 44 18 66 4" stroke="#4a7c59" stroke-width="3" stroke-linecap="round" fill="none" />
 </svg>

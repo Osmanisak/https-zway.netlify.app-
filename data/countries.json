@@ -1,8 +1,10 @@
 [
-  {"code":"JP","label":"Japan","slug":"japan"},
-  {"code":"KR","label":"Sydkorea","slug":"sydkorea"},
-  {"code":"UK","label":"Storbritannien","slug":"uk"},
-  {"code":"US","label":"USA","slug":"usa"},
-  {"code":"CN","label":"Kina","slug":"kina"},
-  {"code":"IN","label":"Indien","slug":"indien"}
+  {"code":"DK","label":"Danmark"},
+  {"code":"EU","label":"EU"},
+  {"code":"NO","label":"Norge"},
+  {"code":"SE","label":"Sverige"},
+  {"code":"US","label":"USA"},
+  {"code":"JP","label":"Japan"},
+  {"code":"CN","label":"Kina"},
+  {"code":"TW","label":"Taiwan"}
 ]

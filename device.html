@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enhedsdetaljer – Z-Wave Compatibility Hub</title>
+  <meta name="description" content="Læs detaljer om Z-Wave enheder, specifikationer, kompatibilitet og danske anmeldelser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles/base.css">
+</head>
+<body data-page="device">
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand-mark" href="/">
+        <img src="/assets/logo-et.svg" alt="ET logo">
+        <span>Z-Wave Compatibility Hub</span>
+      </a>
+      <nav class="primary-nav">
+        <a href="/">Hjem</a>
+        <a href="/enheder.html">Enheder</a>
+        <a href="/community.html">Community</a>
+        <a href="/om-os.html">Om os</a>
+      </nav>
+      <form id="global-search" class="input-group" role="search">
+        <input id="global-search-input" type="search" placeholder="Søg efter enhed eller kompatibilitet" aria-label="Global søgning">
+        <button class="btn ghost" type="submit">Søg</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top:3rem">
+    <div id="device-view" class="device-detail"></div>
+    <section class="section">
+      <h2>Relaterede enheder</h2>
+      <div id="device-related" class="grid cols-3"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container cols">
+      <div>
+        <a class="brand-mark" href="/">
+          <img src="/assets/logo-et.svg" alt="ET logo">
+          <span>Z-Wave Compatibility Hub</span>
+        </a>
+        <p>Community-drevet guide til Z-Wave enheder, frekvenser og danske erfaringer.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="/enheder.html">Tilbage til enheder</a></li>
+          <li><a href="/community.html">Community</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toasts" class="toast-container" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

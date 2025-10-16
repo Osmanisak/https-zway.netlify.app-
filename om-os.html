@@ -1,278 +1,125 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Om Selekti – Totalpris, levering og FAQ</title>
-  <meta name="description" content="Læs om Selekti, vores leveringszoner, Selekti+ og hvordan vi beregner totalpriser for danske kunder." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/styles/base.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { ink:'#0f172a', soft:'#f6f8fb', ocean:'#0ea5e9', mint:'#10b981' },
-          fontFamily: { sans:['Inter','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
-          boxShadow: { soft:'0 12px 40px rgba(15,23,42,0.12)' }
-        }
-      }
-    }
-  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Om os – Z-Wave Compatibility Hub</title>
+  <meta name="description" content="Læs om Z-Wave Compatibility Hub. Vores mission er at sikre danske forbrugere kompatible Z-Wave køb.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles/base.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "name": "Selekti",
-        "url": "https://zway.netlify.app/",
-        "logo": "https://zway.netlify.app/assets/illustrations/magpie.svg",
-        "sameAs": ["https://www.linkedin.com/company/selekti"],
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "contactType": "customer support",
-          "email": "team@selekti.dk",
-          "areaServed": "DK"
-        }
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Hvordan beregner Selekti totalpris?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Vi lægger varepris, fragt, servicefee (min. 49 kr.), told og 25 % moms sammen for at vise en totalpris til dansk levering."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Hvordan bestiller jeg hos Selekti?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Tilføj produkter til ønskelisten eller indsæt et link via bestillingsformularen. Vi bekræfter totalprisen og sender et betalingslink."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Er Selekti en webshop?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Selekti er en concierge- og logistikservice, der indkøber på dine vegne hos internationale butikker og leverer til Danmark."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Hvordan fungerer retur hos Selekti?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Kontakt Selekti support, så koordinerer vi returnering med butikken og håndterer papirarbejdet. Selekti+ Premium inkluderer returfragt."
-            }
-          }
-        ]
-      }
-    ]
+    "@type": "Organization",
+    "name": "Z-Wave Compatibility Hub",
+    "url": "https://zway.netlify.app/",
+    "logo": "https://zway.netlify.app/assets/logo-et.svg",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hej@zwavehub.dk",
+      "contactType": "customer support",
+      "areaServed": "DK"
+    }
   }
   </script>
-  <script src="app.js" defer></script>
 </head>
-<body data-page="about" class="min-h-screen bg-gradient-to-b from-white via-soft to-soft">
-  <header class="sticky top-0 z-50 border-b border-black/5 bg-white/90 backdrop-blur">
-    <div class="container mx-auto flex flex-wrap items-center gap-3 px-4 py-3">
-      <a class="flex items-center gap-2" href="index.html">
-        <img src="assets/logo-et.svg" alt="Selekti" class="h-9 w-auto" loading="lazy" decoding="async" />
-        <img src="assets/illustrations/magpie.svg" alt="" class="hidden h-8 w-auto sm:block" aria-hidden="true" loading="lazy" decoding="async" />
+<body data-page="about">
+  <header class="site-header">
+    <div class="container inner">
+      <a class="brand-mark" href="/">
+        <img src="/assets/logo-et.svg" alt="ET logo">
+        <span>Z-Wave Compatibility Hub</span>
       </a>
-      <form id="global-search" class="hidden flex-1 items-center gap-2 rounded-full bg-soft px-3 py-2 ring-1 ring-black/10 sm:flex">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" class="text-ink/50"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm7-1-3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <input id="global-search-input" type="search" placeholder="Søg efter butik, brand eller produkt" class="w-full bg-transparent text-sm text-ink placeholder:text-ink/40 focus:outline-none" />
-        <button class="hidden rounded-full bg-ink px-3 py-1 text-xs font-medium text-white sm:inline-flex" type="submit">Søg</button>
-      </form>
-      <nav class="ml-auto flex items-center gap-4 text-sm text-ink/70">
-        <a class="hover:text-ink" href="butikker.html">Butikker</a>
-        <a class="hover:text-ink" href="index.html#landing-featured-stores">Fremhævede</a>
-        <a class="hover:text-ink" href="index.html#selekti-plus">Selekti+</a>
-        <a class="hover:text-ink" href="index.html#guides">Guides</a>
-        <a class="font-semibold text-ink" href="om-os.html">Om os</a>
-        <a class="hover:text-ink" href="bliv-partner.html">Bliv partner</a>
+      <nav class="primary-nav">
+        <a href="/">Hjem</a>
+        <a href="/enheder.html">Enheder</a>
+        <a href="/community.html">Community</a>
+        <a href="/om-os.html" class="active">Om os</a>
       </nav>
-      <div class="flex items-center gap-2">
-        <button id="wishlist-open" data-open="sheet-wishlist" class="btn ghost relative gap-2 text-sm">
-          <span>Ønskeliste</span>
-          <span id="wishlist-count" class="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">0</span>
-        </button>
-        <button class="btn primary text-sm" data-auth-action>
-          <span data-auth-state="label">Log ind</span>
-        </button>
-      </div>
+      <form id="global-search" class="input-group" role="search">
+        <input id="global-search-input" type="search" placeholder="Søg efter enhed eller kompatibilitet" aria-label="Global søgning">
+        <button class="btn ghost" type="submit">Søg</button>
+      </form>
     </div>
   </header>
 
-  <main class="pb-16">
-    <section class="container mx-auto grid gap-6 px-4 pt-10 md:grid-cols-[1.1fr_.9fr]">
-      <div class="space-y-5">
-        <p class="text-xs uppercase tracking-wide text-ink/60">Om Selekti</p>
-        <h1 class="text-3xl font-bold md:text-4xl">Totalpris på global shopping – bygget i Danmark</h1>
-        <p class="text-sm text-ink/70">Selekti gør det lige så nemt at shoppe på tværs af lande som at handle lokalt. Vi indhenter produktpriser, beregner told og moms, håndterer betaling og leverer til Danmark.</p>
-        <div class="rounded-3xl bg-white p-6 ring-1 ring-black/5 shadow-soft">
-          <h2 class="text-lg font-semibold">Leveringszoner</h2>
-          <ul class="mt-3 space-y-2 text-sm text-ink/70">
-            <li><strong>EU & UK:</strong> 2–6 hverdage. Fri fragt med Selekti+ Standard og Premium.</li>
-            <li><strong>USA & Canada:</strong> 5–10 hverdage. Selekti+ dækker fragt op til 5 kg (Standard) eller 12 kg (Premium).</li>
-            <li><strong>Japan & Sydkorea:</strong> 6–12 hverdage. Concierge kontrollerer ægthed og dokumentation.</li>
-            <li><strong>Kina & Indien:</strong> 9–16 hverdage. Vi håndterer told og kvalitetskontrol i EU-hubben.</li>
-          </ul>
+  <main class="container" style="padding-top:3rem">
+    <section class="section" style="padding-top:0">
+      <h1>Vores mission</h1>
+      <p class="lead">Z-Wave Compatibility Hub er Danmarks portal til globale Z-Wave køb. Vi vil gøre det trygt og nemt at finde enheder der fungerer i danske hjem.</p>
+      <div class="grid cols-3">
+        <div class="device-card">
+          <h3>Tryghed</h3>
+          <p>Alle enheder på sitet er verificeret for EU 868-frekvens og dansk kompatibilitet.</p>
+        </div>
+        <div class="device-card">
+          <h3>Fællesskab</h3>
+          <p>Vi drives af danske brugere, installatører og frivillige, der deler erfaringer og anmeldelser.</p>
+        </div>
+        <div class="device-card">
+          <h3>Transparens</h3>
+          <p>Vi viser priser i DKK, importomkostninger og linker til officielle ressourcer om told og moms.</p>
         </div>
       </div>
-      <div class="rounded-3xl bg-white p-6 ring-1 ring-black/5 shadow-soft">
-        <h2 class="text-lg font-semibold">Hvordan vi beregner totalpris</h2>
-        <ol class="mt-3 space-y-2 text-sm text-ink/70">
-          <li><strong>Produktpris:</strong> Vi omregner til DKK med dagskurs.</li>
-          <li><strong>Fragt:</strong> Estimeret på baggrund af vægt og land. Selekti+ kan dække hele beløbet.</li>
-          <li><strong>Told & moms:</strong> Beregnes efter gældende satser og varetype.</li>
-          <li><strong>Selekti service:</strong> 12 % (minimum 49 kr.) dækker concierge, compliance og risikostyring.</li>
-        </ol>
-        <details class="mt-4 rounded-2xl bg-soft p-4 text-xs text-ink/70 ring-1 ring-black/10">
-          <summary class="cursor-pointer text-sm font-semibold text-ink">Totalpris forklaret</summary>
-          <p class="mt-2">Totalpris = Vare + Fragt + Service (≥49 kr.) + Told + Moms (25%).</p>
-          <ul class="mt-2 space-y-1 list-disc pl-4">
-            <li>Servicefee dækker concierge, kvalitetstjek og forsikring.</li>
-            <li>Told anslås til 3 % og justeres efter produktets HS-kode.</li>
-            <li>Moms følger danske satser (25 %) via IOSS, også for UK/US-ordre.</li>
-          </ul>
-          <p class="mt-2">Kilder: <a class="text-ocean underline" href="https://taxation-customs.ec.europa.eu/customs-4/online-services-and-databases/taric_en" target="_blank" rel="noopener">EU TARIC</a>, <a class="text-ocean underline" href="https://www.gov.uk/guidance/classification-of-goods" target="_blank" rel="noopener">HMRC</a>, <a class="text-ocean underline" href="https://www.cbp.gov/trade/basic-import-export" target="_blank" rel="noopener">US CBP</a>.</p>
+    </section>
+
+    <section class="section" id="faq">
+      <h2>FAQ</h2>
+      <div class="device-card">
+        <details open>
+          <summary>Hvordan beregner I totalpris?</summary>
+          <p>Totalpris = Varepris + Forventet fragt + Service + Told (typisk 0-12%) + Moms (25%). Brug vores estimator for at se et konservativt estimat før du køber.</p>
+        </details>
+        <details>
+          <summary>Hvilke hubs tester I med?</summary>
+          <p>Home Assistant (Z-Wave JS), Fibaro Home Center 3 og ioBroker. Vi markerer hvilke enheder der er verificeret på hvert system.</p>
+        </details>
+        <details>
+          <summary>Importer I produkter?</summary>
+          <p>Nej, vi er en guide. Køb foregår direkte hos forhandleren. Vi viser altid hvem der leverer til Danmark.</p>
+        </details>
+        <details>
+          <summary>Hvordan bidrager jeg?</summary>
+          <p>Tilføj enheder via formularen på forsiden eller del din erfaring i vores community. Alle bidrag gennemgås inden publicering.</p>
         </details>
       </div>
     </section>
 
-    <section id="faq" class="container mx-auto px-4 py-12">
-      <div class="rounded-3xl bg-white p-6 ring-1 ring-black/5 shadow-soft md:p-10">
-        <h2 class="text-2xl font-bold">FAQ</h2>
-        <div class="mt-6 space-y-4 text-sm text-ink/70">
-          <details class="rounded-2xl bg-soft p-4">
-            <summary class="cursor-pointer text-ink font-medium">Hvordan beregner I totalprisen?</summary>
-            <p class="mt-2">Vores estimator lægger vare, fragt, servicefee (min. 49 kr.), told og 25 % moms sammen. Servicen dækker concierge, papirarbejde og forsikring. Told-satsen er anslået til 3 % og justeres efter HS-kode.</p>
-            <p class="mt-2">Læs mere hos <a class="text-ocean underline" href="https://taxation-customs.ec.europa.eu/customs-4/online-services-and-databases/taric_en" target="_blank" rel="noopener">EU TARIC</a>, <a class="text-ocean underline" href="https://www.gov.uk/guidance/classification-of-goods" target="_blank" rel="noopener">HMRC</a> og <a class="text-ocean underline" href="https://www.cbp.gov/trade/basic-import-export" target="_blank" rel="noopener">US CBP</a>.</p>
-          </details>
-          <details class="rounded-2xl bg-soft p-4">
-            <summary class="cursor-pointer text-ink font-medium">Hvordan bestiller jeg?</summary>
-            <p class="mt-2">Tilføj produkter til ønskelisten eller indsend et link via bestillingsformularen. Vi bekræfter totalprisen og sender betalingslink.</p>
-          </details>
-          <details class="rounded-2xl bg-soft p-4">
-            <summary class="cursor-pointer text-ink font-medium">Er I en webshop?</summary>
-            <p class="mt-2">Vi er en concierge- og logistikservice, der samarbejder med butikker globalt. Vi køber på dine vegne og leverer til Danmark.</p>
-          </details>
-          <details class="rounded-2xl bg-soft p-4">
-            <summary class="cursor-pointer text-ink font-medium">Hvordan fungerer retur?</summary>
-            <p class="mt-2">Kontakt Selekti support. Vi koordinerer returnering med butikken og håndterer papirarbejdet. Selekti+ Premium har inkluderet returfragt.</p>
-          </details>
-          <details class="rounded-2xl bg-soft p-4">
-            <summary class="cursor-pointer text-ink font-medium">Hvordan kontakter jeg jer?</summary>
-            <p class="mt-2">Skriv til <a href="mailto:team@selekti.dk" class="text-ocean underline">team@selekti.dk</a> eller brug bestillingsformularen i ønskelisten.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="container mx-auto px-4 pb-12">
-      <div class="rounded-3xl bg-white p-6 ring-1 ring-black/5 shadow-soft md:p-10">
-        <h2 class="text-2xl font-bold">Kontakt os</h2>
-        <p class="mt-2 text-sm text-ink/70">Har du spørgsmål eller ønsker du at blive informeret om nye lande? Send os en besked.</p>
-        <form name="about-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-6 grid gap-4" data-success-target="contact-success">
-          <input type="hidden" name="form-name" value="about-contact" />
-          <p class="hp visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
-          <label class="text-sm font-medium">Navn
-            <input type="text" name="name" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
-          </label>
-          <label class="text-sm font-medium">E-mail
-            <input type="email" name="email" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
-          </label>
-          <label class="text-sm font-medium">Besked
-            <textarea name="message" rows="4" class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="Fortæl os hvordan vi kan hjælpe"></textarea>
-          </label>
-          <button type="submit" class="btn primary">Send besked</button>
-        </form>
-        <div id="contact-success" class="mt-4 hidden rounded-2xl bg-soft p-4 text-sm text-ink/70">Tak for din besked. Vi svarer hurtigst muligt.</div>
+    <section class="section" id="sikkerhed">
+      <h2>Sikkerhed & import</h2>
+      <div class="device-card">
+        <h3>Vigtige ressourcer</h3>
+        <ul class="spec-list">
+          <li><span>EU told</span><span><a href="https://ec.europa.eu/taxation_customs/dds2/taric" target="_blank" rel="noopener">EU TARIC</a></span></li>
+          <li><span>UK import</span><span><a href="https://www.gov.uk/guidance/classification-of-goods" target="_blank" rel="noopener">HMRC</a></span></li>
+          <li><span>USA import</span><span><a href="https://www.cbp.gov" target="_blank" rel="noopener">US CBP</a></span></li>
+        </ul>
       </div>
     </section>
   </main>
 
-  <aside id="sheet-wishlist" data-sheet class="sheet hidden fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white p-6 shadow-soft ring-1 ring-black/10" aria-hidden="true" role="dialog">
-    <div class="flex items-center justify-between">
-      <h2 class="text-lg font-semibold">Ønskeliste & Bestil via link</h2>
-      <button type="button" data-close class="rounded-full bg-soft px-3 py-2 text-sm">Luk</button>
-    </div>
-    <div class="mt-4 space-y-6">
+  <footer class="footer">
+    <div class="container cols">
       <div>
-        <div id="wishlist-empty" class="rounded-2xl bg-soft p-6 text-sm text-ink/60 text-center">
-          <img src="assets/illustrations/magpie.svg" alt="Selekti maskot" class="mx-auto mb-3 h-28 w-auto" loading="lazy" decoding="async" />
-          <p class="font-semibold text-ink">Din ønskeliste er tom.</p>
-          <p>Find noget unikt og tryk på ♡ for at gemme det til senere.</p>
-        </div>
-        <div id="wishlist-list" class="grid gap-3"></div>
-        <div id="wishlist-actions" class="mt-3 hidden">
-          <button id="wishlist-clear" type="button" class="text-sm text-ocean">Ryd ønskeliste</button>
-        </div>
+        <a class="brand-mark" href="/">
+          <img src="/assets/logo-et.svg" alt="ET logo">
+          <span>Z-Wave Compatibility Hub</span>
+        </a>
+        <p>Community-drevet guide til Z-Wave enheder, frekvenser og danske erfaringer.</p>
       </div>
-      <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3">
-        <input type="hidden" name="form-name" value="wishlist" />
-        <input type="hidden" name="items_json" value="[]" />
-        <input type="hidden" name="detected_title" value="" />
-        <input type="hidden" name="detected_price_dkk" value="" />
-        <input type="hidden" name="detected_currency" value="" />
-        <input type="hidden" name="detected_zone" value="" />
-        <input type="hidden" name="detected_weight" value="" />
-        <input type="hidden" name="estimated_total_dkk" value="" />
-        <p class="hp visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
-        <label class="text-sm font-medium">Produktlink
-          <input name="product_url" type="url" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="https://butik.com/vare" />
-        </label>
-        <label class="text-sm font-medium">Variant / størrelse
-          <input name="variant" type="text" class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="fx Medium" />
-        </label>
-        <label class="text-sm font-medium">Noter
-          <textarea name="notes" rows="3" class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="Fortæl os hvad du ønsker"></textarea>
-        </label>
-        <label class="text-sm font-medium">E-mail
-          <input name="email" type="email" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="din@email.dk" />
-        </label>
-        <button type="submit" class="btn primary">Send forespørgsel</button>
-        <p class="text-xs text-ink/60">Vi vender tilbage inden for 24 timer med din endelige totalpris.</p>
-      </form>
-    </div>
-  </aside>
-
-  <button id="chatbot-toggle" type="button" aria-controls="chatbot-panel" class="fixed bottom-6 right-6 z-30 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-medium text-white shadow-soft">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.525.49 2.944 1.33 4.117L5 19l2.352-.588A8.68 8.68 0 0 0 12 19Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span>Chat med Selekti</span>
-  </button>
-  <section id="chatbot-panel" aria-hidden="true" role="dialog" class="hidden fixed bottom-24 right-6 z-30 flex w-[320px] max-w-[calc(100%-3rem)] flex-col rounded-3xl bg-white shadow-soft ring-1 ring-black/10">
-    <header class="flex items-start justify-between gap-2 border-b border-black/10 p-4">
       <div>
-        <p class="text-[11px] uppercase tracking-wide text-ink/60">AI guide</p>
-        <h2 class="text-sm font-semibold text-ink">Spørg Selekti</h2>
+        <h4>Kontakt</h4>
+        <ul>
+          <li><a href="mailto:hej@zwavehub.dk">hej@zwavehub.dk</a></li>
+          <li><a href="/community.html">Community</a></li>
+        </ul>
       </div>
-      <button id="chatbot-close" type="button" class="rounded-full bg-soft px-3 py-1 text-xs text-ink/70">Luk</button>
-    </header>
-    <div class="flex flex-wrap gap-2 border-b border-black/10 px-4 py-3 text-xs text-ink/70">
-      <button type="button" class="chip inline-flex items-center gap-2 rounded-full bg-soft px-3 py-1 text-xs font-medium ring-1 ring-black/10" data-chat-suggestion="Hvilke butikker har I i Japan?">Japan</button>
-      <button type="button" class="chip inline-flex items-center gap-2 rounded-full bg-soft px-3 py-1 text-xs font-medium ring-1 ring-black/10" data-chat-suggestion="Hvordan fungerer levering?">Levering</button>
-      <button type="button" class="chip inline-flex items-center gap-2 rounded-full bg-soft px-3 py-1 text-xs font-medium ring-1 ring-black/10" data-chat-suggestion="Hvordan bliver min butik partner?">Bliv partner</button>
     </div>
-    <div id="chatbot-messages" role="log" aria-live="polite" class="flex-1 space-y-3 overflow-y-auto px-4 py-4"></div>
-    <form id="chatbot-form" class="grid gap-2 border-t border-black/10 p-4">
-      <label class="text-xs font-medium text-ink">Din besked
-        <textarea id="chatbot-input" rows="2" class="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="Spørg om et land, levering eller Selekti+"></textarea>
-      </label>
-      <button type="submit" class="btn primary text-sm">Send</button>
-    </form>
-  </section>
+  </footer>
 
-  <div id="sheet-dim" class="hidden fixed inset-0 z-40 bg-black/40"></div>
-  <div id="toasts" class="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex flex-col items-center gap-2 px-4"></div>
+  <div id="toasts" class="toast-container" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
 </body>
 </html>

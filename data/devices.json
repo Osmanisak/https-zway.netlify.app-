@@ -1,0 +1,953 @@
+[
+  {
+    "id": "aeotec-multisensor-7",
+    "name": "Aeotec MultiSensor 7",
+    "brand": "Aeotec",
+    "type": "sensor",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker", "fibaro"],
+    "priceDKK": 629,
+    "rating": 4.7,
+    "reviewsCount": 42,
+    "description": "Multisensor med syv sensorer i ét kompakt kabinet – temperatur, luftfugtighed, bevægelse, UV, lux, vibration og tilstedeværelse.",
+    "features": [
+      "Power by USB eller batteri",
+      "SmartStart og S2 sikkerhed",
+      "Rapportering med 0.5°C præcision"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://aeotec.com/products/multisensor-7/manual"
+    },
+    "purchase": [
+      {
+        "retailer": "Proshop",
+        "url": "https://www.proshop.dk/Smarthome/Aeotec-MultiSensor-7/",
+        "priceDKK": 629,
+        "shipping": "Gratis over 499"
+      },
+      {
+        "retailer": "Vesternet",
+        "url": "https://www.vesternet.com/products/aeotec-zwave-multisensor-7",
+        "priceDKK": 615,
+        "shipping": "Levering 5-7 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen – EU lager",
+      "notes": "Leveres fra EU med dansk moms"
+    },
+    "tags": ["temperatur", "bevægelse", "indre miljø"],
+    "highlightDK": true,
+    "bestFor": "Komplet sensorpakke til Home Assistant",
+    "danishReviews": [
+      {
+        "user": "Line, Aalborg",
+        "rating": 5,
+        "text": "Nem at inkludere i Home Assistant via Z-Wave JS. Rapporterer hurtigt og stabilt.",
+        "date": "2024-03-12"
+      },
+      {
+        "user": "Martin, Roskilde",
+        "rating": 4,
+        "text": "Batteriet holder ~9 måneder ved standard rapportering.",
+        "date": "2024-01-28"
+      }
+    ]
+  },
+  {
+    "id": "fibaro-dimmer-2",
+    "name": "FIBARO Dimmer 2",
+    "brand": "FIBARO",
+    "type": "dimmer",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro"],
+    "priceDKK": 549,
+    "rating": 4.6,
+    "reviewsCount": 58,
+    "description": "Universel indbygningsdimmer til de fleste lyskilder med automatisk kalibrering og måling af energiforbrug.",
+    "features": [
+      "Understøtter både 2- og 3-leder installation",
+      "Indbygget overstrømsbeskyttelse",
+      "Scener via S1/S2 indgang"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://manuals.fibaro.com/dimmer-2/"
+    },
+    "purchase": [
+      {
+        "retailer": "Greenline",
+        "url": "https://www.greenline.dk/fibaro-dimmer-2",
+        "priceDKK": 549,
+        "shipping": "49 kr. – dag-til-dag"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen – leveres fra Danmark",
+      "notes": "CE-godkendt og DK installationsguide"
+    },
+    "tags": ["lys", "indbygning", "scener"],
+    "highlightDK": true,
+    "bestFor": "Renovering med eksisterende afbrydere",
+    "danishReviews": [
+      {
+        "user": "Camilla, Esbjerg",
+        "rating": 5,
+        "text": "Perfekt sammen med LK Fuga tryk og Home Assistant.",
+        "date": "2023-11-02"
+      }
+    ]
+  },
+  {
+    "id": "qubino-flush-1",
+    "name": "Qubino Flush 1 Relay",
+    "brand": "Qubino",
+    "type": "switch",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 449,
+    "rating": 4.4,
+    "reviewsCount": 31,
+    "description": "Kompakt relæmodul til on/off styring op til 10A med temperatursensor indgang.",
+    "features": [
+      "Temperaturprobe (ekstra tilbehør)",
+      "Lav standby strøm",
+      "Støtter scener via input"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1618005198919-d3d4b5a92eee?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://qubino.com/manuals/flush-1-relay"
+    },
+    "purchase": [
+      {
+        "retailer": "Coop Elektro",
+        "url": "https://www.coop.dk/elektronik/qubino-flush-1-relay",
+        "priceDKK": 449,
+        "shipping": "Gratis over 499"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Kendt for stabilitet i danske installationer"
+    },
+    "tags": ["afbryder", "relæ", "temperatur"],
+    "highlightDK": false,
+    "bestFor": "Styring af udendørs lys og pumper",
+    "danishReviews": [
+      {
+        "user": "Jonas, Hillerød",
+        "rating": 4,
+        "text": "Nem at montere, kræver dog dyb dåse for plads.",
+        "date": "2024-04-21"
+      }
+    ]
+  }
+  ,{
+    "id": "heatit-z-dim",
+    "name": "Heatit Z-Dim",
+    "brand": "Heatit",
+    "type": "dimmer",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro"],
+    "priceDKK": 899,
+    "rating": 4.5,
+    "reviewsCount": 22,
+    "description": "Dansk designet vægdimmer med LED-display og støtte for faseafsnit og fasekontrol.",
+    "features": [
+      "Passer i nordisk rammesystem",
+      "Mulighed for scenestyring",
+      "Indbygget temperaturføler"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://www.heatit.com/manuals/z-dim"
+    },
+    "purchase": [
+      {
+        "retailer": "Elgiganten Pro",
+        "url": "https://www.elgiganten.dk/heatit-z-dim",
+        "priceDKK": 899,
+        "shipping": "Gratis afhentning i butik"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Produceret i Norge med dansk manual"
+    },
+    "tags": ["vægdimmer", "nordisk", "display"],
+    "highlightDK": true,
+    "bestFor": "Fast installation med høj W belastning",
+    "danishReviews": [
+      {
+        "user": "Henrik, Viborg",
+        "rating": 5,
+        "text": "Føles som et almindeligt LK tryk – kunden forstår det straks.",
+        "date": "2023-12-14"
+      }
+    ]
+  },
+  {
+    "id": "sensative-strip-comfort",
+    "name": "Sensative Strips Comfort",
+    "brand": "Sensative",
+    "type": "sensor",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 399,
+    "rating": 4.3,
+    "reviewsCount": 19,
+    "description": "Ultratynd temperatur- og fugtsensor med 10 års batterilevetid, perfekt til vinduesrammer.",
+    "features": ["IP67", "10 års batteri", "Kommer med SmartStart"],
+    "images": [
+      "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://sensative.com/manuals/strips-comfort"
+    },
+    "purchase": [
+      {
+        "retailer": "SmartDk",
+        "url": "https://www.smartdk.dk/sensative-strips-comfort",
+        "priceDKK": 399,
+        "shipping": "39 kr. levering"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Leveres fra svensk lager"
+    },
+    "tags": ["fugt", "temperatur", "slim"],
+    "highlightDK": false,
+    "bestFor": "Diskret indeklima sensor",
+    "danishReviews": []
+  },
+  {
+    "id": "aeotec-nano-shutter",
+    "name": "Aeotec Nano Shutter",
+    "brand": "Aeotec",
+    "type": "roller",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro"],
+    "priceDKK": 579,
+    "rating": 4.2,
+    "reviewsCount": 27,
+    "description": "Kontrol af rullegardiner og markiser med præcis kalibrering og sceneindgange.",
+    "features": ["Scene support", "Kalibrering", "S2 Security"],
+    "images": [
+      "https://images.unsplash.com/photo-1529429617124-aee99961f6f1?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://aeotec.com/products/nano-shutter/manual"
+    },
+    "purchase": [
+      {
+        "retailer": "Smarthome Europe",
+        "url": "https://www.smarthomeeurope.com/aeotec-nano-shutter",
+        "priceDKK": 579,
+        "shipping": "Levering 4-6 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "EU forsendelse inkl. moms"
+    },
+    "tags": ["gardin", "motor", "markise"],
+    "highlightDK": false,
+    "bestFor": "Rullegardiner i danske boliger",
+    "danishReviews": []
+  },
+  {
+    "id": "heatit-z-trm3",
+    "name": "Heatit Z-TRM3",
+    "brand": "Heatit",
+    "type": "thermostat",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro", "iobroker"],
+    "priceDKK": 1349,
+    "rating": 4.8,
+    "reviewsCount": 45,
+    "description": "Gulvvarmetermostat udviklet til Skandinavien med 3A relæ, støtte for 2 sensorer og lokal displaystyring.",
+    "features": ["Open window detection", "Energy log", "SmartStart"],
+    "images": [
+      "https://images.unsplash.com/photo-1527030280862-64139fba04ca?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://www.heatit.com/manuals/z-trm3"
+    },
+    "purchase": [
+      {
+        "retailer": "Solar Danmark",
+        "url": "https://www.solardanmark.dk/heatit-z-trm3",
+        "priceDKK": 1349,
+        "shipping": "Gratis ved afhentning"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Tilpasset dansk el-reglement"
+    },
+    "tags": ["gulvvarme", "display", "nordisk"],
+    "highlightDK": true,
+    "bestFor": "Elektrisk gulvvarme i badeværelser",
+    "danishReviews": [
+      {
+        "user": "Sofie, Lyngby",
+        "rating": 5,
+        "text": "Fantastisk integration med Floor-sensor – holder 0.5°C præcis.",
+        "date": "2024-02-09"
+      }
+    ]
+  },
+  {
+    "id": "fibaro-smart-implant",
+    "name": "FIBARO Smart Implant",
+    "brand": "FIBARO",
+    "type": "module",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro", "iobroker"],
+    "priceDKK": 489,
+    "rating": 4.1,
+    "reviewsCount": 33,
+    "description": "Universelt I/O modul med to inputs, to outputs og temperatursensor-tilslutning.",
+    "features": ["0-10V support", "Digital/analog inputs", "Temperaturprobe"],
+    "images": [
+      "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://manuals.fibaro.com/smart-implant/"
+    },
+    "purchase": [
+      {
+        "retailer": "Nelectra",
+        "url": "https://www.nelectra.dk/fibaro-smart-implant",
+        "priceDKK": 489,
+        "shipping": "49 kr."
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Populær til specialprojekter"
+    },
+    "tags": ["io", "analog", "temperatur"],
+    "highlightDK": false,
+    "bestFor": "Integration af eksisterende anlæg",
+    "danishReviews": []
+  }
+  ,{
+    "id": "namron-zwave-plug",
+    "name": "Namron Z-Wave Strømstik",
+    "brand": "Namron",
+    "type": "plug",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant"],
+    "priceDKK": 329,
+    "rating": 4.0,
+    "reviewsCount": 14,
+    "description": "Robust smart plug med energimåling og børnesikring.",
+    "features": ["16A belastning", "Energi-rapportering", "Fysisk knap"],
+    "images": [
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://www.namron.com/manuals/zwave-plug"
+    },
+    "purchase": [
+      {
+        "retailer": "Elefun",
+        "url": "https://www.elefun.dk/namron-zwave-plug",
+        "priceDKK": 329,
+        "shipping": "49 kr."
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Leveres fra norsk lager med dansk stik"
+    },
+    "tags": ["stik", "energi", "plug"],
+    "highlightDK": false,
+    "bestFor": "Overvågning af energiforbrug",
+    "danishReviews": []
+  },
+  {
+    "id": "philio-pan11",
+    "name": "Philio PAN11 Smart Plug",
+    "brand": "Philio",
+    "type": "plug",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 299,
+    "rating": 3.9,
+    "reviewsCount": 18,
+    "description": "Smart plug med energimåling og indbygget overbelastningsbeskyttelse.",
+    "features": ["Timerfunktion", "LED indikator", "12A belastning"],
+    "images": [
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://philio.com/manuals/pan11"
+    },
+    "purchase": [
+      {
+        "retailer": "Amazon DE",
+        "url": "https://amazon.de/philio-pan11",
+        "priceDKK": 299,
+        "shipping": "Levering 5-8 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Leveres fra Tyskland"
+    },
+    "tags": ["plug", "overvågning"],
+    "highlightDK": false,
+    "bestFor": "Budget venlig stikkontakt",
+    "danishReviews": []
+  },
+  {
+    "id": "fibaro-the-button",
+    "name": "FIBARO The Button",
+    "brand": "FIBARO",
+    "type": "controller",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro"],
+    "priceDKK": 399,
+    "rating": 4.1,
+    "reviewsCount": 26,
+    "description": "Trådløs scenekontakt med seks tryk-mønstre, perfekt til husholdningen.",
+    "features": ["6 scenemønstre", "Magnetisk bund", "Batteri CR2450"],
+    "images": [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://manuals.fibaro.com/the-button/"
+    },
+    "purchase": [
+      {
+        "retailer": "Proshop",
+        "url": "https://www.proshop.dk/smarthome/fibaro-the-button",
+        "priceDKK": 399,
+        "shipping": "Gratis over 499"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Dansk manual inkluderet"
+    },
+    "tags": ["controller", "scene", "batteri"],
+    "highlightDK": false,
+    "bestFor": "Hurtige scener",
+    "danishReviews": []
+  },
+  {
+    "id": "aeotec-range-extender-7",
+    "name": "Aeotec Range Extender 7",
+    "brand": "Aeotec",
+    "type": "repeater",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker", "fibaro"],
+    "priceDKK": 329,
+    "rating": 4.5,
+    "reviewsCount": 37,
+    "description": "Forstærker Z-Wave signalet i hjemmet med 700-serie chip og S2 sikkerhed.",
+    "features": ["S2 sikkerhed", "SmartStart", "USB strøm"],
+    "images": [
+      "https://images.unsplash.com/photo-1603791452906-bb260f32d1d1?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://aeotec.com/products/range-extender-7/manual"
+    },
+    "purchase": [
+      {
+        "retailer": "Vesternet",
+        "url": "https://www.vesternet.com/products/aeotec-range-extender-7",
+        "priceDKK": 329,
+        "shipping": "Levering 5-7 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "God til murstenshuse"
+    },
+    "tags": ["repeater", "mesh"],
+    "highlightDK": true,
+    "bestFor": "Forstærkning i ældre bygninger",
+    "danishReviews": []
+  },
+  {
+    "id": "poppo-keypad",
+    "name": "POPPO Trådløst Keypad",
+    "brand": "POPPO",
+    "type": "keypad",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 559,
+    "rating": 3.8,
+    "reviewsCount": 12,
+    "description": "Udendørs keypad til alarm og adgangsstyring, IP44 godkendt.",
+    "features": ["PIN koder", "Batteridrevet", "Belyste taster"],
+    "images": [
+      "https://images.unsplash.com/photo-1603791452906-bb260f32d1d1?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://poppo.com/manuals/zwave-keypad"
+    },
+    "purchase": [
+      {
+        "retailer": "Smarthome Europe",
+        "url": "https://www.smarthomeeurope.com/poppo-keypad",
+        "priceDKK": 559,
+        "shipping": "Levering 4-6 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Virker ned til -10°C"
+    },
+    "tags": ["adgang", "sikkerhed"],
+    "highlightDK": false,
+    "bestFor": "Adgang til garage eller skur",
+    "danishReviews": []
+  },
+  {
+    "id": "zooz-zen32",
+    "name": "Zooz ZEN32 Scene Controller",
+    "brand": "Zooz",
+    "type": "controller",
+    "chip": "700",
+    "frequency": "us908",
+    "compatibility": ["home-assistant"],
+    "priceDKK": 479,
+    "rating": 4.2,
+    "reviewsCount": 16,
+    "description": "Scenecontroller med fem knapper og LED feedback, kræver 120V backbox men fungerer med adapter i DK.",
+    "features": ["5 programmerbare knapper", "LED farver", "CentralScene"],
+    "images": [
+      "https://images.unsplash.com/photo-1529429617124-aee99961f6f1?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://www.support.getzooz.com/kb/article/754-zen32-advanced"
+    },
+    "purchase": [
+      {
+        "retailer": "The Smartest House",
+        "url": "https://www.thesmartesthouse.com/products/zooz-zen32",
+        "priceDKK": 479,
+        "shipping": "US import – told kan forekomme"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Mulig told og moms – beregn 25%",
+      "notes": "Kræver EU frekvens adapter (købes separat)"
+    },
+    "tags": ["scene", "controller", "us"],
+    "highlightDK": false,
+    "bestFor": "Avancerede Home Assistant scener",
+    "danishReviews": []
+  }
+  ,{
+    "id": "aeotec-heavy-duty-switch",
+    "name": "Aeotec Heavy Duty Switch",
+    "brand": "Aeotec",
+    "type": "switch",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 999,
+    "rating": 4.4,
+    "reviewsCount": 21,
+    "description": "63A smart kontakt til varmepumper og ladere. Perfekt til danske bryggersinstallationer.",
+    "features": ["63A", "Energi-måling", "IP44"],
+    "images": [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://aeotec.com/products/heavy-duty-switch/manual"
+    },
+    "purchase": [
+      {
+        "retailer": "Proshop",
+        "url": "https://www.proshop.dk/smarthome/aeotec-heavy-duty-switch",
+        "priceDKK": 999,
+        "shipping": "Gratis over 499"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Skal monteres af autoriseret elektriker"
+    },
+    "tags": ["63a", "varmepumpe", "lader"],
+    "highlightDK": true,
+    "bestFor": "Styring af varmepumpe",
+    "danishReviews": []
+  },
+  {
+    "id": "heatit-zm-thermostat",
+    "name": "Heatit ZM Thermostat",
+    "brand": "Heatit",
+    "type": "thermostat",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 1195,
+    "rating": 4.5,
+    "reviewsCount": 17,
+    "description": "DIN-skinne termostat til elskabe. Ideel til teknikrum og fjernvarme styring.",
+    "features": ["DIN montage", "NTC sensor", "Styring via modbus input"],
+    "images": [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://www.heatit.com/manuals/zm-thermostat"
+    },
+    "purchase": [
+      {
+        "retailer": "El-Salg",
+        "url": "https://elsalg.dk/heatit-zm-thermostat",
+        "priceDKK": 1195,
+        "shipping": "Gratis afhentning"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Kendt i danske nybyg"
+    },
+    "tags": ["din", "varme", "skab"],
+    "highlightDK": false,
+    "bestFor": "Teknikskabe",
+    "danishReviews": []
+  },
+  {
+    "id": "fibaro-wall-plug",
+    "name": "FIBARO Wall Plug",
+    "brand": "FIBARO",
+    "type": "plug",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro", "iobroker"],
+    "priceDKK": 469,
+    "rating": 4.5,
+    "reviewsCount": 62,
+    "description": "Elegant vægkontakt med LED ring, energimåling og overbelastningsbeskyttelse.",
+    "features": ["LED status", "Energi log", "Børnesikring"],
+    "images": [
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://manuals.fibaro.com/wall-plug/"
+    },
+    "purchase": [
+      {
+        "retailer": "Proshop",
+        "url": "https://www.proshop.dk/smarthome/fibaro-wall-plug",
+        "priceDKK": 469,
+        "shipping": "Gratis over 499"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "En af de mest populære i Danmark"
+    },
+    "tags": ["energi", "plug", "led"],
+    "highlightDK": true,
+    "bestFor": "Synlig energimåling i stuen",
+    "danishReviews": []
+  },
+  {
+    "id": "heatit-z-water",
+    "name": "Heatit Z-Water",
+    "brand": "Heatit",
+    "type": "controller",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker", "fibaro"],
+    "priceDKK": 2195,
+    "rating": 4.6,
+    "reviewsCount": 24,
+    "description": "10-kanals aktuator til vandbåren gulvvarme, udviklet til nordiske installationer.",
+    "features": ["10 udgange", "DIN montage", "Temperatur inputs"],
+    "images": [
+      "https://images.unsplash.com/photo-1527030280862-64139fba04ca?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://www.heatit.com/manuals/z-water"
+    },
+    "purchase": [
+      {
+        "retailer": "VVS Eksperten",
+        "url": "https://www.vvs-eksperten.dk/heatit-z-water",
+        "priceDKK": 2195,
+        "shipping": "Fri fragt"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Bruges bredt i danske parcelhuse"
+    },
+    "tags": ["gulvvarme", "aktuator", "vand"],
+    "highlightDK": true,
+    "bestFor": "Hydrauliske gulvvarmesystemer",
+    "danishReviews": []
+  },
+  {
+    "id": "philio-psr04",
+    "name": "Philio PSR04 Smart Color Button",
+    "brand": "Philio",
+    "type": "remote",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 259,
+    "rating": 3.6,
+    "reviewsCount": 15,
+    "description": "Farverig scene-kontakt til simple opgaver. Magnetisk og med vibrationalarm.",
+    "features": ["RGB feedback", "Vibration", "USB opladning"],
+    "images": [
+      "https://images.unsplash.com/photo-1529429617124-aee99961f6f1?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://philio.com/manuals/psr04"
+    },
+    "purchase": [
+      {
+        "retailer": "Amazon DE",
+        "url": "https://amazon.de/philio-psr04",
+        "priceDKK": 259,
+        "shipping": "Levering 5-8 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Budget scene controller"
+    },
+    "tags": ["scene", "fjernbetjening"],
+    "highlightDK": false,
+    "bestFor": "Børneværelser",
+    "danishReviews": []
+  },
+  {
+    "id": "fibaro-co-sensor",
+    "name": "FIBARO CO Sensor",
+    "brand": "FIBARO",
+    "type": "sensor",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro"],
+    "priceDKK": 779,
+    "rating": 4.7,
+    "reviewsCount": 29,
+    "description": "Kulilte sensor med sirene og lysindikator. Dansk brandgodkendelse.",
+    "features": ["Sirene", "LED ring", "Selvtest"],
+    "images": [
+      "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://manuals.fibaro.com/co-sensor/"
+    },
+    "purchase": [
+      {
+        "retailer": "Proshop",
+        "url": "https://www.proshop.dk/smarthome/fibaro-co-sensor",
+        "priceDKK": 779,
+        "shipping": "Gratis over 499"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Opfylder danske brandkrav"
+    },
+    "tags": ["sikkerhed", "alarm", "co"],
+    "highlightDK": true,
+    "bestFor": "Gaskedler og garager",
+    "danishReviews": []
+  },
+  {
+    "id": "aeotec-water-sensor-7",
+    "name": "Aeotec Water Sensor 7",
+    "brand": "Aeotec",
+    "type": "sensor",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 449,
+    "rating": 4.3,
+    "reviewsCount": 18,
+    "description": "Vandskadesensor med ekstern probe og temperaturmåling. Ideel til teknikrum.",
+    "features": ["Ekstern probe", "Temperatur", "SmartStart"],
+    "images": [
+      "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://aeotec.com/products/water-sensor-7/manual"
+    },
+    "purchase": [
+      {
+        "retailer": "Vesternet",
+        "url": "https://www.vesternet.com/products/aeotec-water-sensor-7",
+        "priceDKK": 449,
+        "shipping": "Levering 5-7 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Kabler kan forlænges til dansk installationsstil"
+    },
+    "tags": ["vand", "sikkerhed"],
+    "highlightDK": true,
+    "bestFor": "Bryggers og teknikskabe",
+    "danishReviews": []
+  }
+  ,{
+    "id": "danfoss-ally-radiator",
+    "name": "Danfoss Ally Radiatortermostat",
+    "brand": "Danfoss",
+    "type": "thermostat",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "iobroker"],
+    "priceDKK": 599,
+    "rating": 4.2,
+    "reviewsCount": 38,
+    "description": "Elektronisk termostat til radiatorer med dansk design og adaptere inkluderet.",
+    "features": ["Vindue-funktion", "Boost", "Integreret temperatur"],
+    "images": [
+      "https://images.unsplash.com/photo-1527030280862-64139fba04ca?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://www.danfoss.com/manuals/ally"
+    },
+    "purchase": [
+      {
+        "retailer": "XL-Byg",
+        "url": "https://www.xl-byg.dk/danfoss-ally",
+        "priceDKK": 599,
+        "shipping": "49 kr. levering"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Adaptere til danske ventiler medfølger"
+    },
+    "tags": ["radiator", "varme"],
+    "highlightDK": true,
+    "bestFor": "Radiatorstyring i lejligheder",
+    "danishReviews": []
+  },
+  {
+    "id": "ring-keypad-v2",
+    "name": "Ring Keypad v2 (Z-Wave)",
+    "brand": "Ring",
+    "type": "keypad",
+    "chip": "700",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant"],
+    "priceDKK": 649,
+    "rating": 4.0,
+    "reviewsCount": 20,
+    "description": "Keypad med baggrundslys og indbygget sirene. Brugt af mange danske alarm-opsætninger.",
+    "features": ["Indbygget sirene", "Genopladeligt batteri", "Væg- og bordmontering"],
+    "images": [
+      "https://images.unsplash.com/photo-1603791452906-bb260f32d1d1?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://support.ring.com/hc/en-us/articles/keypad"
+    },
+    "purchase": [
+      {
+        "retailer": "Amazon DE",
+        "url": "https://amazon.de/ring-keypad-zwave",
+        "priceDKK": 649,
+        "shipping": "Levering 4-6 dage"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Skal inkluderes via S2 i Home Assistant"
+    },
+    "tags": ["sikkerhed", "alarm"],
+    "highlightDK": false,
+    "bestFor": "Alarmpanel ved hoveddør",
+    "danishReviews": []
+  },
+  {
+    "id": "zwave-me-wall-controller",
+    "name": "Z-Wave.Me Wall Controller",
+    "brand": "Z-Wave.Me",
+    "type": "controller",
+    "chip": "500",
+    "frequency": "eu868",
+    "compatibility": ["home-assistant", "fibaro"],
+    "priceDKK": 359,
+    "rating": 3.9,
+    "reviewsCount": 18,
+    "description": "Vægmonteret controller med fire trykflader. Passer i Fuga rammer.",
+    "features": ["CentralScene", "Batteri CR2032", "Udskiftelige covers"],
+    "images": [
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+    ],
+    "docs": {
+      "manual": "https://z-wave.me/manuals/wall-controller"
+    },
+    "purchase": [
+      {
+        "retailer": "Proshop",
+        "url": "https://www.proshop.dk/smarthome/z-wave-me-wall-controller",
+        "priceDKK": 359,
+        "shipping": "Gratis over 499"
+      }
+    ],
+    "shipping": {
+      "dk": true,
+      "import": "Ingen",
+      "notes": "Passer i danske Fuga rammer"
+    },
+    "tags": ["controller", "fuga", "scene"],
+    "highlightDK": true,
+    "bestFor": "Montering ved indgang",
+    "danishReviews": []
+  }
+]

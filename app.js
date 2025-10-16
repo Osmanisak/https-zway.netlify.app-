@@ -1,264 +1,600 @@
-const DB = {
-  products: [],
-  stores: [],
+const state = {
+  devices: [],
   categories: [],
-  countries: [],
-  shippingConfig: null
+  brands: [],
+  loaded: false
 };
 
-const STORAGE_KEY_WISHLIST = 'selekti_wishlist';
-const STORAGE_KEY_PROFILE = 'selekti_profile';
-
-const storage = (() => {
-  try {
-    const testKey = '__selekti_test__';
-    window.localStorage.setItem(testKey, '1');
-    window.localStorage.removeItem(testKey);
-    return window.localStorage;
-  } catch (err) {
-    const fallback = {};
-    return {
-      getItem: key => Object.prototype.hasOwnProperty.call(fallback, key) ? fallback[key] : null,
-      setItem: (key, value) => { fallback[key] = String(value); },
-      removeItem: key => { delete fallback[key]; }
-    };
-  }
-})();
-
-const wishlist = {
-  get() {
-    try {
-      const raw = storage.getItem(STORAGE_KEY_WISHLIST);
-      return raw ? JSON.parse(raw) : [];
-    } catch (err) {
-      return [];
-    }
-  },
-  set(items) {
-    storage.setItem(STORAGE_KEY_WISHLIST, JSON.stringify(items));
-    renderWishlist();
-    updateWishlistBadge();
-    syncWishlistButtons();
-  },
-  toggle(item) {
-    const list = this.get();
-    const index = list.findIndex(entry => entry.id === item.id);
-    if (index >= 0) {
-      list.splice(index, 1);
-      toast('Fjernet fra ønskeliste');
-    } else {
-      list.push(item);
-      toast('Tilføjet til ønskeliste');
-    }
-    this.set(list);
-  },
-  clear() {
-    this.set([]);
-    toast('Ønskeliste ryddet');
-  },
-  has(id) {
-    return this.get().some(entry => entry.id === id);
-  }
+const filterState = {
+  query: '',
+  advanced: '',
+  types: new Set(),
+  chips: new Set(),
+  frequencies: new Set(),
+  compat: new Set(),
+  brands: new Set(),
+  price: new Set(),
+  rating: new Set(),
+  sort: 'featured'
 };
 
-const toasts = {
-  container: null,
+const PRICE_BUCKETS = {
+  low: device => device.priceDKK < 400,
+  mid: device => device.priceDKK >= 400 && device.priceDKK <= 800,
+  high: device => device.priceDKK > 800
+};
+
+const page = () => document.body?.dataset?.page || '';
+
+const toastHub = {
+  el: null,
   init() {
-    this.container = document.getElementById('toasts');
+    this.el = document.getElementById('toasts');
   },
-  push(message) {
-    if (!this.container) return;
-    const el = document.createElement('div');
-    el.className = 'toast';
-    el.textContent = message;
-    this.container.appendChild(el);
-    requestAnimationFrame(() => el.classList.add('show'));
+  show(message) {
+    if (!this.el) return;
+    const node = document.createElement('div');
+    node.className = 'toast';
+    node.textContent = message;
+    this.el.appendChild(node);
+    requestAnimationFrame(() => node.classList.add('show'));
     setTimeout(() => {
-      el.classList.remove('show');
-      setTimeout(() => el.remove(), 300);
-    }, 3200);
+      node.classList.remove('show');
+      setTimeout(() => node.remove(), 300);
+    }, 2800);
   }
 };
 
 function toast(message) {
-  toasts.push(message);
-}
-
-const quoteCache = new Map();
-let quoteSequence = 0;
-const QUOTE_ENDPOINT = '/.netlify/functions/aiLinkQuote';
-const QUOTE_TIMEOUT = 8000;
-
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, char => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  })[char]);
+  toastHub.show(message);
 }
 
 function formatDKK(value) {
-  const number = Number.isFinite(Number(value)) ? Number(value) : 0;
+  const number = Number(value) || 0;
   return `DKK ${Math.round(number).toLocaleString('da-DK')}`;
 }
 
-function storeQuote(quote) {
-  const id = `quote-${++quoteSequence}`;
-  quoteCache.set(id, quote);
-  return id;
+function fetchJSON(path) {
+  return fetch(path, { cache: 'no-store' }).then(r => {
+    if (!r.ok) throw new Error(`Failed to load ${path}`);
+    return r.json();
+  });
 }
 
-function getStoredQuote(id) {
-  return quoteCache.get(id);
+async function loadData() {
+  const [devices, categories] = await Promise.all([
+    fetchJSON('/data/devices.json'),
+    fetchJSON('/data/categories.json')
+  ]);
+  state.devices = Array.isArray(devices) ? devices : [];
+  state.categories = Array.isArray(categories) ? categories : [];
+  state.brands = [...new Set(state.devices.map(d => d.brand).filter(Boolean))].sort();
+  state.loaded = true;
 }
 
-function updateWishlistField(name, value) {
-  const field = document.querySelector(`#sheet-wishlist [name="${name}"]`);
-  if (field) field.value = value ?? '';
+function initGlobalSearch() {
+  const form = document.getElementById('global-search');
+  if (!form) return;
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const input = document.getElementById('global-search-input');
+    const term = input?.value?.trim();
+    const target = '/enheder.html' + (term ? `?q=${encodeURIComponent(term)}` : '');
+    window.location.href = target;
+  });
 }
 
-function prefillWishlistWithQuote(quote) {
-  if (!quote) return;
-  const detected = quote.detected || {};
-  const estimate = quote.estimate || {};
-  updateWishlistField('product_url', detected.url || quote.url || '');
-  updateWishlistField('detected_title', detected.title || '');
-  updateWishlistField('detected_price_dkk', Number.isFinite(detected.priceDKK) ? Math.round(detected.priceDKK) : '');
-  updateWishlistField('detected_currency', detected.priceOriginal?.currency || '');
-  updateWishlistField('detected_zone', detected.zone || estimate.zoneCode || '');
-  updateWishlistField('detected_weight', Number.isFinite(detected.weightKg) ? detected.weightKg : '');
-  updateWishlistField('estimated_total_dkk', Number.isFinite(estimate.totalDKK) ? Math.round(estimate.totalDKK) : '');
+function buildDeviceCard(device) {
+  const tags = [device.type, ...(device.tags || [])].slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('');
+  const compat = (device.compatibility || []).map(c => `<span class="tag">${compatibilityLabel(c)}</span>`).join('');
+  return `
+    <article class="device-card" data-id="${device.id}">
+      <img src="${device.images?.[0] || 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80'}" loading="lazy" decoding="async" alt="${device.name}">
+      <div class="meta">
+        <span class="rating">⭐ ${device.rating.toFixed(1)}</span>
+        <span>${device.reviewsCount} anmeldelser</span>
+      </div>
+      <h3>${device.name}</h3>
+      <p class="lead">${device.bestFor || ''}</p>
+      <div>${tags}</div>
+      <div>${compat}</div>
+      <div class="meta">
+        <span>${formatDKK(device.priceDKK)}</span>
+        <span>${device.brand}</span>
+      </div>
+      <div class="input-group" style="margin-top:auto;">
+        <button class="btn primary" data-view-device="${device.id}">Se detaljer</button>
+        <button class="btn ghost" data-copy-link="${device.id}">Kopiér link</button>
+      </div>
+    </article>`;
 }
 
-async function requestQuote(url, zone) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), QUOTE_TIMEOUT);
-  try {
-    const payload = { url };
-    if (zone) payload.zone = zone;
-    const response = await fetch(QUOTE_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    });
-    const data = await response.json().catch(() => ({ ok: false, error: 'INVALID_JSON' }));
-    if (!response.ok) {
-      return { ok: false, error: data.error || 'NETWORK', url };
+function compatibilityLabel(value) {
+  const map = {
+    'home-assistant': 'Home Assistant',
+    iobroker: 'IOBroker',
+    fibaro: 'Fibaro HC'
+  };
+  return map[value] || value;
+}
+
+function bindDeviceCardActions(root = document) {
+  root.addEventListener('click', event => {
+    const viewBtn = event.target.closest('[data-view-device]');
+    if (viewBtn) {
+      const id = viewBtn.dataset.viewDevice;
+      window.location.href = `/device.html?id=${encodeURIComponent(id)}`;
     }
-    if (data && typeof data === 'object') {
-      data.url = url;
-      if (data.detected) {
-        data.detected.url = data.detected.url || url;
+    const copyBtn = event.target.closest('[data-copy-link]');
+    if (copyBtn) {
+      const id = copyBtn.dataset.copyLink;
+      const url = `${window.location.origin}/device.html?id=${encodeURIComponent(id)}`;
+      navigator.clipboard?.writeText(url).then(() => toast('Link kopieret')).catch(() => toast('Kunne ikke kopiere link'));
+    }
+  });
+}
+
+function renderLanding() {
+  const heroSearch = document.getElementById('hero-search');
+  const heroBtn = document.getElementById('hero-search-btn');
+  const suggestions = document.getElementById('hero-suggestions');
+  if (heroSearch && heroBtn) {
+    const buildSuggestions = term => {
+      const text = term.trim().toLowerCase();
+      let matches = state.devices;
+      if (text) {
+        matches = state.devices.filter(device => device.name.toLowerCase().includes(text) || device.brand.toLowerCase().includes(text));
       }
+      suggestions.innerHTML = matches.slice(0, 5).map(device => `<button class="suggestion" data-view-device="${device.id}">${device.name}</button>`).join('');
+    };
+    heroSearch.addEventListener('input', () => buildSuggestions(heroSearch.value || ''));
+    heroBtn.addEventListener('click', () => {
+      const term = heroSearch.value.trim();
+      const url = term ? `/enheder.html?q=${encodeURIComponent(term)}` : '/enheder.html';
+      window.location.href = url;
+    });
+    buildSuggestions('');
+  }
+
+  const dkPopular = document.getElementById('dk-popular');
+  if (dkPopular) {
+    const items = state.devices.filter(device => device.highlightDK).slice(0, 8);
+    dkPopular.innerHTML = items.map(buildDeviceCard).join('');
+  }
+
+  const latestGrid = document.getElementById('latest-grid');
+  if (latestGrid) {
+    const newest = [...state.devices].reverse().slice(0, 6);
+    latestGrid.innerHTML = newest.map(buildDeviceCard).join('');
+  }
+
+  const caseGrid = document.getElementById('case-grid');
+  if (caseGrid) {
+    const cases = [
+      {
+        title: 'Elektrisk gulvvarme i rækkehus',
+        body: 'Heatit Z-TRM3 styrer gulvvarme i badeværelse. Sammen med Home Assistant automatisk sænkning ved udluftning.'
+      },
+      {
+        title: 'Alarm med keypad',
+        body: 'Ring Keypad v2 kombineret med Aeotec sirene giver tryghed. Scener aktiverer lys ved alarm.'
+      },
+      {
+        title: 'Energiovervågning',
+        body: 'Aeotec Heavy Duty Switch monitorerer varmepumpe og rapporterer forbrug til elmåler-dashboard.'
+      }
+    ];
+    caseGrid.innerHTML = cases.map(item => `
+      <article class="device-card">
+        <h3>${item.title}</h3>
+        <p>${item.body}</p>
+      </article>`).join('');
+  }
+
+  const addForm = document.forms['add-device'];
+  if (addForm) {
+    const success = document.getElementById('add-device-success');
+    const typeSelect = addForm.querySelector('select[name="type"]');
+    if (typeSelect) {
+      typeSelect.innerHTML += state.categories.map(cat => `<option value="${cat.id}">${cat.label}</option>`).join('');
     }
-    return data;
-  } catch (error) {
-    if (error.name === 'AbortError') {
-      return { ok: false, error: 'TIMEOUT', url };
-    }
-    return { ok: false, error: 'NETWORK', url };
-  } finally {
-    clearTimeout(timer);
+    addForm.addEventListener('submit', event => {
+      event.preventDefault();
+      addForm.querySelector('button[type="submit"]').disabled = true;
+      setTimeout(() => {
+        addForm.reset();
+        addForm.querySelector('button[type="submit"]').disabled = false;
+        if (success) success.hidden = false;
+        toast('Tak for dit bidrag!');
+      }, 400);
+    });
+  }
+
+  const tooltip = document.getElementById('tooltip-onboard');
+  if (tooltip) {
+    setTimeout(() => tooltip.classList.remove('hidden'), 1200);
+    tooltip.addEventListener('click', () => tooltip.classList.add('hidden'));
   }
 }
 
-function getZoneLabel(code) {
-  if (!code) return '';
-  const zone = DB.shippingConfig?.zones?.find(entry => entry.code === code);
-  return zone ? zone.label : code;
+function initDirectory() {
+  populateTypeFilters();
+  populateBrandFilters();
+  bindFilterEvents();
+  applyParamsToFilters();
+  renderDirectory();
 }
 
-function renderQuoteMarkup(quote, { context = 'hero' } = {}) {
-  const detected = quote.detected || {};
-  const estimate = quote.estimate || {};
-  const breakdown = [
-    ['Vare', Number.isFinite(detected.priceDKK) ? detected.priceDKK : estimate.itemDKK],
-    ['Fragt', estimate.freightDKK],
-    ['Service', estimate.serviceDKK],
-    ['Told', estimate.dutyDKK],
-    ['Moms', estimate.vatDKK]
-  ].filter(([, value]) => Number.isFinite(value));
-  const storedId = storeQuote(quote);
-  const metaParts = [];
-  if (detected.store) metaParts.push(detected.store);
-  if (detected.zone || estimate.zoneCode) metaParts.push(getZoneLabel(detected.zone || estimate.zoneCode));
-  if (Number.isFinite(detected.weightKg)) metaParts.push(`${detected.weightKg} kg est.`);
-  const noteText = quote.notes?.length ? quote.notes.join(' • ') : 'Estimat. Endelig pris bekræftes på mail.';
-  const image = detected.images?.[0];
-  const originalPrice = detected.priceOriginal;
-  const originalLabel = originalPrice?.amount && originalPrice?.currency
-    ? `Fundet pris: ${originalPrice.amount} ${originalPrice.currency}`
-    : 'Fundet pris';
-
-  return `
-    <article class="quote-card" data-quote-id="${storedId}">
-      ${image ? `<figure class="aspect-[3/2] overflow-hidden rounded-2xl bg-soft"><img src="${escapeHtml(image)}" alt="${escapeHtml(detected.title || 'Produkt')}" loading="lazy" decoding="async" class="h-full w-full object-cover"/></figure>` : ''}
-      <div>
-        <p class="text-xs uppercase tracking-wide text-ink/50">${escapeHtml(originalLabel)}</p>
-        <h3>${escapeHtml(detected.title || 'Vi fandt produktet')}</h3>
-      </div>
-      ${metaParts.length ? `<div class="quote-meta">${metaParts.map(item => escapeHtml(item)).join(' • ')}</div>` : ''}
-      ${breakdown.length ? `<ul class="quote-breakdown">${breakdown.map(([label, value]) => `<li><span>${escapeHtml(label)}</span><span>${formatDKK(value)}</span></li>`).join('')}</ul>` : ''}
-      <div class="quote-total">${formatDKK(estimate.totalDKK ?? detected.priceDKK ?? 0)}</div>
-      <p class="quote-notes">${escapeHtml(noteText)}</p>
-      <div class="flex flex-wrap gap-2">
-        <button class="btn primary small" data-quote-continue="${storedId}" data-context="${escapeHtml(context)}">Fortsæt</button>
-      </div>
-    </article>
-  `;
+function populateTypeFilters() {
+  const container = document.getElementById('filter-types');
+  if (!container) return;
+  container.innerHTML = state.categories.map(cat => `<button class="filter-chip" data-type="${cat.id}">${cat.label}</button>`).join('');
 }
 
-function renderQuoteError(url, error, { context = 'hero' } = {}) {
-  const messages = {
-    UNREADABLE_PAGE: 'Vi kunne ikke læse produktet automatisk. Indsæt pris og vægt i formularen, så sender vi din totalpris.',
-    TIMEOUT: 'Forbindelsen brugte for lang tid. Du kan stadig sende linket til os manuelt.',
-    NETWORK: 'Der opstod en midlertidig fejl. Prøv igen, eller indsæt pris manuelt.'
+function populateBrandFilters() {
+  const container = document.getElementById('filter-brand');
+  if (!container) return;
+  container.innerHTML = state.brands.map(brand => `<button class="filter-chip" data-brand="${brand}">${brand}</button>`).join('');
+}
+
+function bindFilterEvents() {
+  document.addEventListener('click', event => {
+    const chip = event.target.closest('.filter-chip');
+    if (!chip) return;
+    if (chip.dataset.type) toggleSet(filterState.types, chip.dataset.type, chip);
+    if (chip.dataset.chip) toggleSet(filterState.chips, chip.dataset.chip, chip);
+    if (chip.dataset.frequency) toggleSet(filterState.frequencies, chip.dataset.frequency, chip);
+    if (chip.dataset.compat) toggleSet(filterState.compat, chip.dataset.compat, chip);
+    if (chip.dataset.brand) toggleSet(filterState.brands, chip.dataset.brand, chip);
+    if (chip.dataset.price) toggleSet(filterState.price, chip.dataset.price, chip);
+    if (chip.dataset.rating) toggleSet(filterState.rating, chip.dataset.rating, chip);
+    updateURLFromFilters();
+    renderDirectory();
+  });
+
+  const searchInput = document.getElementById('directory-search');
+  const suggestions = document.getElementById('directory-suggestions');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      filterState.query = searchInput.value.trim();
+      updateURLFromFilters();
+      renderDirectory();
+      suggestions.innerHTML = suggestionMarkup(filterState.query);
+    });
+  }
+
+  const advancedBtn = document.getElementById('advanced-search-btn');
+  if (advancedBtn) {
+    advancedBtn.addEventListener('click', () => {
+      const advanced = document.getElementById('advanced-search');
+      filterState.advanced = advanced?.value.trim() || '';
+      updateURLFromFilters();
+      renderDirectory();
+      toast('Avanceret søgning anvendt');
+    });
+  }
+
+  const sortSelect = document.getElementById('directory-sort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      filterState.sort = sortSelect.value;
+      updateURLFromFilters();
+      renderDirectory();
+    });
+  }
+
+  const resetBtn = document.getElementById('directory-reset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      Object.assign(filterState, {
+        query: '',
+        advanced: '',
+        types: new Set(),
+        chips: new Set(),
+        frequencies: new Set(),
+        compat: new Set(),
+        brands: new Set(),
+        price: new Set(),
+        rating: new Set(),
+        sort: 'featured'
+      });
+      document.querySelectorAll('.filter-chip.active').forEach(node => node.classList.remove('active'));
+      const search = document.getElementById('directory-search');
+      const advanced = document.getElementById('advanced-search');
+      if (search) search.value = '';
+      if (advanced) advanced.value = '';
+      const sort = document.getElementById('directory-sort');
+      if (sort) sort.value = 'featured';
+      updateURLFromFilters();
+      renderDirectory();
+    });
+  }
+
+  const saveBtn = document.getElementById('save-search');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      navigator.clipboard?.writeText(window.location.href).then(() => toast('Søgning kopieret')).catch(() => toast('Kunne ikke kopiere link'));
+    });
+  }
+}
+
+function suggestionMarkup(term) {
+  const q = term.toLowerCase();
+  const matches = state.devices.filter(device => device.name.toLowerCase().includes(q)).slice(0, 5);
+  return matches.map(device => `<button class="suggestion" data-view-device="${device.id}">${device.name}</button>`).join('');
+}
+
+function toggleSet(set, value, node) {
+  if (set.has(value)) {
+    set.delete(value);
+    node?.classList.remove('active');
+  } else {
+    set.add(value);
+    node?.classList.add('active');
+  }
+}
+
+function applyParamsToFilters() {
+  const params = new URLSearchParams(window.location.search);
+  filterState.query = params.get('q') || '';
+  filterState.sort = params.get('sort') || 'featured';
+  const multi = name => (params.get(name)?.split(',').filter(Boolean) || []);
+  filterState.types = new Set(multi('types'));
+  filterState.chips = new Set(multi('chips'));
+  filterState.frequencies = new Set(multi('freq'));
+  filterState.compat = new Set(multi('compat'));
+  filterState.brands = new Set(multi('brands'));
+  filterState.price = new Set(multi('price'));
+  filterState.rating = new Set(multi('rating'));
+  filterState.advanced = params.get('adv') || '';
+
+  const searchInput = document.getElementById('directory-search');
+  if (searchInput) searchInput.value = filterState.query;
+  const advanced = document.getElementById('advanced-search');
+  if (advanced) advanced.value = filterState.advanced;
+  const sort = document.getElementById('directory-sort');
+  if (sort) sort.value = filterState.sort;
+
+  const markActive = (selector, set) => {
+    document.querySelectorAll(selector).forEach(node => {
+      const value = node.dataset.type || node.dataset.chip || node.dataset.frequency || node.dataset.compat || node.dataset.brand || node.dataset.price || node.dataset.rating;
+      if (set.has(value)) node.classList.add('active');
+    });
   };
-  const storedId = storeQuote({ ok: false, url, error });
-  const description = messages[error] || 'Vi kunne ikke hente detaljer automatisk. Fortsæt og tilføj pris manuelt.';
-  return `
-    <article class="quote-card" data-quote-id="${storedId}">
-      <h3>Fortsæt uden automatisk estimat</h3>
-      <p class="quote-notes">${escapeHtml(description)}</p>
-      <div class="flex flex-wrap gap-2">
-        <button class="btn primary small" data-quote-continue="${storedId}" data-context="${escapeHtml(context)}">Fortsæt</button>
-      </div>
-    </article>
-  `;
+  markActive('[data-type]', filterState.types);
+  markActive('[data-chip]', filterState.chips);
+  markActive('[data-frequency]', filterState.frequencies);
+  markActive('[data-compat]', filterState.compat);
+  markActive('[data-brand]', filterState.brands);
+  markActive('[data-price]', filterState.price);
+  markActive('[data-rating]', filterState.rating);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function updateURLFromFilters() {
+  const params = new URLSearchParams();
+  if (filterState.query) params.set('q', filterState.query);
+  if (filterState.sort !== 'featured') params.set('sort', filterState.sort);
+  const setParam = (key, set) => {
+    if (set.size > 0) params.set(key, Array.from(set).join(','));
+  };
+  setParam('types', filterState.types);
+  setParam('chips', filterState.chips);
+  setParam('freq', filterState.frequencies);
+  setParam('compat', filterState.compat);
+  setParam('brands', filterState.brands);
+  setParam('price', filterState.price);
+  setParam('rating', filterState.rating);
+  if (filterState.advanced) params.set('adv', filterState.advanced);
+  const query = params.toString();
+  const url = query ? `?${query}` : location.pathname;
+  window.history.replaceState({}, '', url);
+}
+
+function renderDirectory() {
+  const grid = document.getElementById('directory-grid');
+  const empty = document.getElementById('directory-empty');
+  if (!grid) return;
+  let results = [...state.devices];
+
+  if (filterState.query) {
+    const q = filterState.query.toLowerCase();
+    results = results.filter(device => [device.name, device.brand, ...(device.tags || [])].join(' ').toLowerCase().includes(q));
+  }
+  if (filterState.advanced) {
+    const q = filterState.advanced.toLowerCase();
+    results = results.filter(device => device.description.toLowerCase().includes(q) || (device.bestFor || '').toLowerCase().includes(q));
+  }
+  if (filterState.types.size) {
+    results = results.filter(device => filterState.types.has(device.type));
+  }
+  if (filterState.chips.size) {
+    results = results.filter(device => filterState.chips.has(device.chip));
+  }
+  if (filterState.frequencies.size) {
+    results = results.filter(device => filterState.frequencies.has(device.frequency));
+  }
+  if (filterState.compat.size) {
+    results = results.filter(device => {
+      const compat = new Set(device.compatibility || []);
+      return Array.from(filterState.compat).every(entry => compat.has(entry));
+    });
+  }
+  if (filterState.brands.size) {
+    results = results.filter(device => filterState.brands.has(device.brand));
+  }
+  if (filterState.price.size) {
+    results = results.filter(device => Array.from(filterState.price).some(bucket => PRICE_BUCKETS[bucket]?.(device)));
+  }
+  if (filterState.rating.size) {
+    const min = Math.max(...Array.from(filterState.rating).map(Number));
+    results = results.filter(device => device.rating >= min);
+  }
+
+  switch (filterState.sort) {
+    case 'price-asc':
+      results.sort((a, b) => a.priceDKK - b.priceDKK);
+      break;
+    case 'price-desc':
+      results.sort((a, b) => b.priceDKK - a.priceDKK);
+      break;
+    case 'rating':
+      results.sort((a, b) => b.rating - a.rating);
+      break;
+    case 'newest':
+      results = results.reverse();
+      break;
+    default:
+      results.sort((a, b) => Number(b.highlightDK) - Number(a.highlightDK));
+      break;
+  }
+
+  document.getElementById('directory-count')?.replaceChildren(document.createTextNode(String(results.length)));
+
+  if (results.length === 0) {
+    grid.innerHTML = '';
+    empty?.removeAttribute('hidden');
+    const suggestions = document.getElementById('empty-suggestions');
+    if (suggestions) {
+      suggestions.innerHTML = state.devices.slice(0, 5).map(device => `<button class="suggestion" data-view-device="${device.id}">${device.name}</button>`).join('');
+    }
+    return;
+  }
+
+  empty?.setAttribute('hidden', '');
+  grid.innerHTML = results.map(buildDeviceCard).join('');
+}
+
+function initDevice() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const device = state.devices.find(item => item.id === id) || state.devices[0];
+  const view = document.getElementById('device-view');
+  if (!view) return;
+  if (!device) {
+    view.innerHTML = '<p>Enhed ikke fundet.</p>';
+    return;
+  }
+  document.title = `${device.name} – Z-Wave Compatibility Hub`;
+  view.innerHTML = `
+    <div class="gallery">
+      <img src="${device.images?.[0] || 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80'}" alt="${device.name}" loading="lazy">
+      <div class="device-card">
+        <h1>${device.name}</h1>
+        <div class="meta">
+          <span class="rating">⭐ ${device.rating.toFixed(1)}</span>
+          <span>${device.reviewsCount} danske anmeldelser</span>
+        </div>
+        <p>${device.description}</p>
+        <div class="meta">
+          <span>${formatDKK(device.priceDKK)}</span>
+          <span>${device.brand}</span>
+          <span>${device.chip}-serie</span>
+        </div>
+        <div>${(device.compatibility || []).map(compatibilityLabel).map(text => `<span class="tag">${text}</span>`).join('')}</div>
+        <div class="input-group" style="margin-top:1rem;">
+          <button class="btn primary" data-open-retailers>Se forhandlere</button>
+          <a class="btn ghost" href="/enheder.html">Tilbage</a>
+        </div>
+      </div>
+    </div>
+    <aside class="specs">
+      <h2>Specifikationer</h2>
+      <ul class="spec-list">
+        <li><span>Type</span><span>${device.type}</span></li>
+        <li><span>Chip</span><span>${device.chip}-serie</span></li>
+        <li><span>Frekvens</span><span>${device.frequency.toUpperCase()}</span></li>
+        <li><span>Kompatibilitet</span><span>${(device.compatibility || []).map(compatibilityLabel).join(', ')}</span></li>
+        <li><span>Levering</span><span>${device.shipping?.notes || ''}</span></li>
+      </ul>
+      <h3>Forhandlere</h3>
+      <ul class="spec-list">
+        ${(device.purchase || []).map(entry => `<li><span>${entry.retailer}</span><span><a href="${entry.url}" target="_blank" rel="noopener">${formatDKK(entry.priceDKK)}</a></span></li>`).join('')}
+      </ul>
+    </aside>
+    <aside class="reviews">
+      <h2>Danske anmeldelser</h2>
+      ${(device.danishReviews && device.danishReviews.length)
+        ? device.danishReviews.map(review => `<div class="review-card"><strong>${review.user}</strong><div class="rating">⭐ ${review.rating}</div><p>${review.text}</p><small>${review.date}</small></div>`).join('')
+        : '<p>Der er endnu ingen danske anmeldelser.</p>'}
+    </aside>`;
+
+  const related = document.getElementById('device-related');
+  if (related) {
+    const matches = state.devices.filter(item => item.id !== device.id && (item.type === device.type || item.brand === device.brand)).slice(0, 3);
+    related.innerHTML = matches.map(buildDeviceCard).join('');
+  }
+}
+
+function initCommunity() {
+  const panels = document.getElementById('community-panels');
+  if (panels) {
+    const stats = [
+      {
+        title: 'Top anmeldere',
+        body: `${totalReviews()} danske anmeldelser på tværs af ${state.devices.length} enheder.`
+      },
+      {
+        title: 'Verificeret kompatibilitet',
+        body: `${state.devices.filter(d => (d.compatibility || []).includes('home-assistant')).length} enheder testet med Home Assistant.`
+      },
+      {
+        title: 'Importerede enheder',
+        body: `${state.devices.filter(d => d.shipping?.import && d.shipping.import.includes('told')).length} kræver særlig import – vi markerer dem tydeligt.`
+      }
+    ];
+    panels.innerHTML = stats.map(item => `<article class="device-card"><h3>${item.title}</h3><p>${item.body}</p></article>`).join('');
+  }
+
+  const reviewsTarget = document.getElementById('community-reviews');
+  if (reviewsTarget) {
+    const reviews = [];
+    state.devices.forEach(device => {
+      (device.danishReviews || []).forEach(review => {
+        reviews.push({ device, review });
+      });
+    });
+    reviews.sort((a, b) => (b.review.date || '').localeCompare(a.review.date || ''));
+    reviewsTarget.innerHTML = reviews.slice(0, 6).map(entry => `
+      <article class="device-card">
+        <h3>${entry.device.name}</h3>
+        <div class="rating">⭐ ${entry.review.rating}</div>
+        <p>${entry.review.text}</p>
+        <small>${entry.review.user} – ${entry.review.date}</small>
+      </article>`).join('');
+  }
+}
+
+function initAbout() {
+  // currently no dynamic behaviour required
+}
+
+function totalReviews() {
+  return state.devices.reduce((acc, device) => acc + (device.danishReviews?.length || 0), 0);
+}
 
 async function init() {
-  toasts.init();
-  initSheets();
-  initGlobalHandlers();
-  initAuthMock();
+  toastHub.init();
+  try {
+    await loadData();
+  } catch (error) {
+    console.error(error);
+    toast('Kunne ikke indlæse data');
+    return;
+  }
   initGlobalSearch();
-  await loadData();
-  renderWishlist();
-  updateWishlistBadge();
-  syncWishlistButtons();
-  document.querySelectorAll('form[data-netlify]').forEach(handleNetlifyForm);
-  initEstimator();
-  initChatbot();
-
-  const page = document.body.dataset.page;
-  switch (page) {
+  bindDeviceCardActions(document);
+  switch (page()) {
     case 'landing':
-      initLanding();
+      renderLanding();
       break;
     case 'directory':
       initDirectory();
       break;
-    case 'country':
-      initCountry();
+    case 'device':
+      initDevice();
       break;
-    case 'partners':
-      initPartners();
+    case 'community':
+      initCommunity();
       break;
     case 'about':
       initAbout();
@@ -268,905 +604,4 @@ async function init() {
   }
 }
 
-async function loadData() {
-  const files = [
-    { key: 'products', file: 'products.json', fallback: [] },
-    { key: 'stores', file: 'stores.json', fallback: [] },
-    { key: 'categories', file: 'categories.json', fallback: [] },
-    { key: 'countries', file: 'countries.json', fallback: [] },
-    { key: 'shippingConfig', file: 'shipping-config.json', fallback: null }
-  ];
-
-  await Promise.all(files.map(async entry => {
-    try {
-      const res = await fetch(`/data/${entry.file}`, { cache: 'no-store' });
-      if (!res.ok) throw new Error(res.statusText);
-      DB[entry.key] = await res.json();
-    } catch (err) {
-      DB[entry.key] = entry.fallback;
-      console.error(`Kunne ikke indlæse ${entry.file}:`, err);
-    }
-  }));
-}
-
-function initSheets() {
-  const dim = document.getElementById('sheet-dim');
-  const sheets = document.querySelectorAll('[data-sheet]');
-
-  function openSheet(id) {
-    const sheet = document.getElementById(id);
-    if (!sheet) return;
-    sheet.classList.add('open');
-    sheet.classList.remove('hidden');
-    dim?.classList.remove('hidden');
-    dim?.classList.add('visible');
-    sheet.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeAllSheets() {
-    sheets.forEach(sheet => {
-      sheet.classList.remove('open');
-      sheet.setAttribute('aria-hidden', 'true');
-      setTimeout(() => sheet.classList.add('hidden'), 200);
-    });
-    dim?.classList.remove('visible');
-    setTimeout(() => dim?.classList.add('hidden'), 200);
-  }
-
-  document.body.addEventListener('click', event => {
-    const openTarget = event.target.closest('[data-open]');
-    if (openTarget) {
-      const sheetId = openTarget.dataset.open;
-      if (sheetId) {
-        if (sheetId === 'sheet-wishlist') {
-          const input = document.querySelector('#sheet-wishlist input[name="product_url"]');
-          if (openTarget.dataset.prefillUrl) {
-            if (input) {
-              input.value = openTarget.dataset.prefillUrl;
-              input.focus();
-            }
-            prefillWishlistWithQuote({ detected: { url: openTarget.dataset.prefillUrl } });
-          } else {
-            prefillWishlistWithQuote({ detected: { url: input?.value || '' } });
-          }
-        }
-        openSheet(sheetId);
-      }
-    }
-
-    const closeTarget = event.target.closest('[data-close]');
-    if (closeTarget) {
-      closeAllSheets();
-    }
-
-    const wishlistToggle = event.target.closest('[data-add-to-wishlist]');
-    if (wishlistToggle) {
-      const dataset = wishlistToggle.dataset;
-      wishlist.toggle({
-        id: dataset.id,
-        title: dataset.title,
-        img: dataset.img,
-        priceDKK: Number(dataset.price || 0),
-        url: dataset.url
-      });
-      wishlistToggle.classList.toggle('active');
-    }
-
-    const quoteContinue = event.target.closest('[data-quote-continue]');
-    if (quoteContinue) {
-      const quote = getStoredQuote(quoteContinue.dataset.quoteContinue);
-      if (quote) {
-        prefillWishlistWithQuote(quote);
-      } else if (quoteContinue.dataset.url) {
-        prefillWishlistWithQuote({ detected: { url: quoteContinue.dataset.url } });
-      }
-      openSheet('sheet-wishlist');
-      const urlField = document.querySelector('#sheet-wishlist input[name="product_url"]');
-      urlField?.focus();
-      return;
-    }
-  });
-
-  dim?.addEventListener('click', closeAllSheets);
-  window.addEventListener('keyup', event => {
-    if (event.key === 'Escape') closeAllSheets();
-  });
-
-  window.openSheet = openSheet;
-  window.closeSheets = closeAllSheets;
-}
-
-function initGlobalHandlers() {
-  document.getElementById('wishlist-open')?.addEventListener('click', () => openSheet('sheet-wishlist'));
-  document.getElementById('wishlist-clear')?.addEventListener('click', () => wishlist.clear());
-}
-
-function initAuthMock() {
-  const loginButtons = document.querySelectorAll('[data-auth-action]');
-  loginButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const hasProfile = Boolean(storage.getItem(STORAGE_KEY_PROFILE));
-      if (hasProfile) {
-        storage.removeItem(STORAGE_KEY_PROFILE);
-        toast('Logget ud');
-        updateAuthState();
-      } else {
-        storage.setItem(STORAGE_KEY_PROFILE, '1');
-        toast('Logget ind (demo)');
-        updateAuthState();
-      }
-    });
-  });
-
-  updateAuthState();
-}
-
-function updateAuthState() {
-  const isLoggedIn = Boolean(storage.getItem(STORAGE_KEY_PROFILE));
-  document.querySelectorAll('[data-auth-state="label"]').forEach(el => {
-    el.textContent = isLoggedIn ? 'Min konto' : 'Log ind';
-  });
-}
-
-function initGlobalSearch() {
-  const form = document.getElementById('global-search');
-  if (!form) return;
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    const input = document.getElementById('global-search-input');
-    const query = input?.value?.trim() || '';
-    const url = new URL(window.location.origin + '/butikker.html');
-    if (query) {
-      url.searchParams.set('q', query);
-    }
-    window.location.href = url.toString();
-  });
-}
-
-function initEstimator() {
-  const form = document.getElementById('est-form');
-  if (!form) return;
-
-  const totalEl = document.getElementById('est-total');
-  const detailEl = document.getElementById('est-breakdown');
-  const zoneSelect = form.querySelector('[name="zone"]');
-
-  if (totalEl) totalEl.textContent = 'Indtast varepris';
-  if (detailEl) detailEl.innerHTML = '';
-
-  if (zoneSelect && DB.shippingConfig?.zones?.length) {
-    zoneSelect.innerHTML = DB.shippingConfig.zones
-      .map(zone => `<option value="${zone.code}">${zone.label}</option>`)
-      .join('');
-  }
-
-  const handleUpdate = (event) => {
-    if (event) event.preventDefault();
-    const itemDKK = Number(form.querySelector('[name="item_dkk"]')?.value || 0);
-    const weightKg = Number(form.querySelector('[name="weight_kg"]')?.value || 0);
-    const zoneCode = (form.querySelector('[name="zone"]')?.value || 'EU').toUpperCase();
-
-    if (!itemDKK) {
-      if (totalEl) totalEl.textContent = 'Indtast varepris';
-      if (detailEl) detailEl.innerHTML = '';
-      return;
-    }
-
-    const result = computeEstimate({ itemDKK, weightKg, zoneCode });
-    if (totalEl) totalEl.textContent = `DKK ${result.total.toLocaleString('da-DK')}`;
-    if (detailEl) {
-      const map = [
-        ['Vare', result.breakdown.item],
-        ['Fragt', result.breakdown.freight],
-        ['Service', result.breakdown.service],
-        ['Told', result.breakdown.duty],
-        ['Moms', result.breakdown.vat]
-      ];
-      detailEl.innerHTML = map
-        .map(([label, value]) => `<li>${label}: DKK ${Number(value).toLocaleString('da-DK')}</li>`)
-        .join('');
-    }
-  };
-
-  form.addEventListener('submit', handleUpdate);
-  form.querySelectorAll('input, select').forEach(input => {
-    input.addEventListener('change', handleUpdate);
-    input.addEventListener('input', event => {
-      if (event.target.name === 'item_dkk') handleUpdate();
-    });
-  });
-
-  handleUpdate();
-}
-
-function computeEstimate({ itemDKK, weightKg = 0, zoneCode = 'EU' }) {
-  const cfg = DB.shippingConfig;
-  const zone = cfg?.zones?.find(entry => entry.code === zoneCode) || { vat: 0.25, dutyDefault: 0.03 };
-  const weights = cfg?.weights || [];
-  const freightTable = cfg?.freight || {};
-  const rate = cfg?.service?.rate ?? 0.12;
-  const minService = cfg?.service?.minDKK ?? 49;
-
-  const weight = Number.isFinite(weightKg) && weightKg > 0 ? weightKg : 0.01;
-  let freight = 0;
-  if (weights.length) {
-    const zoneFreight = freightTable[zoneCode] || freightTable[zoneCode.toUpperCase()] || [];
-    const index = weights.findIndex(limit => weight <= limit);
-    const safeIndex = index >= 0 ? index : weights.length - 1;
-    freight = zoneFreight[safeIndex] ?? zoneFreight[zoneFreight.length - 1] ?? 0;
-  }
-
-  const service = Math.max(Math.round(itemDKK * rate), minService);
-  const dutiable = itemDKK + freight;
-  const duty = Math.round(dutiable * (zone.dutyDefault ?? 0.03));
-  const vat = Math.round((dutiable + duty + service) * (zone.vat ?? 0.25));
-  const total = Math.round(itemDKK + freight + duty + vat + service);
-
-  return {
-    total,
-    breakdown: {
-      item: itemDKK,
-      freight,
-      service,
-      duty,
-      vat
-    }
-  };
-}
-
-function initChatbot() {
-  const toggle = document.getElementById('chatbot-toggle');
-  const panel = document.getElementById('chatbot-panel');
-  const closeBtn = document.getElementById('chatbot-close');
-  const form = document.getElementById('chatbot-form');
-  const input = document.getElementById('chatbot-input');
-  const messages = document.getElementById('chatbot-messages');
-  if (!toggle || !panel || !form || !input || !messages) return;
-
-  const suggestions = Array.from(document.querySelectorAll('[data-chat-suggestion]'));
-  toggle.setAttribute('aria-expanded', 'false');
-
-  function setPanel(open) {
-    if (open) {
-      panel.classList.remove('hidden');
-      panel.setAttribute('aria-hidden', 'false');
-      toggle.setAttribute('aria-expanded', 'true');
-      setTimeout(() => input.focus(), 50);
-    } else {
-      panel.classList.add('hidden');
-      panel.setAttribute('aria-hidden', 'true');
-      toggle.setAttribute('aria-expanded', 'false');
-    }
-  }
-
-  function appendMessage(role, text, { html = false } = {}) {
-    const row = document.createElement('div');
-    row.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-    const bubble = document.createElement('div');
-    bubble.className = `max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${role === 'user' ? 'bg-ink text-white' : 'bg-soft text-ink'}`;
-    if (html) {
-      bubble.innerHTML = text;
-    } else {
-      bubble.textContent = text;
-    }
-    row.appendChild(bubble);
-    messages.appendChild(row);
-    messages.scrollTop = messages.scrollHeight;
-    return { row, bubble };
-  }
-
-  function appendAssistantQuote(html) {
-    const row = document.createElement('div');
-    row.className = 'flex justify-start';
-    row.innerHTML = html;
-    messages.appendChild(row);
-    messages.scrollTop = messages.scrollHeight;
-    return row;
-  }
-
-  async function respondTo(text) {
-    const lower = text.toLowerCase();
-    const urlMatch = text.match(/https?:\/\/[^\s]+/i);
-    if (urlMatch) {
-      const pending = appendMessage('assistant', 'Jeg analyserer linket…');
-      const quote = await requestQuote(urlMatch[0]);
-      pending?.row?.remove();
-      if (quote?.ok) {
-        appendAssistantQuote(renderQuoteMarkup(quote, { context: 'chatbot' }));
-      } else {
-        appendAssistantQuote(renderQuoteError(urlMatch[0], quote?.error, { context: 'chatbot' }));
-      }
-      return;
-    }
-    const responses = [
-      {
-        keywords: ['japan', 'jp'],
-        reply: 'Japan-guiden ligger klar – klik på Japan i forsiden eller gå direkte til japan.html for topbutikker og produkter.'
-      },
-      {
-        keywords: ['usa', 'us', 'amerika'],
-        reply: 'For amerikanske fund anbefaler vi B&H, StockX og Huckberry. Se hele listen på usa.html eller filtrer i butikker.html.'
-      },
-      {
-        keywords: ['uk', 'storbritannien', 'england'],
-        reply: 'Storbritannien-siden viser Apple Store UK, END. og Selfridges. Brug butiksoversigten med country=UK for alle produkter.'
-      },
-      {
-        keywords: ['korea', 'sydkorea', 'kr'],
-        reply: 'Vores Sydkorea-katalog samler k-beauty og streetwear. Kig forbi sydkorea.html eller filtrer efter KR i oversigten.'
-      },
-      {
-        keywords: ['kina', 'cn', 'china'],
-        reply: 'Designmarkedet fra Shanghai og gadget-butikker er klar på kina.html. Du kan også filtrere efter Kina i butikker.html.'
-      },
-      {
-        keywords: ['indien', 'india', 'in'],
-        reply: 'Indien-siden samler håndværk og tech fra Bangalore til Delhi. Besøg indien.html for inspiration.'
-      },
-      {
-        keywords: ['levering', 'fragt', 'totalpris'],
-        reply: 'Vi viser altid én totalpris. Alle detaljer om levering og priser finder du på om-os.html under FAQ.'
-      },
-      {
-        keywords: ['selekti+', 'abonnement', 'plus'],
-        reply: 'Selekti+ giver fri fragt, behovsbokse og priority support. Læs mere i Selekti+-sektionen på forsiden eller udfyld ventelisten via sheetet.'
-      },
-      {
-        keywords: ['partner', 'butik', 'samarbejde'],
-        reply: 'Klik på bliv-partner.html for at se programmet og sende en ansøgning. Vi onboarder normalt på 48–72 timer.'
-      },
-      {
-        keywords: ['wishlist', 'ønskeliste', 'favorit'],
-        reply: 'Tryk på hjerterne på produkterne for at gemme dem i ønskelisten. Du kan altid åbne listen via knappen i headeren.'
-      }
-    ];
-
-    const entry = responses.find(item => item.keywords.some(keyword => lower.includes(keyword)));
-    if (entry) {
-      appendMessage('assistant', entry.reply);
-    } else {
-      appendMessage('assistant', 'Jeg hjælper dig gerne videre. Stil et spørgsmål om et land, levering eller hvordan du bestiller via Selekti.');
-    }
-  }
-
-  if (!messages.dataset.bootstrapped) {
-    appendMessage('assistant', 'Hej! Jeg er din Selekti-guide. Spørg mig om butikker, lande eller hvordan du bestiller, så viser jeg vejen.');
-    messages.dataset.bootstrapped = 'true';
-  }
-
-  toggle.addEventListener('click', () => {
-    const open = panel.classList.contains('hidden');
-    setPanel(open);
-  });
-
-  closeBtn?.addEventListener('click', () => setPanel(false));
-
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !panel.classList.contains('hidden')) {
-      setPanel(false);
-    }
-  });
-
-  suggestions.forEach(button => {
-    button.addEventListener('click', () => {
-      const question = button.dataset.chatSuggestion;
-      if (!question) return;
-      setPanel(true);
-      input.value = question;
-      input.focus();
-    });
-  });
-
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-    appendMessage('user', text);
-    input.value = '';
-    await respondTo(text);
-  });
-}
-
-function initLanding() {
-  renderFeaturedStores('#landing-featured-stores', store => store.featured);
-  renderFeaturedProducts('#landing-featured-products');
-  renderGuides();
-  const heroEst = document.getElementById('hero-est');
-  if (heroEst) {
-    const res = computeEstimate({ itemDKK: 1500, weightKg: 1.2, zoneCode: 'JP' });
-    heroEst.textContent = `DKK ${res.total.toLocaleString('da-DK')}`;
-  }
-  const heroLinkForm = document.getElementById('hero-link-form');
-  const heroLinkInput = document.getElementById('hero-link-input');
-  const heroQuote = document.getElementById('hero-quote');
-  if (heroLinkForm) {
-    heroLinkForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      const link = heroLinkInput?.value?.trim();
-      if (!link) {
-        toast('Indsæt et gyldigt produktlink.');
-        heroLinkInput?.focus();
-        return;
-      }
-      let parsed;
-      try {
-        parsed = new URL(link);
-      } catch (err) {
-        toast('Linket ser ikke rigtigt ud. Prøv igen.');
-        heroLinkInput?.focus();
-        return;
-      }
-      if (heroQuote) {
-        heroQuote.classList.remove('hidden');
-        heroQuote.innerHTML = '<div class="quote-loading">Vi analyserer linket…</div>';
-      }
-      const quote = await requestQuote(parsed.href);
-      if (heroLinkInput) {
-        heroLinkInput.value = parsed.href;
-      }
-      if (heroQuote) {
-        if (quote?.ok) {
-          heroQuote.innerHTML = renderQuoteMarkup(quote, { context: 'hero' });
-        } else {
-          heroQuote.innerHTML = renderQuoteError(parsed.href, quote?.error, { context: 'hero' });
-        }
-      }
-    });
-  }
-}
-
-function renderFeaturedStores(selector, filterFn) {
-  const container = document.querySelector(selector);
-  if (!container) return;
-  const stores = DB.stores.filter(filterFn || (() => true)).slice(0, 6);
-  if (!stores.length) {
-    container.innerHTML = '<p class="text-sm text-ink/60">Ingen butikker at vise endnu.</p>';
-    return;
-  }
-  container.innerHTML = stores.map(store => `
-    <article class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-5 flex flex-col gap-4">
-      <div class="flex items-center gap-3">
-        <img src="${store.logo}" alt="${store.name}" loading="lazy" decoding="async" class="h-12 w-12 rounded-xl object-cover">
-        <div>
-          <h3 class="text-lg font-semibold">${store.name}</h3>
-          <p class="text-xs text-ink/60">${store.tags.join(' • ')}</p>
-        </div>
-      </div>
-      <p class="text-sm text-ink/70">${store.deliveryHint}</p>
-      <div class="flex flex-wrap gap-2">
-        <a href="butikker.html?store=${encodeURIComponent(store.id)}" class="btn primary small">Se produkter</a>
-        <button class="btn ghost small" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
-      </div>
-    </article>
-  `).join('');
-}
-
-function renderFeaturedProducts(selector) {
-  const container = document.querySelector(selector);
-  if (!container) return;
-  const products = DB.products.filter(product => product.featured).slice(0, 12);
-  container.innerHTML = products.map(renderProductCard).join('');
-}
-
-function renderGuides() {
-  const container = document.getElementById('landing-guides');
-  if (!container) return;
-  const guides = DB.countries.map(country => ({
-    country,
-    url: `/${(country.slug || country.code || '').toLowerCase()}.html`,
-    title: `Guide til shopping i ${country.label}`,
-    summary: `Få tips til populære butikker og levering fra ${country.label}.`
-  }));
-  container.innerHTML = guides.map(guide => `
-    <article class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 flex flex-col gap-3">
-      <h3 class="text-lg font-semibold">${guide.title}</h3>
-      <p class="text-sm text-ink/70">${guide.summary}</p>
-      <a class="text-sm font-medium text-ocean" href="${guide.url}">Læs guiden →</a>
-    </article>
-  `).join('');
-}
-
-function initDirectory() {
-  hydrateDirectoryFromParams();
-  bindDirectoryControls();
-  renderDirectoryFeatured();
-  renderDirectory();
-
-  const estEl = document.getElementById('directory-hero-est');
-  if (estEl) {
-    const res = computeEstimate({ itemDKK: 899, weightKg: 0.8, zoneCode: 'US' });
-    estEl.textContent = `DKK ${res.total.toLocaleString('da-DK')}`;
-  }
-}
-
-function hydrateDirectoryFromParams() {
-  const params = getParams();
-  const searchInput = document.getElementById('directory-search-input');
-  if (searchInput) searchInput.value = params.get('q') || '';
-  const searchCountry = document.getElementById('directory-search-country');
-  if (searchCountry) searchCountry.value = params.get('country') || '';
-  const sortSelect = document.getElementById('directory-sort');
-  if (sortSelect) sortSelect.value = params.get('sort') || 'popular';
-
-  document.querySelectorAll('[data-filter="country"]').forEach(chip => {
-    chip.classList.toggle('active', chip.dataset.value === params.get('country'));
-  });
-}
-
-function bindDirectoryControls() {
-  const searchForm = document.getElementById('directory-search');
-  searchForm?.addEventListener('submit', event => {
-    event.preventDefault();
-    const term = document.getElementById('directory-search-input')?.value || '';
-    setParam('q', term.trim());
-    setParam('country', document.getElementById('directory-search-country')?.value || '');
-    renderDirectory();
-  });
-
-  document.querySelectorAll('[data-filter="country"]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const current = getParams().get('country');
-      const value = chip.dataset.value;
-      setParam('country', current === value ? '' : value);
-      hydrateDirectoryFromParams();
-      renderDirectory();
-    });
-  });
-
-  const filterForm = document.getElementById('directory-filters');
-  filterForm?.addEventListener('change', () => {
-    const params = new FormData(filterForm);
-    const categories = params.getAll('category');
-    const countries = params.getAll('country');
-    const brands = params.getAll('brand');
-    const sizes = params.getAll('size');
-    setParam('cat', categories.join(','));
-    setParam('countries', countries.join(','));
-    setParam('brands', brands.join(','));
-    setParam('sizes', sizes.join(','));
-    renderDirectory();
-  });
-
-  document.getElementById('directory-reset')?.addEventListener('click', () => {
-    ['q', 'country', 'cat', 'countries', 'brands', 'sizes', 'priceMin', 'priceMax', 'store', 'sort'].forEach(key => setParam(key, ''));
-    hydrateDirectoryFromParams();
-    if (filterForm) filterForm.reset();
-    renderDirectory();
-  });
-
-  const sortSelect = document.getElementById('directory-sort');
-  sortSelect?.addEventListener('change', event => {
-    setParam('sort', event.target.value);
-    renderDirectory();
-  });
-
-  document.querySelectorAll('[data-row-prev]').forEach(button => {
-    button.addEventListener('click', () => {
-      const id = button.dataset.target;
-      const row = document.getElementById(id);
-      row?.scrollBy({ left: -320, behavior: 'smooth' });
-    });
-  });
-  document.querySelectorAll('[data-row-next]').forEach(button => {
-    button.addEventListener('click', () => {
-      const id = button.dataset.target;
-      const row = document.getElementById(id);
-      row?.scrollBy({ left: 320, behavior: 'smooth' });
-    });
-  });
-}
-
-function renderDirectory() {
-  const params = getParams();
-  const q = (params.get('q') || '').toLowerCase();
-  const country = params.get('country') || '';
-  const categoryParam = params.get('cat') || '';
-  const multiCountries = (params.get('countries') || '').split(',').filter(Boolean);
-  const brands = (params.get('brands') || '').split(',').filter(Boolean);
-  const sizes = (params.get('sizes') || '').split(',').filter(Boolean);
-  const store = params.get('store') || '';
-  const sort = params.get('sort') || 'popular';
-
-  let list = [...DB.products];
-
-  if (q) {
-    list = list.filter(product => {
-      const storeName = DB.stores.find(store => store.id === product.storeId)?.name || '';
-      return [product.title, product.tags?.join(' '), storeName].join(' ').toLowerCase().includes(q);
-    });
-  }
-
-  if (country) {
-    list = list.filter(product => product.country.toLowerCase() === country.toLowerCase());
-  }
-
-  if (categoryParam) {
-    const categories = categoryParam.split(',').filter(Boolean);
-    if (categories.length) {
-      list = list.filter(product => categories.includes(product.category));
-    }
-  }
-
-  if (multiCountries.length) {
-    list = list.filter(product => multiCountries.includes(product.country.toLowerCase()));
-  }
-
-  if (brands.length) {
-    list = list.filter(product => brands.some(brand => product.tags?.includes(brand)));
-  }
-
-  if (sizes.length) {
-    list = list.filter(product => sizes.some(size => product.tags?.includes(size)));
-  }
-
-  if (store) {
-    list = list.filter(product => product.storeId === store);
-  }
-
-  switch (sort) {
-    case 'price_asc':
-      list.sort((a, b) => a.priceDKK - b.priceDKK);
-      break;
-    case 'price_desc':
-      list.sort((a, b) => b.priceDKK - a.priceDKK);
-      break;
-    case 'new':
-      list = list.slice().reverse();
-      break;
-    default:
-      list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-      break;
-  }
-
-  const countEl = document.getElementById('directory-count');
-  if (countEl) {
-    countEl.textContent = list.length ? `${list.length} produkter` : '0 produkter';
-  }
-
-  updateDirectoryActiveFilters({ q, country, categoryParam, multiCountries, brands, sizes, store });
-
-  const grid = document.getElementById('directory-grid');
-  const emptyState = document.getElementById('directory-empty');
-  if (!grid) return;
-
-  if (!list.length) {
-    grid.innerHTML = '';
-    emptyState?.classList.remove('hidden');
-    renderDirectorySuggestions();
-    return;
-  }
-
-  emptyState?.classList.add('hidden');
-  grid.innerHTML = list.map(renderProductCard).join('');
-  syncWishlistButtons();
-}
-
-function renderDirectoryFeatured() {
-  const container = document.getElementById('directory-featured');
-  if (!container) return;
-  const featuredStores = DB.stores.filter(store => store.featured).slice(0, 6);
-  if (!featuredStores.length) {
-    container.innerHTML = '<p class="text-sm text-ink/60">Ingen kampagner aktive lige nu.</p>';
-    return;
-  }
-  container.innerHTML = featuredStores.map(store => `
-    <article class="min-w-[260px] max-w-[280px] rounded-3xl bg-white p-5 ring-1 ring-black/5 shadow-soft">
-      <div class="flex items-center gap-3">
-        <img src="${store.logo}" alt="${store.name}" loading="lazy" decoding="async" class="h-12 w-12 rounded-xl object-cover">
-        <div>
-          <h3 class="text-base font-semibold">${store.name}</h3>
-          <p class="text-xs text-ink/60">${store.tags.join(' • ')}</p>
-        </div>
-      </div>
-      <p class="mt-3 text-sm text-ink/70">${store.deliveryHint}</p>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <a href="butikker.html?store=${encodeURIComponent(store.id)}" class="btn primary small">Se produkter</a>
-        <button class="btn ghost small" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
-      </div>
-    </article>
-  `).join('');
-}
-
-function renderDirectorySuggestions() {
-  const suggestions = document.getElementById('directory-suggestions');
-  if (!suggestions) return;
-  const categoryChips = DB.categories.slice(0, 3).map(category => `
-    <a class="chip" href="butikker.html?cat=${encodeURIComponent(category.id)}">${category.label}</a>
-  `);
-  const countryChips = DB.countries.slice(0, 3).map(country => `
-    <a class="chip" href="butikker.html?country=${encodeURIComponent(country.code.toLowerCase())}">${country.label}</a>
-  `);
-  suggestions.innerHTML = [...categoryChips, ...countryChips].join('');
-}
-
-function updateDirectoryActiveFilters({ q, country, categoryParam, multiCountries, brands, sizes, store }) {
-  const container = document.getElementById('active-filters');
-  if (!container) return;
-  const chips = [];
-  if (q) chips.push(`<span class="chip">Søg: ${q}</span>`);
-  if (country) chips.push(`<span class="chip">Land: ${country.toUpperCase()}</span>`);
-  if (categoryParam) chips.push(`<span class="chip">Kategori: ${categoryParam}</span>`);
-  if (multiCountries.length) chips.push(`<span class="chip">Lande: ${multiCountries.join(', ').toUpperCase()}</span>`);
-  if (brands.length) chips.push(`<span class="chip">Tags: ${brands.join(', ')}</span>`);
-  if (sizes.length) chips.push(`<span class="chip">Størrelser: ${sizes.join(', ')}</span>`);
-  if (store) {
-    const storeName = DB.stores.find(s => s.id === store)?.name || store;
-    chips.push(`<span class="chip">Butik: ${storeName}</span>`);
-  }
-  container.innerHTML = chips.join('');
-}
-
-function renderProductCard(product) {
-  const store = DB.stores.find(entry => entry.id === product.storeId);
-  const storeName = store ? store.name : 'Butik';
-  const isActive = wishlist.has(product.id);
-  return `
-    <article class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft overflow-hidden card">
-      <div class="aspect-[4/5] bg-soft overflow-hidden">
-        <img src="${product.img}" alt="${product.title}" loading="lazy" decoding="async" class="h-full w-full object-cover">
-      </div>
-      <div class="p-4 space-y-2">
-        <p class="text-xs uppercase tracking-wide text-ink/50">${storeName}</p>
-        <h3 class="text-base font-semibold leading-tight">${product.title}</h3>
-        <p class="text-sm text-ink/70">DKK ${product.priceDKK.toLocaleString('da-DK')}</p>
-        <div class="flex gap-2 pt-2">
-          <button class="wishlist-btn${isActive ? ' active' : ''}" aria-label="Tilføj til ønskeliste"
-            data-add-to-wishlist
-            data-id="${product.id}"
-            data-title="${product.title}"
-            data-img="${product.img}"
-            data-price="${product.priceDKK}"
-            data-url="${product.url}">♡</button>
-          <button class="btn primary small font-medium" data-open="sheet-wishlist" data-prefill-url="${product.url}">Bestil via link</button>
-        </div>
-      </div>
-    </article>
-  `;
-}
-
-function initCountry() {
-  const countryCode = document.body.dataset.country || getParams().get('country');
-  if (!countryCode) return;
-  const stores = DB.stores.filter(store => store.country.toLowerCase() === countryCode.toLowerCase());
-  const products = DB.products.filter(product => product.country.toLowerCase() === countryCode.toLowerCase());
-  const storeGrid = document.getElementById('country-store-grid');
-  const productGrid = document.getElementById('country-product-grid');
-  if (storeGrid) {
-    storeGrid.innerHTML = stores.map(store => `
-      <article class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-5 flex flex-col gap-3">
-        <div class="flex items-center gap-3">
-          <img src="${store.logo}" alt="${store.name}" loading="lazy" decoding="async" class="h-12 w-12 rounded-xl object-cover">
-          <div>
-            <h3 class="text-lg font-semibold">${store.name}</h3>
-            <p class="text-xs text-ink/60">${store.tags.join(' • ')}</p>
-          </div>
-        </div>
-        <p class="text-sm text-ink/70">${store.deliveryHint}</p>
-        <a href="butikker.html?store=${encodeURIComponent(store.id)}" class="text-sm font-medium text-ocean">Gå til butik →</a>
-      </article>
-    `).join('');
-  }
-  if (productGrid) {
-    productGrid.innerHTML = products.map(renderProductCard).join('');
-  }
-}
-
-function initPartners() {
-  document.querySelectorAll('form[data-netlify]').forEach(handleNetlifyForm);
-}
-
-function initAbout() {
-  document.querySelectorAll('form[data-netlify]').forEach(handleNetlifyForm);
-}
-
-function handleNetlifyForm(form) {
-  if (form.dataset.netlifyBound === 'true') return;
-  form.dataset.netlifyBound = 'true';
-  const submitButton = form.querySelector('button[type="submit"]');
-  const successTarget = form.dataset.successTarget ? document.getElementById(form.dataset.successTarget) : null;
-  if (submitButton && !submitButton.dataset.originalText) {
-    submitButton.dataset.originalText = submitButton.textContent || '';
-  }
-
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.dataset.loading = 'true';
-      submitButton.textContent = 'Sender…';
-    }
-
-    try {
-      const formData = new FormData(form);
-      const response = await fetch(form.getAttribute('action') || '/', {
-        method: 'POST',
-        body: formData
-      });
-      if (response.ok) {
-        form.reset();
-        if (successTarget) successTarget.classList.remove('hidden');
-        if (form.dataset.hideOnSuccess === 'true') {
-          form.classList.add('hidden');
-        }
-        toast('Tak for din besked – vi vender tilbage snart.');
-      } else {
-        throw new Error('Netværksfejl');
-      }
-    } catch (err) {
-      toast('Noget gik galt – prøv igen.');
-    } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.dataset.loading = 'false';
-        submitButton.textContent = submitButton.dataset.originalText || 'Send';
-      }
-    }
-  });
-}
-
-function renderWishlist() {
-  const listEl = document.getElementById('wishlist-list');
-  const emptyEl = document.getElementById('wishlist-empty');
-  const actionsEl = document.getElementById('wishlist-actions');
-  const itemsJson = document.querySelector('#sheet-wishlist input[name="items_json"]');
-  if (!listEl || !emptyEl || !actionsEl) return;
-  const items = wishlist.get();
-  if (!items.length) {
-    listEl.innerHTML = '';
-    emptyEl.classList.remove('hidden');
-    actionsEl.classList.add('hidden');
-  } else {
-    emptyEl.classList.add('hidden');
-    actionsEl.classList.remove('hidden');
-    listEl.innerHTML = items.map(item => `
-      <article class="flex items-center gap-3 rounded-2xl bg-white ring-1 ring-black/5 p-3">
-        <img src="${item.img}" alt="${item.title}" loading="lazy" decoding="async" class="h-16 w-16 rounded-xl object-cover">
-        <div class="flex-1">
-          <p class="text-sm font-medium">${item.title}</p>
-          <p class="text-xs text-ink/60">DKK ${Number(item.priceDKK || 0).toLocaleString('da-DK')}</p>
-        </div>
-        <button class="text-xs text-ocean" type="button" data-remove-wishlist="${item.id}">Fjern</button>
-      </article>
-    `).join('');
-    listEl.querySelectorAll('[data-remove-wishlist]').forEach(button => {
-      button.addEventListener('click', () => {
-        const id = button.dataset.removeWishlist;
-        wishlist.set(wishlist.get().filter(item => item.id !== id));
-      });
-    });
-  }
-  if (itemsJson) itemsJson.value = JSON.stringify(items);
-}
-
-function updateWishlistBadge() {
-  const badge = document.getElementById('wishlist-count');
-  if (!badge) return;
-  badge.textContent = String(wishlist.get().length);
-}
-
-function syncWishlistButtons() {
-  const ids = new Set(wishlist.get().map(item => item.id));
-  document.querySelectorAll('[data-add-to-wishlist]').forEach(button => {
-    if (ids.has(button.dataset.id)) {
-      button.classList.add('active');
-    } else {
-      button.classList.remove('active');
-    }
-  });
-}
-
-function getParams() {
-  return new URLSearchParams(window.location.search);
-}
-
-function setParam(key, value) {
-  const params = getParams();
-  if (value === undefined || value === null || value === '') {
-    params.delete(key);
-  } else {
-    params.set(key, value);
-  }
-  const query = params.toString();
-  const newUrl = `${window.location.pathname}${query ? `?${query}` : ''}`;
-  window.history.replaceState({}, '', newUrl);
-}
+document.addEventListener('DOMContentLoaded', init);

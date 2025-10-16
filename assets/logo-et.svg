@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" role="img" aria-labelledby="title">
-  <title id="title">Selekti logo</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Z-Wave Compatibility Hub logo</title>
+  <desc id="logoDesc">Initialerne ZC i en grøn gradient firkant med moderne typografi</desc>
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0ea5e9" />
-      <stop offset="50%" stop-color="#10b981" />
-      <stop offset="100%" stop-color="#7c3aed" />
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2c5530" />
+      <stop offset="100%" stop-color="#8fb996" />
     </linearGradient>
   </defs>
-  <rect x="0" y="0" width="120" height="40" rx="12" fill="url(#g)" />
-  <text x="30" y="26" font-family="'Inter', 'Segoe UI', sans-serif" font-size="20" font-weight="700" fill="#ffffff">ET</text>
-  <text x="56" y="26" font-family="'Inter', 'Segoe UI', sans-serif" font-size="18" font-weight="500" fill="#ffffff">Selekti</text>
+  <rect x="2" y="2" width="36" height="36" rx="10" fill="url(#grad)" />
+  <text x="20" y="26" text-anchor="middle" font-family="'Inter', 'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#ffffff">ZC</text>
+  <text x="48" y="25" font-family="'Inter', 'Segoe UI', sans-serif" font-size="16" font-weight="600" fill="#2d3047">Z-Wave</text>
+  <text x="48" y="34" font-family="'Inter', 'Segoe UI', sans-serif" font-size="12" font-weight="500" fill="#4a7c59">Compatibility Hub</text>
 </svg>
