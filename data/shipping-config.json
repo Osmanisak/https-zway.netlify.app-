@@ -1,0 +1,22 @@
+{
+  "zones": [
+    { "code": "EU", "label": "EU", "vat": 0.25, "dutyDefault": 0.03 },
+    { "code": "UK", "label": "Storbritannien", "vat": 0.20, "dutyDefault": 0.03 },
+    { "code": "US", "label": "USA", "vat": 0.00, "dutyDefault": 0.03 },
+    { "code": "JP", "label": "Japan", "vat": 0.10, "dutyDefault": 0.03 },
+    { "code": "KR", "label": "Sydkorea", "vat": 0.10, "dutyDefault": 0.03 },
+    { "code": "CN", "label": "Kina", "vat": 0.13, "dutyDefault": 0.03 },
+    { "code": "IN", "label": "Indien", "vat": 0.18, "dutyDefault": 0.03 }
+  ],
+  "weights": [0.5, 1, 2, 5, 10, 15],
+  "freight": {
+    "EU": [79, 99, 129, 199, 299, 399],
+    "UK": [99, 129, 179, 259, 359, 499],
+    "US": [129, 169, 219, 329, 479, 699],
+    "JP": [129, 169, 229, 339, 499, 749],
+    "KR": [129, 169, 229, 339, 499, 749],
+    "CN": [129, 169, 229, 339, 499, 749],
+    "IN": [139, 179, 239, 359, 519, 799]
+  },
+  "service": { "rate": 0.12, "minDKK": 49 }
+}

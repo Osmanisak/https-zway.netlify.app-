@@ -1,0 +1,10 @@
+[
+  { "id": "elektronik", "label": "Elektronik" },
+  { "id": "audio", "label": "Lyd" },
+  { "id": "beauty", "label": "Skønhed" },
+  { "id": "tøj", "label": "Tøj" },
+  { "id": "sneakers", "label": "Sneakers" },
+  { "id": "home", "label": "Bolig" },
+  { "id": "foto", "label": "Foto" },
+  { "id": "gaming", "label": "Gaming" }
+]

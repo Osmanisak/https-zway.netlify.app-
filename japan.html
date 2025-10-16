@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Japan – Butikker og produkter | Selekti</title>
+  <meta name="description" content="Se de bedste japanske butikker og produkter til danske kunder via Selekti." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/styles/base.css" />
+  <script src="/app.js" defer></script>
+</head>
+<body data-page="country" data-country="JP">
+  <header class="site-header">
+    <div class="container inner">
+      <a class="logo" href="/index.html" aria-label="Selekti forside"><span class="logo-mark">ET</span></a>
+      <form id="global-search" class="global-search" role="search">
+        <input id="global-search-input" type="search" placeholder="Søg butik, brand eller produkt" aria-label="Global søgning" />
+        <button class="btn primary" type="submit">Søg</button>
+      </form>
+      <nav class="primary-nav">
+        <a href="/butikker.html">Butikker</a>
+        <a href="/index.html#guides">Guides</a>
+        <a href="/om-os.html">Om os</a>
+        <a href="/bliv-partner.html">Bliv partner</a>
+      </nav>
+      <div class="cta-group">
+        <button id="wishlist-open" data-open="sheet-wishlist" class="btn ghost">Ønskeliste <span id="wishlist-count" class="badge">0</span></button>
+        <button class="btn primary" data-auth-action>Log ind</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container country-hero">
+        <div>
+          <h1>Japan</h1>
+          <p>Få adgang til japanske sneakers, elektronik og designmærker. Selekti håndterer told, moms og levering til Danmark.</p>
+          <div class="badge-row">
+            <span class="badge">Levering 7–14 hverdage</span>
+            <span class="badge">Totalpris inkl. told & moms</span>
+            <a class="badge" href="/butikker.html?country=JP">Se alt fra Japan</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light">
+      <div class="container">
+        <header class="section-head">
+          <h2>Top butikker i Japan</h2>
+        </header>
+        <div id="country-stores" class="row-scroll"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <header class="section-head">
+          <h2>Populært fra Japan</h2>
+        </header>
+        <div id="country-products" class="product-grid"></div>
+        <div class="cta-center">
+          <a class="btn primary" href="/butikker.html?country=JP">Se alle produkter</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <img src="/assets/logo-et.svg" alt="Selekti" width="120" />
+        <p>Global shopping, dansk tryghed.</p>
+      </div>
+      <div>
+        <h3>Navigation</h3>
+        <ul>
+          <li><a href="/index.html">Forside</a></li>
+          <li><a href="/butikker.html">Butikker</a></li>
+          <li><a href="/om-os.html">Om os</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Kontakt</h3>
+        <ul>
+          <li><a href="mailto:team@selekti.dk">team@selekti.dk</a></li>
+          <li><button class="btn ghost" data-open="sheet-wishlist">Bestil via link</button></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Nyheder</h3>
+        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="newsletter" />
+          <p class="hp"><label>Udfyld ikke <input name="bot-field" /></label></p>
+          <input type="email" name="email" required placeholder="din@email.dk" />
+          <button class="btn primary" type="submit">Tilmeld</button>
+        </form>
+      </div>
+    </div>
+  </footer>
+
+  <div id="sheet-dim" class="sheet-dim" hidden></div>
+  <aside id="sheet-wishlist" class="sheet" role="dialog" aria-modal="true" aria-labelledby="wishlist-title">
+    <div class="sheet-header">
+      <h2 id="wishlist-title">Ønskeliste & bestil via link</h2>
+      <button class="btn ghost" data-close>Luk</button>
+    </div>
+    <div class="sheet-body">
+      <section>
+        <div id="wishlist-empty" class="wishlist-empty">
+          <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" class="mascot" />
+          <p>Din liste er tom. Find noget unikt – tryk ♡</p>
+        </div>
+        <div id="wishlist-list" class="wishlist-list"></div>
+        <div id="wishlist-actions" hidden>
+          <button id="wishlist-clear" class="btn ghost" type="button">Ryd ønskeliste</button>
+        </div>
+      </section>
+      <section>
+        <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="wishlist" />
+          <input type="hidden" name="items_json" id="wishlist-json" value="[]" />
+          <p class="hp"><label>Du må ikke udfylde <input name="bot-field" /></label></p>
+          <label>Produktlink
+            <input id="wishlist-product-url" name="product_url" type="url" required placeholder="https://butik.com/vare" />
+          </label>
+          <label>Variant / størrelse
+            <input name="variant" type="text" placeholder="fx Medium" />
+          </label>
+          <label>Noter
+            <textarea name="notes" rows="3" placeholder="Fortæl os hvad du ønsker"></textarea>
+          </label>
+          <label>E-mail
+            <input name="email" type="email" required placeholder="din@email.dk" />
+          </label>
+          <button class="btn primary" type="submit">Send forespørgsel</button>
+          <p class="note">Estimat. Endelig pris bekræftes på mail.</p>
+        </form>
+      </section>
+    </div>
+  </aside>
+
+  <div id="toasts" class="toast-container" aria-live="polite"></div>
+</body>
+</html>
