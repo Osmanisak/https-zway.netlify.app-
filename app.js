@@ -152,7 +152,10 @@ function closeSheets() {
     dim.setAttribute('hidden', '');
   }
   setTimeout(() => {
-    document.querySelectorAll('.sheet').forEach(sheet => sheet.classList.remove('open'));
+    document.querySelectorAll('.sheet').forEach(sheet => {
+      sheet.classList.remove('open');
+      sheet.setAttribute('hidden', '');
+    });
   }, 200);
 }
 
@@ -223,11 +226,11 @@ function renderWishlist() {
   if (!list || !empty) return;
   list.innerHTML = '';
   if (state.wishlist.length === 0) {
-    empty.removeAttribute('hidden');
-    if (actions) actions.setAttribute('hidden', '');
+    empty.hidden = false;
+    if (actions) actions.hidden = true;
   } else {
-    empty.setAttribute('hidden', '');
-    if (actions) actions.removeAttribute('hidden');
+    empty.hidden = true;
+    if (actions) actions.hidden = false;
     const frag = document.createDocumentFragment();
     state.wishlist.forEach(item => {
       const article = document.createElement('article');
@@ -357,6 +360,7 @@ function initEstimator() {
     totalEl.textContent = `DKK ${estimate.total.toLocaleString('da-DK')}`;
     if (breakdownEl) {
       breakdownEl.innerHTML = Object.entries(estimate.breakdown).map(([key, value]) => `<li>${labelForBreakdown(key)}: DKK ${value.toLocaleString('da-DK')}</li>`).join('');
+      breakdownEl.hidden = false;
     }
   });
 }
@@ -417,23 +421,37 @@ function requestQuote(url, { context }) {
     .then(res => res.json())
     .then(data => {
       if (!data.ok) throw new Error(data.error || 'Kunne ikke hente pris');
-      state.quotes.set(url, data);
+      const enriched = { ...data, requestUrl: url };
+      state.quotes.set(url, enriched);
       if (quoteContainer) {
-        quoteContainer.innerHTML = renderQuoteCard(data);
+        quoteContainer.innerHTML = renderQuoteCard(enriched);
       }
-      prefillWishlistFromQuote(data);
+      if (context === 'chat') {
+        addChatMessage('bot', 'Her er dit estimat:');
+        addChatQuote(enriched);
+      }
+      prefillWishlistFromQuote(enriched);
     })
     .catch(err => {
       console.error(err);
       if (quoteContainer) {
         quoteContainer.innerHTML = '<p class="quote-error">Kunne ikke læse siden. Indtast pris og vægt manuelt i estimatoren.</p>';
       }
+      if (context === 'chat') {
+        addChatMessage('bot', 'Kunne ikke læse linket – indtast pris og vægt manuelt i estimatoren.');
+      }
       toast('Kunne ikke hente pris – prøv igen eller udfyld pris manuelt');
     });
 }
 
 function renderQuoteCard(data) {
-  const { detected, estimate } = data;
+  const { detected = {}, estimate = {}, requestUrl } = data;
+  const breakdown = estimate.breakdown || {};
+  const itemValue = coalesceNumber(estimate.itemDKK, breakdown.item);
+  const freightValue = coalesceNumber(estimate.freightDKK, breakdown.freight);
+  const serviceValue = coalesceNumber(estimate.serviceDKK, breakdown.service);
+  const dutyValue = coalesceNumber(estimate.dutyDKK, breakdown.duty);
+  const vatValue = coalesceNumber(estimate.vatDKK, breakdown.vat);
   return `
     <article class="card quote-card">
       <div class="quote-header">
@@ -441,24 +459,41 @@ function renderQuoteCard(data) {
         <div>
           <h3>${detected.title || 'Produkt fundet'}</h3>
           <p>Original pris: ${detected.priceOriginal ? `${detected.priceOriginal.amount} ${detected.priceOriginal.currency}` : 'ukendt'}</p>
-          <p>Estimat: <strong>DKK ${estimate.totalDKK.toLocaleString('da-DK')}</strong></p>
+          <p>Estimat: <strong>${formatDKK(estimate.totalDKK)}</strong></p>
         </div>
       </div>
       <ul class="quote-breakdown">
-        <li>Vare: DKK ${estimate.itemDKK?.toLocaleString('da-DK') || '–'}</li>
-        <li>Fragt: DKK ${estimate.freightDKK.toLocaleString('da-DK')}</li>
-        <li>Service: DKK ${estimate.serviceDKK.toLocaleString('da-DK')}</li>
-        <li>Told (est.): DKK ${estimate.dutyDKK.toLocaleString('da-DK')}</li>
-        <li>Moms: DKK ${estimate.vatDKK.toLocaleString('da-DK')}</li>
+        <li>Vare: ${formatDKK(itemValue)}</li>
+        <li>Fragt: ${formatDKK(freightValue)}</li>
+        <li>Service: ${formatDKK(serviceValue)}</li>
+        <li>Told (est.): ${formatDKK(dutyValue)}</li>
+        <li>Moms: ${formatDKK(vatValue)}</li>
       </ul>
-      <button class="btn primary" data-open="sheet-wishlist" data-prefill-url="${detected.url || ''}">Fortsæt</button>
+      <button class="btn primary" data-open="sheet-wishlist" data-prefill-url="${detected.url || requestUrl || ''}">Fortsæt</button>
     </article>`;
+}
+
+function coalesceNumber(...values) {
+  for (const value of values) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+function formatDKK(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return '–';
+  }
+  return `DKK ${Math.round(value).toLocaleString('da-DK')}`;
 }
 
 function prefillWishlistFromQuote(data) {
   const input = document.querySelector('#wishlist-product-url');
-  if (input && data.detected?.url) {
-    input.value = data.detected.url;
+  const fallbackUrl = data.detected?.url || data.requestUrl;
+  if (input && fallbackUrl) {
+    input.value = fallbackUrl;
   }
 }
 
@@ -533,7 +568,8 @@ function getParams() {
 function setParam(key, value) {
   const params = getParams();
   if (!value) params.delete(key); else params.set(key, value);
-  const newUrl = `${window.location.pathname}?${params.toString()}`;
+  const queryString = params.toString();
+  const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
   window.history.replaceState({}, '', newUrl);
 }
 
@@ -548,6 +584,8 @@ function renderDirectory() {
   if (searchInput) searchInput.value = q;
   const sortSelect = document.querySelector('#directory-sort');
   if (sortSelect) sortSelect.value = sort;
+
+  updateFilterActiveStates();
 
   let list = [...DB.products];
   if (q) {
@@ -564,14 +602,42 @@ function renderDirectory() {
   const empty = document.querySelector('#directory-empty');
   if (!grid) return;
   grid.innerHTML = '';
-  if (countEl) countEl.textContent = String(list.length);
+  if (countEl) countEl.textContent = `${list.length} produkter`;
+  const activeFilters = document.querySelector('#active-filters');
+  if (activeFilters) {
+    const active = [];
+    if (country) {
+      const label = DB.countries.find(item => item.code === country)?.label || country;
+      active.push({ key: 'country', label });
+    }
+    if (cat) {
+      const label = DB.categories.find(item => item.id === cat)?.label || cat;
+      active.push({ key: 'cat', label });
+    }
+    if (storeId) {
+      const label = storeName(storeId) || storeId;
+      active.push({ key: 'store', label });
+    }
+    if (active.length) {
+      activeFilters.innerHTML = active.map(filter => `<button type="button" data-remove-filter="${filter.key}">${filter.label} ✕</button>`).join('');
+    } else {
+      activeFilters.innerHTML = '';
+    }
+    activeFilters.querySelectorAll('[data-remove-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setParam(btn.dataset.removeFilter, '');
+        renderDirectory();
+      });
+    });
+  }
   if (list.length === 0) {
     if (empty) {
       empty.removeAttribute('hidden');
       const suggestions = document.querySelector('#empty-suggestions');
       if (suggestions) {
-        const suggestionCountries = DB.countries.slice(0, 5).map(country => `<a class="badge" href="/butikker.html?country=${country.code}">${country.label}</a>`).join('');
-        suggestions.innerHTML = suggestionCountries;
+        const suggestionCountries = DB.countries.slice(0, 4).map(country => `<a class="badge" href="/butikker.html?country=${country.code}">${country.label}</a>`);
+        const suggestionCats = DB.categories.slice(0, 4).map(catItem => `<a class="badge" href="/butikker.html?cat=${catItem.id}">${catItem.label}</a>`);
+        suggestions.innerHTML = [...suggestionCountries, ...suggestionCats].join('');
       }
     }
   } else {
@@ -581,6 +647,15 @@ function renderDirectory() {
     grid.appendChild(frag);
   }
   renderDirectoryFeatured();
+}
+
+function updateFilterActiveStates() {
+  const params = getParams();
+  document.querySelectorAll('[data-filter]').forEach(btn => {
+    const key = btn.dataset.filter;
+    const value = btn.dataset.value;
+    btn.classList.toggle('active', params.get(key) === value);
+  });
 }
 
 function sortProducts(list, sort) {
@@ -602,6 +677,11 @@ function renderDirectoryFeatured() {
   container.innerHTML = '';
   const stores = DB.stores.filter(store => store.premium).slice(0, 6);
   const products = DB.products.filter(product => product.featured).slice(0, 6);
+  if (stores.length === 0 && products.length === 0) {
+    container.setAttribute('hidden', '');
+    return;
+  }
+  container.removeAttribute('hidden');
   stores.forEach(store => {
     const card = document.createElement('article');
     card.className = 'card store-card';
@@ -670,6 +750,8 @@ function initAbout() {
 function submitNetlifyForm(form) {
   const submitBtn = form.querySelector('button[type="submit"]');
   if (submitBtn) submitBtn.disabled = true;
+  const errorMsg = form.querySelector('.form-error');
+  if (errorMsg) errorMsg.hidden = true;
   const formData = new FormData(form);
   fetch('/', {
     method: 'POST',
@@ -678,10 +760,26 @@ function submitNetlifyForm(form) {
   })
     .then(() => {
       form.reset();
+      let success = form.querySelector('.form-success');
+      if (!success) {
+        success = document.createElement('p');
+        success.className = 'form-success note';
+        form.appendChild(success);
+      }
+      success.textContent = 'Tak! Vi vender tilbage hurtigst muligt.';
+      success.hidden = false;
       toast('Tak! Vi vender tilbage hurtigst muligt.');
     })
     .catch(err => {
       console.error(err);
+      let failure = form.querySelector('.form-error');
+      if (!failure) {
+        failure = document.createElement('p');
+        failure.className = 'form-error note';
+        form.appendChild(failure);
+      }
+      failure.textContent = 'Noget gik galt – prøv igen senere.';
+      failure.hidden = false;
       toast('Noget gik galt – prøv igen senere.');
     })
     .finally(() => {
@@ -703,7 +801,46 @@ function toast(message) {
   }, 3200);
 }
 
+function ensureChatMarkup() {
+  if (document.querySelector('#chat-toggle')) return;
+  const toggle = document.createElement('button');
+  toggle.id = 'chat-toggle';
+  toggle.type = 'button';
+  toggle.className = 'chat-toggle';
+  toggle.textContent = 'Chat med Selekti';
+  const panel = document.createElement('aside');
+  panel.id = 'chatbot';
+  panel.className = 'chatbot';
+  panel.setAttribute('hidden', '');
+  panel.setAttribute('aria-live', 'polite');
+  panel.innerHTML = `
+    <div class="chat-header">
+      <div class="chat-title">
+        <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" />
+        <div>
+          <h3>Selekti guide</h3>
+          <p>Indsæt et link – jeg estimerer totalprisen</p>
+        </div>
+      </div>
+      <button class="btn ghost" type="button" data-close-chat>Luk</button>
+    </div>
+    <div id="chat-log" class="chat-log">
+      <div class="chat-empty">
+        <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" />
+        <p>Hej! Indsæt et produktlink eller stil et spørgsmål.</p>
+      </div>
+    </div>
+    <form id="chat-form" class="chat-form">
+      <label class="sr-only" for="chat-input">Din besked</label>
+      <input id="chat-input" type="text" placeholder="Indtast spørgsmål eller indsæt link" required />
+      <button class="btn primary" type="submit">Send</button>
+    </form>`;
+  document.body.appendChild(toggle);
+  document.body.appendChild(panel);
+}
+
 function initChatbot() {
+  ensureChatMarkup();
   const toggle = document.querySelector('#chat-toggle');
   const panel = document.querySelector('#chatbot');
   const close = document.querySelector('[data-close-chat]');
@@ -712,11 +849,15 @@ function initChatbot() {
   toggle.addEventListener('click', () => {
     state.chatOpen = !state.chatOpen;
     panel.hidden = !state.chatOpen;
+    if (state.chatOpen) {
+      document.querySelector('#chat-input')?.focus();
+    }
   });
   if (close) {
     close.addEventListener('click', () => {
       state.chatOpen = false;
       panel.hidden = true;
+      toggle.focus();
     });
   }
   form.addEventListener('submit', evt => {
@@ -732,10 +873,24 @@ function initChatbot() {
 function addChatMessage(role, text) {
   const log = document.querySelector('#chat-log');
   if (!log) return;
+  const empty = log.querySelector('.chat-empty');
+  if (empty) empty.remove();
   const div = document.createElement('div');
   div.className = `chat-message ${role}`;
   div.textContent = text;
   log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function addChatQuote(data) {
+  const log = document.querySelector('#chat-log');
+  if (!log) return;
+  const empty = log.querySelector('.chat-empty');
+  if (empty) empty.remove();
+  const wrapper = document.createElement('div');
+  wrapper.className = 'chat-quote';
+  wrapper.innerHTML = renderQuoteCard(data);
+  log.appendChild(wrapper);
   log.scrollTop = log.scrollHeight;
 }
 
