@@ -255,6 +255,8 @@ function initEstimator() {
   if (!form) return;
   const totalEl = document.getElementById('est-total');
   const detailEl = document.getElementById('est-breakdown');
+  if (totalEl) totalEl.textContent = 'DKK –';
+  if (detailEl) detailEl.innerHTML = '';
   form.addEventListener('submit', event => {
     event.preventDefault();
     const itemDKK = Number(form.querySelector('[name="item_dkk"]')?.value || 0);
@@ -421,6 +423,35 @@ function initLanding() {
     const res = computeEstimate({ itemDKK: 1500, shippingDKK: 250 });
     heroEst.textContent = `DKK ${res.total.toLocaleString('da-DK')}`;
   }
+  const heroLinkForm = document.getElementById('hero-link-form');
+  const heroLinkInput = document.getElementById('hero-link-input');
+  if (heroLinkForm) {
+    heroLinkForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const link = heroLinkInput?.value?.trim();
+      if (!link) {
+        toast('Indsæt et gyldigt produktlink.');
+        heroLinkInput?.focus();
+        return;
+      }
+      try {
+        new URL(link);
+      } catch (err) {
+        toast('Linket ser ikke rigtigt ud. Prøv igen.');
+        heroLinkInput?.focus();
+        return;
+      }
+      const urlField = document.querySelector('#sheet-wishlist input[name="product_url"]');
+      if (urlField) {
+        urlField.value = link;
+      }
+      openSheet('sheet-wishlist');
+      urlField?.focus();
+      if (heroLinkInput) {
+        heroLinkInput.value = '';
+      }
+    });
+  }
 }
 
 function renderFeaturedStores(selector, filterFn) {
@@ -434,7 +465,7 @@ function renderFeaturedStores(selector, filterFn) {
   container.innerHTML = stores.map(store => `
     <article class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-5 flex flex-col gap-4">
       <div class="flex items-center gap-3">
-        <img src="${store.logo}" alt="${store.name}" loading="lazy" class="h-12 w-12 rounded-xl object-cover">
+        <img src="${store.logo}" alt="${store.name}" loading="lazy" decoding="async" class="h-12 w-12 rounded-xl object-cover">
         <div>
           <h3 class="text-lg font-semibold">${store.name}</h3>
           <p class="text-xs text-ink/60">${store.tags.join(' • ')}</p>
@@ -660,7 +691,7 @@ function renderDirectoryFeatured() {
   container.innerHTML = featuredStores.map(store => `
     <article class="min-w-[260px] max-w-[280px] rounded-3xl bg-white p-5 ring-1 ring-black/5 shadow-soft">
       <div class="flex items-center gap-3">
-        <img src="${store.logo}" alt="${store.name}" loading="lazy" class="h-12 w-12 rounded-xl object-cover">
+        <img src="${store.logo}" alt="${store.name}" loading="lazy" decoding="async" class="h-12 w-12 rounded-xl object-cover">
         <div>
           <h3 class="text-base font-semibold">${store.name}</h3>
           <p class="text-xs text-ink/60">${store.tags.join(' • ')}</p>
@@ -742,7 +773,7 @@ function initCountry() {
     storeGrid.innerHTML = stores.map(store => `
       <article class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-5 flex flex-col gap-3">
         <div class="flex items-center gap-3">
-          <img src="${store.logo}" alt="${store.name}" loading="lazy" class="h-12 w-12 rounded-xl object-cover">
+          <img src="${store.logo}" alt="${store.name}" loading="lazy" decoding="async" class="h-12 w-12 rounded-xl object-cover">
           <div>
             <h3 class="text-lg font-semibold">${store.name}</h3>
             <p class="text-xs text-ink/60">${store.tags.join(' • ')}</p>
@@ -771,12 +802,16 @@ function handleNetlifyForm(form) {
   form.dataset.netlifyBound = 'true';
   const submitButton = form.querySelector('button[type="submit"]');
   const successTarget = form.dataset.successTarget ? document.getElementById(form.dataset.successTarget) : null;
+  if (submitButton && !submitButton.dataset.originalText) {
+    submitButton.dataset.originalText = submitButton.textContent || '';
+  }
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.dataset.loading = 'true';
+      submitButton.textContent = 'Sender…';
     }
 
     try {
@@ -788,6 +823,9 @@ function handleNetlifyForm(form) {
       if (response.ok) {
         form.reset();
         if (successTarget) successTarget.classList.remove('hidden');
+        if (form.dataset.hideOnSuccess === 'true') {
+          form.classList.add('hidden');
+        }
         toast('Tak for din besked – vi vender tilbage snart.');
       } else {
         throw new Error('Netværksfejl');
@@ -798,6 +836,7 @@ function handleNetlifyForm(form) {
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.dataset.loading = 'false';
+        submitButton.textContent = submitButton.dataset.originalText || 'Send';
       }
     }
   });
@@ -819,7 +858,7 @@ function renderWishlist() {
     actionsEl.classList.remove('hidden');
     listEl.innerHTML = items.map(item => `
       <article class="flex items-center gap-3 rounded-2xl bg-white ring-1 ring-black/5 p-3">
-        <img src="${item.img}" alt="${item.title}" loading="lazy" class="h-16 w-16 rounded-xl object-cover">
+        <img src="${item.img}" alt="${item.title}" loading="lazy" decoding="async" class="h-16 w-16 rounded-xl object-cover">
         <div class="flex-1">
           <p class="text-sm font-medium">${item.title}</p>
           <p class="text-xs text-ink/60">DKK ${Number(item.priceDKK || 0).toLocaleString('da-DK')}</p>

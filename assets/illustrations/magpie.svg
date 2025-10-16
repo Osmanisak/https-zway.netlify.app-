@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 160 120" role="img" aria-labelledby="title desc">
+  <title id="title">Selekti maskot</title>
+  <desc id="desc">Illustration af en skinnende skade, Selektis maskot</desc>
+  <defs>
+    <linearGradient id="wing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="belly" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#dbeafe" />
+    </linearGradient>
+  </defs>
+  <rect width="160" height="120" rx="24" fill="#ffffff" />
+  <g transform="translate(20 20)">
+    <ellipse cx="52" cy="64" rx="44" ry="26" fill="#0f172a" opacity="0.05" />
+    <path d="M80 18c10 6 16 16 16 28 0 20-18 36-44 36-8 0-22-3-30-8 18-12 18-34 14-45 8-5 30-6 44-11z" fill="url(#wing)" />
+    <path d="M36 12c8-8 28-12 42-8 4 1 4 6 0 7-20 5-28 12-32 22-2 4-3 9-3 14-9-8-14-22-7-35z" fill="#0f172a" />
+    <path d="M62 44c-4 14-16 26-30 32-5-5-8-12-8-20 0-14 10-26 24-30 8 4 14 10 14 18z" fill="url(#belly)" />
+    <circle cx="84" cy="24" r="10" fill="#0f172a" />
+    <circle cx="88" cy="22" r="3" fill="#f8fafc" />
+    <path d="M100 58l16 14c2 2 1 6-2 6h-6l-12-12z" fill="#0ea5e9" />
+  </g>
+</svg>

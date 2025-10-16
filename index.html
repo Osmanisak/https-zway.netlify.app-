@@ -60,6 +60,7 @@
       <a class="flex items-center gap-2" href="index.html">
         <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ocean to-mint text-white font-semibold">S</span>
         <span class="text-lg font-semibold">Selekti</span>
+        <img src="assets/illustrations/magpie.svg" alt="" class="hidden h-8 w-auto sm:block" aria-hidden="true" loading="lazy" decoding="async" />
       </a>
       <form id="global-search" class="hidden flex-1 items-center gap-2 rounded-full bg-soft px-3 py-2 ring-1 ring-black/10 sm:flex">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" class="text-ink/50"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm7-1-3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -96,6 +97,10 @@
           <input id="search-input" name="q" type="search" placeholder="Hvor ønsker du at shoppe? fx Japan" class="rounded-xl border border-black/10 px-4 py-3 text-sm focus:border-ocean focus:outline-none" />
           <button class="rounded-xl bg-ink px-5 py-3 text-sm font-medium text-white">Find</button>
         </form>
+        <form id="hero-link-form" class="grid grid-cols-[1fr_auto] gap-2" novalidate>
+          <input id="hero-link-input" type="url" placeholder="Indsæt link til varen…" class="rounded-xl border border-black/10 px-4 py-3 text-sm focus:border-ocean focus:outline-none" aria-label="Indsæt produktlink" />
+          <button class="rounded-xl bg-white px-5 py-3 text-sm font-medium text-ink ring-1 ring-black/10" type="submit">Fortsæt</button>
+        </form>
         <p class="text-xs text-ink/60">Første Mini Behovsboks er gratis, når du tilmelder dig Selekti+, henter appen og inviterer en ven. I får begge en ekstra Behovsboks som tak.</p>
         <div class="flex flex-wrap gap-2 text-xs">
           <button class="chip" data-open="sheet-wishlist" data-prefill-url="https://selekti.dk/koncierge">Bestil via link</button>
@@ -107,7 +112,10 @@
           <a class="chip" href="butikker.html?country=in">🇮🇳 Indien</a>
         </div>
         <div class="rounded-3xl bg-white p-6 ring-1 ring-black/5 shadow-soft">
-          <h2 class="text-lg font-semibold">Selekti i tre trin</h2>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold">Selekti i tre trin</h2>
+            <img src="assets/illustrations/magpie.svg" alt="Selekti maskot" class="hidden h-16 w-auto md:block" loading="lazy" decoding="async" />
+          </div>
           <div class="mt-3 grid gap-3 text-sm text-ink/70 md:grid-cols-3">
             <div>
               <p class="font-semibold text-ink">1. Vælg land eller indsæt link</p>
@@ -125,12 +133,12 @@
         </div>
       </div>
       <div class="relative overflow-hidden rounded-3xl bg-white ring-1 ring-black/5 shadow-soft">
-        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80" alt="Global shopping" class="h-full w-full object-cover" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80" alt="Global shopping" class="h-full w-full object-cover" loading="lazy" decoding="async" />
         <div class="absolute bottom-4 right-4 max-w-xs rounded-2xl bg-white/90 p-4 text-sm shadow-soft ring-1 ring-black/10">
           <p class="text-[11px] uppercase tracking-wide text-ink/60">Live totalpris</p>
           <p class="mt-1 text-sm"><span class="font-semibold">B&H Photo Video</span> • Kameraudstyr klar til levering</p>
           <p class="text-xs text-ink/60">Totalpris fra</p>
-          <p class="text-2xl font-extrabold text-ink" id="hero-est">DKK 0</p>
+          <p class="text-2xl font-extrabold text-ink" id="hero-est">DKK –</p>
         </div>
       </div>
     </section>
@@ -141,14 +149,37 @@
       <div class="container mx-auto grid gap-6 px-4 md:grid-cols-[1.1fr_.9fr]">
         <div class="space-y-4">
           <p class="text-xs uppercase tracking-wide text-ink/60">Selekti+</p>
-          <h2 class="text-3xl font-bold">Fri fragt, Behovsbokse og priority support</h2>
-          <p class="text-sm text-ink/70">Vores abonnement dækker globale leveringsomkostninger, prioriteret kundesupport og adgang til Behovsbokse kurateret efter dine ønsker. Uden binding, kan opsiges månedligt.</p>
+          <h2 class="text-3xl font-bold">Fri fragt og Behovsbokse – skriv dig på ventelisten</h2>
+          <p class="text-sm text-ink/70">Vi åbner Selekti+ i zoner, så vi kan sikre bæredygtige fragtpriser. Forvent fri fragt, prioriteret support og kuraterede Behovsbokse til dig og venner, du inviterer.</p>
           <ul class="space-y-2 text-sm text-ink/70">
-            <li>• Mini (149 kr./md.) – Fri fragt på ordre under 2 kg + kvartalsvis Mini Behovsboks</li>
-            <li>• Standard (249 kr./md.) – Fri fragt op til 5 kg + månedlig Behovsboks</li>
-            <li>• Premium (399 kr./md.) – Fri fragt op til 12 kg + skræddersyet Behovsboks og concierge</li>
+            <li>• Mini – små accessories &amp; beauty (op til 2 kg pr. ordre)</li>
+            <li>• Standard – sneakers &amp; gadgets (op til 5 kg pr. ordre)</li>
+            <li>• Premium – hi-fi og store ordrer med concierge (op til 12 kg)</li>
           </ul>
-          <button class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-white" data-open="sheet-wishlist" data-prefill-url="https://selekti.dk/selekti-plus">Tilmeld Selekti+</button>
+          <p class="text-xs text-ink/60">Vi vurderer zoner og fragtgrænser – du får besked ved åbning.</p>
+          <form name="plus-waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3 rounded-3xl bg-soft p-4 ring-1 ring-black/10" data-success-target="plus-waitlist-success" data-hide-on-success="true">
+            <input type="hidden" name="form-name" value="plus-waitlist" />
+            <p class="hidden"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+            <label class="text-sm font-medium">Navn
+              <input type="text" name="name" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
+            </label>
+            <label class="text-sm font-medium">E-mail
+              <input type="email" name="email" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
+            </label>
+            <label class="text-sm font-medium">Hvilke kategorier vil du handle?
+              <select name="interest" class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none">
+                <option value="sneakers">Sneakers &amp; streetwear</option>
+                <option value="beauty">Beauty &amp; K-Beauty</option>
+                <option value="hifi">Hi-Fi &amp; elektronik</option>
+                <option value="home">Design &amp; bolig</option>
+                <option value="mix">Jeg vil gerne kunne alt</option>
+              </select>
+            </label>
+            <button type="submit" class="rounded-full bg-ink px-5 py-3 text-sm font-medium text-white">Skriv mig op</button>
+          </form>
+          <div id="plus-waitlist-success" class="hidden rounded-3xl bg-mint/10 p-4 text-sm text-ink">
+            Tak! Vi opdaterer dig så snart Selekti+ åbner i dit område.
+          </div>
         </div>
         <div class="rounded-3xl bg-soft p-6 ring-1 ring-black/5 shadow-soft">
           <h3 class="text-lg font-semibold">Estimator</h3>
@@ -162,10 +193,22 @@
             </label>
             <button class="rounded-xl bg-ink px-4 py-2 text-sm font-medium text-white">Beregn</button>
           </form>
-          <div class="mt-4">
-            <p class="text-xs uppercase tracking-wide text-ink/60">Vejledende total</p>
-            <p id="est-total" class="text-2xl font-extrabold">DKK 0</p>
-            <ul id="est-breakdown" class="mt-2 space-y-1 text-xs text-ink/60"></ul>
+          <div class="mt-4 space-y-2">
+            <div>
+              <p class="text-xs uppercase tracking-wide text-ink/60">Vejledende total</p>
+              <p id="est-total" class="text-2xl font-extrabold">DKK –</p>
+            </div>
+            <ul id="est-breakdown" class="space-y-1 text-xs text-ink/60"></ul>
+            <details class="rounded-2xl bg-white p-4 text-xs text-ink/70 ring-1 ring-black/10" id="est-explained">
+              <summary class="cursor-pointer text-sm font-semibold text-ink">Totalpris forklaret</summary>
+              <p class="mt-2">Totalpris = Vare + Fragt + Service (≥49 kr.) + Told + Moms (25%).</p>
+              <ul class="mt-2 space-y-1 list-disc pl-4">
+                <li>Servicefee dækker concierge, kvalitetstjek og forsikring.</li>
+                <li>Toldsats er anslået til 3% og justeres efter HS-kode.</li>
+                <li>Moms beregnes efter danske regler (25%).</li>
+              </ul>
+              <p class="mt-2">Læs mere: <a class="text-ocean underline" href="https://taxation-customs.ec.europa.eu/customs-4/online-services-and-databases/taric_en" target="_blank" rel="noopener">EU TARIC</a>, <a class="text-ocean underline" href="https://www.gov.uk/guidance/classification-of-goods" target="_blank" rel="noopener">HMRC</a>, <a class="text-ocean underline" href="https://www.cbp.gov/trade/basic-import-export" target="_blank" rel="noopener">US CBP</a>.</p>
+            </details>
           </div>
           <button class="mt-4 inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-medium ring-1 ring-black/10" data-open="sheet-wishlist">Fortsæt til bestilling</button>
         </div>
@@ -178,6 +221,47 @@
         <a href="butikker.html" class="text-sm font-medium text-ocean">Se alle →</a>
       </div>
       <div id="landing-featured-products" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <section class="bg-white py-12">
+      <div class="container mx-auto space-y-6 px-4">
+        <h2 class="text-2xl font-bold">Sådan ser en ordre ud</h2>
+        <div class="grid gap-4 md:grid-cols-3 text-sm text-ink/70">
+          <article class="rounded-3xl bg-soft p-5 ring-1 ring-black/5 shadow-soft">
+            <h3 class="text-lg font-semibold text-ink">Sneakers fra Tokyo</h3>
+            <ul class="mt-3 space-y-1">
+              <li>Kunde: “Mette, København Ø”</li>
+              <li>Butik: Tokyo Streetwear</li>
+              <li>Varepris: 1.050 kr.</li>
+              <li>Fragt &amp; told: 340 kr.</li>
+              <li>Totalpris betalt: 1.390 kr.</li>
+              <li>Leveringstid: 9 hverdage</li>
+            </ul>
+          </article>
+          <article class="rounded-3xl bg-soft p-5 ring-1 ring-black/5 shadow-soft">
+            <h3 class="text-lg font-semibold text-ink">Hi-Fi fra London</h3>
+            <ul class="mt-3 space-y-1">
+              <li>Kunde: “Jonas, Aarhus C”</li>
+              <li>Butik: UK Audio Boutique</li>
+              <li>Varepris: 2.800 kr.</li>
+              <li>Fragt &amp; told: 560 kr.</li>
+              <li>Totalpris betalt: 3.360 kr.</li>
+              <li>Leveringstid: 6 hverdage</li>
+            </ul>
+          </article>
+          <article class="rounded-3xl bg-soft p-5 ring-1 ring-black/5 shadow-soft">
+            <h3 class="text-lg font-semibold text-ink">Beauty fra Seoul</h3>
+            <ul class="mt-3 space-y-1">
+              <li>Kunde: “Sara, Aalborg”</li>
+              <li>Butik: Seoul Beauty Lab</li>
+              <li>Varepris: 420 kr.</li>
+              <li>Fragt &amp; told: 155 kr.</li>
+              <li>Totalpris betalt: 575 kr.</li>
+              <li>Leveringstid: 11 hverdage</li>
+            </ul>
+          </article>
+        </div>
+      </div>
     </section>
 
     <section id="guides" class="bg-white py-12">
@@ -237,7 +321,11 @@
     </div>
     <div class="mt-4 space-y-6">
       <div>
-        <div id="wishlist-empty" class="rounded-2xl bg-soft p-6 text-sm text-ink/60">Din ønskeliste er tom. Find produkter og tilføj dem med hjertet.</div>
+        <div id="wishlist-empty" class="rounded-2xl bg-soft p-6 text-sm text-ink/60 text-center">
+          <img src="assets/illustrations/magpie.svg" alt="Selekti maskot" class="mx-auto mb-3 h-28 w-auto" loading="lazy" decoding="async" />
+          <p class="font-semibold text-ink">Din ønskeliste er tom.</p>
+          <p>Find noget unikt og tryk på ♡ for at gemme det til senere.</p>
+        </div>
         <div id="wishlist-list" class="grid gap-3"></div>
         <div id="wishlist-actions" class="mt-3 hidden">
           <button id="wishlist-clear" type="button" class="text-sm text-ocean">Ryd ønskeliste</button>
