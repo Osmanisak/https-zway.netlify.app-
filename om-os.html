@@ -84,8 +84,7 @@
   <header class="sticky top-0 z-50 border-b border-black/5 bg-white/90 backdrop-blur">
     <div class="container mx-auto flex flex-wrap items-center gap-3 px-4 py-3">
       <a class="flex items-center gap-2" href="index.html">
-        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ocean to-mint text-white font-semibold">S</span>
-        <span class="text-lg font-semibold">Selekti</span>
+        <img src="assets/logo-et.svg" alt="Selekti" class="h-9 w-auto" loading="lazy" decoding="async" />
         <img src="assets/illustrations/magpie.svg" alt="" class="hidden h-8 w-auto sm:block" aria-hidden="true" loading="lazy" decoding="async" />
       </a>
       <form id="global-search" class="hidden flex-1 items-center gap-2 rounded-full bg-soft px-3 py-2 ring-1 ring-black/10 sm:flex">
@@ -185,7 +184,7 @@
         <p class="mt-2 text-sm text-ink/70">Har du spørgsmål eller ønsker du at blive informeret om nye lande? Send os en besked.</p>
         <form name="about-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-6 grid gap-4" data-success-target="contact-success">
           <input type="hidden" name="form-name" value="about-contact" />
-          <p class="visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+          <p class="hp visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
           <label class="text-sm font-medium">Navn
             <input type="text" name="name" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
           </label>
@@ -222,7 +221,13 @@
       <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3">
         <input type="hidden" name="form-name" value="wishlist" />
         <input type="hidden" name="items_json" value="[]" />
-        <p class="visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+        <input type="hidden" name="detected_title" value="" />
+        <input type="hidden" name="detected_price_dkk" value="" />
+        <input type="hidden" name="detected_currency" value="" />
+        <input type="hidden" name="detected_zone" value="" />
+        <input type="hidden" name="detected_weight" value="" />
+        <input type="hidden" name="estimated_total_dkk" value="" />
+        <p class="hp visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
         <label class="text-sm font-medium">Produktlink
           <input name="product_url" type="url" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="https://butik.com/vare" />
         </label>

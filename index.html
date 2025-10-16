@@ -38,8 +38,7 @@
   <header class="sticky top-0 z-50 border-b border-black/5 bg-white/90 backdrop-blur">
     <div class="container mx-auto flex flex-wrap items-center gap-3 px-4 py-3">
       <a class="flex items-center gap-2" href="index.html">
-        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-ocean to-mint text-white font-semibold">S</span>
-        <span class="text-lg font-semibold">Selekti</span>
+        <img src="assets/logo-et.svg" alt="Selekti" class="h-9 w-auto" loading="lazy" decoding="async" />
         <img src="assets/illustrations/magpie.svg" alt="" class="hidden h-8 w-auto sm:block" aria-hidden="true" loading="lazy" decoding="async" />
       </a>
       <form id="global-search" class="hidden flex-1 items-center gap-2 rounded-full bg-soft px-3 py-2 ring-1 ring-black/10 sm:flex">
@@ -81,6 +80,7 @@
           <input id="hero-link-input" type="url" placeholder="Indsæt link til varen…" class="rounded-xl border border-black/10 px-4 py-3 text-sm focus:border-ocean focus:outline-none" aria-label="Indsæt produktlink" />
           <button class="btn ghost" type="submit">Fortsæt</button>
         </form>
+        <div id="hero-quote" class="hidden" aria-live="polite"></div>
         <p class="text-xs text-ink/60">Første Mini Behovsboks er gratis, når du tilmelder dig Selekti+, henter appen og inviterer en ven. I får begge en ekstra Behovsboks som tak.</p>
         <div class="flex flex-wrap gap-2 text-xs">
           <button class="chip" data-open="sheet-wishlist" data-prefill-url="https://selekti.dk/koncierge">Bestil via link</button>
@@ -118,7 +118,7 @@
           <p class="text-[11px] uppercase tracking-wide text-ink/60">Live totalpris</p>
           <p class="mt-1 text-sm"><span class="font-semibold">B&H Photo Video</span> • Kameraudstyr klar til levering</p>
           <p class="text-xs text-ink/60">Totalpris fra</p>
-          <p class="text-2xl font-extrabold text-ink" id="hero-est">DKK –</p>
+          <p class="text-2xl font-extrabold text-ink" id="hero-est">DKK 5.480</p>
         </div>
       </div>
     </section>
@@ -139,7 +139,7 @@
           <p class="text-xs text-ink/60">Vi vurderer zoner og fragtgrænser – du får besked ved åbning.</p>
           <form name="plus-waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3 rounded-3xl bg-soft p-4 ring-1 ring-black/10" data-success-target="plus-waitlist-success" data-hide-on-success="true">
             <input type="hidden" name="form-name" value="plus-waitlist" />
-            <p class="visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+            <p class="hp visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
             <label class="text-sm font-medium">Navn
               <input type="text" name="name" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
             </label>
@@ -166,10 +166,10 @@
           <p class="text-sm text-ink/70">Indtast varepris, vægt og zone for at se et vejledende totalbeløb. <span class="block text-xs text-ink/50">Estimat. Endelig pris sendes på mail.</span></p>
           <form id="est-form" class="mt-4 grid gap-3">
             <label class="grid gap-1 text-sm">Varepris (DKK)
-              <input type="number" name="item_dkk" min="0" step="1" class="rounded-xl border border-black/10 px-3 py-2 focus:border-ocean focus:outline-none" required />
+              <input type="number" name="item_dkk" min="0" step="1" value="1500" class="rounded-xl border border-black/10 px-3 py-2 focus:border-ocean focus:outline-none" required />
             </label>
             <label class="grid gap-1 text-sm">Vægt (kg)
-              <input type="number" name="weight_kg" min="0" step="0.1" class="rounded-xl border border-black/10 px-3 py-2 focus:border-ocean focus:outline-none" placeholder="fx 0.7" />
+              <input type="number" name="weight_kg" min="0" step="0.1" value="1" class="rounded-xl border border-black/10 px-3 py-2 focus:border-ocean focus:outline-none" placeholder="fx 0.7" />
             </label>
             <label class="grid gap-1 text-sm">Zone
               <select name="zone" id="est-zone" class="rounded-xl border border-black/10 px-3 py-2 focus:border-ocean focus:outline-none">
@@ -187,7 +187,7 @@
           <div class="mt-4 space-y-2">
             <div>
               <p class="text-xs uppercase tracking-wide text-ink/60">Vejledende total</p>
-              <p id="est-total" class="text-2xl font-extrabold">DKK –</p>
+              <p id="est-total" class="text-2xl font-extrabold">DKK 2.995</p>
             </div>
             <ul id="est-breakdown" class="space-y-1 text-xs text-ink/60"></ul>
             <details class="rounded-2xl bg-white p-4 text-xs text-ink/70 ring-1 ring-black/10" id="est-explained">
@@ -297,7 +297,7 @@
         <h3 class="font-semibold text-ink">Nyheder</h3>
         <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-3 grid grid-cols-[1fr_auto] gap-2">
           <input type="hidden" name="form-name" value="newsletter" />
-          <p class="visually-hidden" aria-hidden="true"><label>Du må ikke udfylde: <input name="bot-field" /></label></p>
+          <p class="hp visually-hidden" aria-hidden="true"><label>Du må ikke udfylde: <input name="bot-field" /></label></p>
           <input type="email" name="email" required placeholder="din@email.dk" class="rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
           <button class="btn primary small">Tilmeld</button>
         </form>
@@ -325,7 +325,13 @@
       <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3">
         <input type="hidden" name="form-name" value="wishlist" />
         <input type="hidden" name="items_json" value="[]" />
-        <p class="visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+        <input type="hidden" name="detected_title" value="" />
+        <input type="hidden" name="detected_price_dkk" value="" />
+        <input type="hidden" name="detected_currency" value="" />
+        <input type="hidden" name="detected_zone" value="" />
+        <input type="hidden" name="detected_weight" value="" />
+        <input type="hidden" name="estimated_total_dkk" value="" />
+        <p class="hp visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
         <label class="text-sm font-medium">Produktlink
           <input name="product_url" type="url" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="https://butik.com/vare" />
         </label>

@@ -84,6 +84,152 @@ function toast(message) {
   toasts.push(message);
 }
 
+const quoteCache = new Map();
+let quoteSequence = 0;
+const QUOTE_ENDPOINT = '/.netlify/functions/aiLinkQuote';
+const QUOTE_TIMEOUT = 8000;
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+function formatDKK(value) {
+  const number = Number.isFinite(Number(value)) ? Number(value) : 0;
+  return `DKK ${Math.round(number).toLocaleString('da-DK')}`;
+}
+
+function storeQuote(quote) {
+  const id = `quote-${++quoteSequence}`;
+  quoteCache.set(id, quote);
+  return id;
+}
+
+function getStoredQuote(id) {
+  return quoteCache.get(id);
+}
+
+function updateWishlistField(name, value) {
+  const field = document.querySelector(`#sheet-wishlist [name="${name}"]`);
+  if (field) field.value = value ?? '';
+}
+
+function prefillWishlistWithQuote(quote) {
+  if (!quote) return;
+  const detected = quote.detected || {};
+  const estimate = quote.estimate || {};
+  updateWishlistField('product_url', detected.url || quote.url || '');
+  updateWishlistField('detected_title', detected.title || '');
+  updateWishlistField('detected_price_dkk', Number.isFinite(detected.priceDKK) ? Math.round(detected.priceDKK) : '');
+  updateWishlistField('detected_currency', detected.priceOriginal?.currency || '');
+  updateWishlistField('detected_zone', detected.zone || estimate.zoneCode || '');
+  updateWishlistField('detected_weight', Number.isFinite(detected.weightKg) ? detected.weightKg : '');
+  updateWishlistField('estimated_total_dkk', Number.isFinite(estimate.totalDKK) ? Math.round(estimate.totalDKK) : '');
+}
+
+async function requestQuote(url, zone) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), QUOTE_TIMEOUT);
+  try {
+    const payload = { url };
+    if (zone) payload.zone = zone;
+    const response = await fetch(QUOTE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal
+    });
+    const data = await response.json().catch(() => ({ ok: false, error: 'INVALID_JSON' }));
+    if (!response.ok) {
+      return { ok: false, error: data.error || 'NETWORK', url };
+    }
+    if (data && typeof data === 'object') {
+      data.url = url;
+      if (data.detected) {
+        data.detected.url = data.detected.url || url;
+      }
+    }
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      return { ok: false, error: 'TIMEOUT', url };
+    }
+    return { ok: false, error: 'NETWORK', url };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function getZoneLabel(code) {
+  if (!code) return '';
+  const zone = DB.shippingConfig?.zones?.find(entry => entry.code === code);
+  return zone ? zone.label : code;
+}
+
+function renderQuoteMarkup(quote, { context = 'hero' } = {}) {
+  const detected = quote.detected || {};
+  const estimate = quote.estimate || {};
+  const breakdown = [
+    ['Vare', Number.isFinite(detected.priceDKK) ? detected.priceDKK : estimate.itemDKK],
+    ['Fragt', estimate.freightDKK],
+    ['Service', estimate.serviceDKK],
+    ['Told', estimate.dutyDKK],
+    ['Moms', estimate.vatDKK]
+  ].filter(([, value]) => Number.isFinite(value));
+  const storedId = storeQuote(quote);
+  const metaParts = [];
+  if (detected.store) metaParts.push(detected.store);
+  if (detected.zone || estimate.zoneCode) metaParts.push(getZoneLabel(detected.zone || estimate.zoneCode));
+  if (Number.isFinite(detected.weightKg)) metaParts.push(`${detected.weightKg} kg est.`);
+  const noteText = quote.notes?.length ? quote.notes.join(' • ') : 'Estimat. Endelig pris bekræftes på mail.';
+  const image = detected.images?.[0];
+  const originalPrice = detected.priceOriginal;
+  const originalLabel = originalPrice?.amount && originalPrice?.currency
+    ? `Fundet pris: ${originalPrice.amount} ${originalPrice.currency}`
+    : 'Fundet pris';
+
+  return `
+    <article class="quote-card" data-quote-id="${storedId}">
+      ${image ? `<figure class="aspect-[3/2] overflow-hidden rounded-2xl bg-soft"><img src="${escapeHtml(image)}" alt="${escapeHtml(detected.title || 'Produkt')}" loading="lazy" decoding="async" class="h-full w-full object-cover"/></figure>` : ''}
+      <div>
+        <p class="text-xs uppercase tracking-wide text-ink/50">${escapeHtml(originalLabel)}</p>
+        <h3>${escapeHtml(detected.title || 'Vi fandt produktet')}</h3>
+      </div>
+      ${metaParts.length ? `<div class="quote-meta">${metaParts.map(item => escapeHtml(item)).join(' • ')}</div>` : ''}
+      ${breakdown.length ? `<ul class="quote-breakdown">${breakdown.map(([label, value]) => `<li><span>${escapeHtml(label)}</span><span>${formatDKK(value)}</span></li>`).join('')}</ul>` : ''}
+      <div class="quote-total">${formatDKK(estimate.totalDKK ?? detected.priceDKK ?? 0)}</div>
+      <p class="quote-notes">${escapeHtml(noteText)}</p>
+      <div class="flex flex-wrap gap-2">
+        <button class="btn primary small" data-quote-continue="${storedId}" data-context="${escapeHtml(context)}">Fortsæt</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderQuoteError(url, error, { context = 'hero' } = {}) {
+  const messages = {
+    UNREADABLE_PAGE: 'Vi kunne ikke læse produktet automatisk. Indsæt pris og vægt i formularen, så sender vi din totalpris.',
+    TIMEOUT: 'Forbindelsen brugte for lang tid. Du kan stadig sende linket til os manuelt.',
+    NETWORK: 'Der opstod en midlertidig fejl. Prøv igen, eller indsæt pris manuelt.'
+  };
+  const storedId = storeQuote({ ok: false, url, error });
+  const description = messages[error] || 'Vi kunne ikke hente detaljer automatisk. Fortsæt og tilføj pris manuelt.';
+  return `
+    <article class="quote-card" data-quote-id="${storedId}">
+      <h3>Fortsæt uden automatisk estimat</h3>
+      <p class="quote-notes">${escapeHtml(description)}</p>
+      <div class="flex flex-wrap gap-2">
+        <button class="btn primary small" data-quote-continue="${storedId}" data-context="${escapeHtml(context)}">Fortsæt</button>
+      </div>
+    </article>
+  `;
+}
+
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
@@ -172,11 +318,16 @@ function initSheets() {
     if (openTarget) {
       const sheetId = openTarget.dataset.open;
       if (sheetId) {
-        if (sheetId === 'sheet-wishlist' && openTarget.dataset.prefillUrl) {
+        if (sheetId === 'sheet-wishlist') {
           const input = document.querySelector('#sheet-wishlist input[name="product_url"]');
-          if (input) {
-            input.value = openTarget.dataset.prefillUrl;
-            input.focus();
+          if (openTarget.dataset.prefillUrl) {
+            if (input) {
+              input.value = openTarget.dataset.prefillUrl;
+              input.focus();
+            }
+            prefillWishlistWithQuote({ detected: { url: openTarget.dataset.prefillUrl } });
+          } else {
+            prefillWishlistWithQuote({ detected: { url: input?.value || '' } });
           }
         }
         openSheet(sheetId);
@@ -199,6 +350,20 @@ function initSheets() {
         url: dataset.url
       });
       wishlistToggle.classList.toggle('active');
+    }
+
+    const quoteContinue = event.target.closest('[data-quote-continue]');
+    if (quoteContinue) {
+      const quote = getStoredQuote(quoteContinue.dataset.quoteContinue);
+      if (quote) {
+        prefillWishlistWithQuote(quote);
+      } else if (quoteContinue.dataset.url) {
+        prefillWishlistWithQuote({ detected: { url: quoteContinue.dataset.url } });
+      }
+      openSheet('sheet-wishlist');
+      const urlField = document.querySelector('#sheet-wishlist input[name="product_url"]');
+      urlField?.focus();
+      return;
     }
   });
 
@@ -266,7 +431,7 @@ function initEstimator() {
   const detailEl = document.getElementById('est-breakdown');
   const zoneSelect = form.querySelector('[name="zone"]');
 
-  if (totalEl) totalEl.textContent = 'DKK –';
+  if (totalEl) totalEl.textContent = 'Indtast varepris';
   if (detailEl) detailEl.innerHTML = '';
 
   if (zoneSelect && DB.shippingConfig?.zones?.length) {
@@ -282,7 +447,7 @@ function initEstimator() {
     const zoneCode = (form.querySelector('[name="zone"]')?.value || 'EU').toUpperCase();
 
     if (!itemDKK) {
-      if (totalEl) totalEl.textContent = 'DKK –';
+      if (totalEl) totalEl.textContent = 'Indtast varepris';
       if (detailEl) detailEl.innerHTML = '';
       return;
     }
@@ -310,6 +475,8 @@ function initEstimator() {
       if (event.target.name === 'item_dkk') handleUpdate();
     });
   });
+
+  handleUpdate();
 }
 
 function computeEstimate({ itemDKK, weightKg = 0, zoneCode = 'EU' }) {
@@ -372,19 +539,45 @@ function initChatbot() {
     }
   }
 
-  function appendMessage(role, text) {
+  function appendMessage(role, text, { html = false } = {}) {
     const row = document.createElement('div');
     row.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
     const bubble = document.createElement('div');
     bubble.className = `max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${role === 'user' ? 'bg-ink text-white' : 'bg-soft text-ink'}`;
-    bubble.textContent = text;
+    if (html) {
+      bubble.innerHTML = text;
+    } else {
+      bubble.textContent = text;
+    }
     row.appendChild(bubble);
     messages.appendChild(row);
     messages.scrollTop = messages.scrollHeight;
+    return { row, bubble };
   }
 
-  function respondTo(text) {
+  function appendAssistantQuote(html) {
+    const row = document.createElement('div');
+    row.className = 'flex justify-start';
+    row.innerHTML = html;
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+    return row;
+  }
+
+  async function respondTo(text) {
     const lower = text.toLowerCase();
+    const urlMatch = text.match(/https?:\/\/[^\s]+/i);
+    if (urlMatch) {
+      const pending = appendMessage('assistant', 'Jeg analyserer linket…');
+      const quote = await requestQuote(urlMatch[0]);
+      pending?.row?.remove();
+      if (quote?.ok) {
+        appendAssistantQuote(renderQuoteMarkup(quote, { context: 'chatbot' }));
+      } else {
+        appendAssistantQuote(renderQuoteError(urlMatch[0], quote?.error, { context: 'chatbot' }));
+      }
+      return;
+    }
     const responses = [
       {
         keywords: ['japan', 'jp'],
@@ -464,13 +657,13 @@ function initChatbot() {
     });
   });
 
-  form.addEventListener('submit', event => {
+  form.addEventListener('submit', async event => {
     event.preventDefault();
     const text = input.value.trim();
     if (!text) return;
     appendMessage('user', text);
     input.value = '';
-    setTimeout(() => respondTo(text), 200);
+    await respondTo(text);
   });
 }
 
@@ -485,8 +678,9 @@ function initLanding() {
   }
   const heroLinkForm = document.getElementById('hero-link-form');
   const heroLinkInput = document.getElementById('hero-link-input');
+  const heroQuote = document.getElementById('hero-quote');
   if (heroLinkForm) {
-    heroLinkForm.addEventListener('submit', event => {
+    heroLinkForm.addEventListener('submit', async event => {
       event.preventDefault();
       const link = heroLinkInput?.value?.trim();
       if (!link) {
@@ -494,21 +688,28 @@ function initLanding() {
         heroLinkInput?.focus();
         return;
       }
+      let parsed;
       try {
-        new URL(link);
+        parsed = new URL(link);
       } catch (err) {
         toast('Linket ser ikke rigtigt ud. Prøv igen.');
         heroLinkInput?.focus();
         return;
       }
-      const urlField = document.querySelector('#sheet-wishlist input[name="product_url"]');
-      if (urlField) {
-        urlField.value = link;
+      if (heroQuote) {
+        heroQuote.classList.remove('hidden');
+        heroQuote.innerHTML = '<div class="quote-loading">Vi analyserer linket…</div>';
       }
-      openSheet('sheet-wishlist');
-      urlField?.focus();
+      const quote = await requestQuote(parsed.href);
       if (heroLinkInput) {
-        heroLinkInput.value = '';
+        heroLinkInput.value = parsed.href;
+      }
+      if (heroQuote) {
+        if (quote?.ok) {
+          heroQuote.innerHTML = renderQuoteMarkup(quote, { context: 'hero' });
+        } else {
+          heroQuote.innerHTML = renderQuoteError(parsed.href, quote?.error, { context: 'hero' });
+        }
       }
     });
   }
