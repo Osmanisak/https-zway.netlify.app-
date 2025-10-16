@@ -2,7 +2,8 @@ const DB = {
   products: [],
   stores: [],
   categories: [],
-  countries: []
+  countries: [],
+  shippingConfig: null
 };
 
 const STORAGE_KEY_WISHLIST = 'selekti_wishlist';
@@ -122,15 +123,22 @@ async function init() {
 }
 
 async function loadData() {
-  const files = ['products', 'stores', 'categories', 'countries'];
-  await Promise.all(files.map(async key => {
+  const files = [
+    { key: 'products', file: 'products.json', fallback: [] },
+    { key: 'stores', file: 'stores.json', fallback: [] },
+    { key: 'categories', file: 'categories.json', fallback: [] },
+    { key: 'countries', file: 'countries.json', fallback: [] },
+    { key: 'shippingConfig', file: 'shipping-config.json', fallback: null }
+  ];
+
+  await Promise.all(files.map(async entry => {
     try {
-      const res = await fetch(`/data/${key}.json`, { cache: 'no-store' });
+      const res = await fetch(`/data/${entry.file}`, { cache: 'no-store' });
       if (!res.ok) throw new Error(res.statusText);
-      DB[key] = await res.json();
+      DB[entry.key] = await res.json();
     } catch (err) {
-      DB[key] = [];
-      console.error(`Kunne ikke indlæse ${key}:`, err);
+      DB[entry.key] = entry.fallback;
+      console.error(`Kunne ikke indlæse ${entry.file}:`, err);
     }
   }));
 }
@@ -253,37 +261,89 @@ function initGlobalSearch() {
 function initEstimator() {
   const form = document.getElementById('est-form');
   if (!form) return;
+
   const totalEl = document.getElementById('est-total');
   const detailEl = document.getElementById('est-breakdown');
+  const zoneSelect = form.querySelector('[name="zone"]');
+
   if (totalEl) totalEl.textContent = 'DKK –';
   if (detailEl) detailEl.innerHTML = '';
-  form.addEventListener('submit', event => {
-    event.preventDefault();
+
+  if (zoneSelect && DB.shippingConfig?.zones?.length) {
+    zoneSelect.innerHTML = DB.shippingConfig.zones
+      .map(zone => `<option value="${zone.code}">${zone.label}</option>`)
+      .join('');
+  }
+
+  const handleUpdate = (event) => {
+    if (event) event.preventDefault();
     const itemDKK = Number(form.querySelector('[name="item_dkk"]')?.value || 0);
-    const shippingDKK = Number(form.querySelector('[name="shipping_dkk"]')?.value || 0);
-    const result = computeEstimate({ itemDKK, shippingDKK });
+    const weightKg = Number(form.querySelector('[name="weight_kg"]')?.value || 0);
+    const zoneCode = (form.querySelector('[name="zone"]')?.value || 'EU').toUpperCase();
+
+    if (!itemDKK) {
+      if (totalEl) totalEl.textContent = 'DKK –';
+      if (detailEl) detailEl.innerHTML = '';
+      return;
+    }
+
+    const result = computeEstimate({ itemDKK, weightKg, zoneCode });
     if (totalEl) totalEl.textContent = `DKK ${result.total.toLocaleString('da-DK')}`;
     if (detailEl) {
-      detailEl.innerHTML = `
-        <li>Vare: DKK ${result.breakdown.item.toLocaleString('da-DK')}</li>
-        <li>Fragt: DKK ${result.breakdown.shipping.toLocaleString('da-DK')}</li>
-        <li>Service: DKK ${result.breakdown.service.toLocaleString('da-DK')}</li>
-        <li>Told: DKK ${result.breakdown.duty.toLocaleString('da-DK')}</li>
-        <li>Moms: DKK ${result.breakdown.vat.toLocaleString('da-DK')}</li>
-      `;
+      const map = [
+        ['Vare', result.breakdown.item],
+        ['Fragt', result.breakdown.freight],
+        ['Service', result.breakdown.service],
+        ['Told', result.breakdown.duty],
+        ['Moms', result.breakdown.vat]
+      ];
+      detailEl.innerHTML = map
+        .map(([label, value]) => `<li>${label}: DKK ${Number(value).toLocaleString('da-DK')}</li>`)
+        .join('');
     }
+  };
+
+  form.addEventListener('submit', handleUpdate);
+  form.querySelectorAll('input, select').forEach(input => {
+    input.addEventListener('change', handleUpdate);
+    input.addEventListener('input', event => {
+      if (event.target.name === 'item_dkk') handleUpdate();
+    });
   });
 }
 
-function computeEstimate({ itemDKK, shippingDKK }) {
-  const service = Math.max(Math.round(itemDKK * 0.12), 49);
-  const dutiable = itemDKK + shippingDKK;
-  const duty = Math.round(dutiable * 0.03);
-  const vat = Math.round((dutiable + duty + service) * 0.25);
-  const total = Math.round(itemDKK + shippingDKK + duty + vat + service);
+function computeEstimate({ itemDKK, weightKg = 0, zoneCode = 'EU' }) {
+  const cfg = DB.shippingConfig;
+  const zone = cfg?.zones?.find(entry => entry.code === zoneCode) || { vat: 0.25, dutyDefault: 0.03 };
+  const weights = cfg?.weights || [];
+  const freightTable = cfg?.freight || {};
+  const rate = cfg?.service?.rate ?? 0.12;
+  const minService = cfg?.service?.minDKK ?? 49;
+
+  const weight = Number.isFinite(weightKg) && weightKg > 0 ? weightKg : 0.01;
+  let freight = 0;
+  if (weights.length) {
+    const zoneFreight = freightTable[zoneCode] || freightTable[zoneCode.toUpperCase()] || [];
+    const index = weights.findIndex(limit => weight <= limit);
+    const safeIndex = index >= 0 ? index : weights.length - 1;
+    freight = zoneFreight[safeIndex] ?? zoneFreight[zoneFreight.length - 1] ?? 0;
+  }
+
+  const service = Math.max(Math.round(itemDKK * rate), minService);
+  const dutiable = itemDKK + freight;
+  const duty = Math.round(dutiable * (zone.dutyDefault ?? 0.03));
+  const vat = Math.round((dutiable + duty + service) * (zone.vat ?? 0.25));
+  const total = Math.round(itemDKK + freight + duty + vat + service);
+
   return {
     total,
-    breakdown: { item: itemDKK, shipping: shippingDKK, duty, vat, service }
+    breakdown: {
+      item: itemDKK,
+      freight,
+      service,
+      duty,
+      vat
+    }
   };
 }
 
@@ -360,7 +420,7 @@ function initChatbot() {
       },
       {
         keywords: ['partner', 'butik', 'samarbejde'],
-        reply: 'Klik på for-butikker.html for at se programmet og sende en ansøgning. Vi onboarder normalt på 48–72 timer.'
+        reply: 'Klik på bliv-partner.html for at se programmet og sende en ansøgning. Vi onboarder normalt på 48–72 timer.'
       },
       {
         keywords: ['wishlist', 'ønskeliste', 'favorit'],
@@ -420,7 +480,7 @@ function initLanding() {
   renderGuides();
   const heroEst = document.getElementById('hero-est');
   if (heroEst) {
-    const res = computeEstimate({ itemDKK: 1500, shippingDKK: 250 });
+    const res = computeEstimate({ itemDKK: 1500, weightKg: 1.2, zoneCode: 'JP' });
     heroEst.textContent = `DKK ${res.total.toLocaleString('da-DK')}`;
   }
   const heroLinkForm = document.getElementById('hero-link-form');
@@ -473,8 +533,8 @@ function renderFeaturedStores(selector, filterFn) {
       </div>
       <p class="text-sm text-ink/70">${store.deliveryHint}</p>
       <div class="flex flex-wrap gap-2">
-        <a href="butikker.html?store=${encodeURIComponent(store.id)}" class="rounded-full bg-ink text-white px-4 py-2 text-xs font-medium">Se produkter</a>
-        <button class="rounded-full bg-white ring-1 ring-black/10 px-4 py-2 text-xs" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
+        <a href="butikker.html?store=${encodeURIComponent(store.id)}" class="btn primary small">Se produkter</a>
+        <button class="btn ghost small" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
       </div>
     </article>
   `).join('');
@@ -492,7 +552,7 @@ function renderGuides() {
   if (!container) return;
   const guides = DB.countries.map(country => ({
     country,
-    url: `/${country.code.toLowerCase()}.html`,
+    url: `/${(country.slug || country.code || '').toLowerCase()}.html`,
     title: `Guide til shopping i ${country.label}`,
     summary: `Få tips til populære butikker og levering fra ${country.label}.`
   }));
@@ -513,7 +573,7 @@ function initDirectory() {
 
   const estEl = document.getElementById('directory-hero-est');
   if (estEl) {
-    const res = computeEstimate({ itemDKK: 899, shippingDKK: 189 });
+    const res = computeEstimate({ itemDKK: 899, weightKg: 0.8, zoneCode: 'US' });
     estEl.textContent = `DKK ${res.total.toLocaleString('da-DK')}`;
   }
 }
@@ -698,9 +758,9 @@ function renderDirectoryFeatured() {
         </div>
       </div>
       <p class="mt-3 text-sm text-ink/70">${store.deliveryHint}</p>
-      <div class="mt-4 flex flex-wrap gap-2 text-xs">
-        <a href="butikker.html?store=${encodeURIComponent(store.id)}" class="rounded-full bg-ink px-4 py-2 font-medium text-white">Se produkter</a>
-        <button class="rounded-full bg-white px-4 py-2 ring-1 ring-black/10" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <a href="butikker.html?store=${encodeURIComponent(store.id)}" class="btn primary small">Se produkter</a>
+        <button class="btn ghost small" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
       </div>
     </article>
   `).join('');
@@ -709,12 +769,13 @@ function renderDirectoryFeatured() {
 function renderDirectorySuggestions() {
   const suggestions = document.getElementById('directory-suggestions');
   if (!suggestions) return;
-  const picks = DB.products.slice(0, 5);
-  suggestions.innerHTML = picks.map(product => `
-    <a class="inline-flex items-center gap-2 rounded-full bg-white ring-1 ring-black/10 px-4 py-2 text-xs" href="butikker.html?store=${encodeURIComponent(product.storeId)}">
-      ${product.title}
-    </a>
-  `).join('');
+  const categoryChips = DB.categories.slice(0, 3).map(category => `
+    <a class="chip" href="butikker.html?cat=${encodeURIComponent(category.id)}">${category.label}</a>
+  `);
+  const countryChips = DB.countries.slice(0, 3).map(country => `
+    <a class="chip" href="butikker.html?country=${encodeURIComponent(country.code.toLowerCase())}">${country.label}</a>
+  `);
+  suggestions.innerHTML = [...categoryChips, ...countryChips].join('');
 }
 
 function updateDirectoryActiveFilters({ q, country, categoryParam, multiCountries, brands, sizes, store }) {
@@ -755,7 +816,7 @@ function renderProductCard(product) {
             data-img="${product.img}"
             data-price="${product.priceDKK}"
             data-url="${product.url}">♡</button>
-          <button class="rounded-full bg-ink text-white px-4 py-2 text-xs font-medium" data-open="sheet-wishlist" data-prefill-url="${product.url}">Bestil via link</button>
+          <button class="btn primary small font-medium" data-open="sheet-wishlist" data-prefill-url="${product.url}">Bestil via link</button>
         </div>
       </div>
     </article>

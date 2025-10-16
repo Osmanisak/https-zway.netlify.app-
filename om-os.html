@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/styles/base.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -78,23 +79,6 @@
   }
   </script>
   <script src="app.js" defer></script>
-  <style>
-    html,body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif;color:#0f172a;background:#f6f8fb}
-    ::selection{background:#dbeafe}
-    .container{max-width:1180px}
-    #sheet-dim{transition:opacity .2s ease}
-    #sheet-dim.hidden{display:none}
-    #sheet-dim{opacity:0}
-    #sheet-dim.visible{opacity:1}
-    [data-sheet]{transition:transform .25s ease,opacity .25s ease}
-    [data-sheet].hidden{display:none}
-    [data-sheet]{transform:translateY(40px);opacity:0}
-    [data-sheet].open{transform:translateY(0);opacity:1}
-    .toast{position:relative;margin:0.5rem auto;padding:0.75rem 1rem;border-radius:9999px;background:#0ea5e9;color:#fff;font-size:.75rem;opacity:0;transform:translateY(6px);transition:opacity .2s ease,transform .2s ease}
-    .toast.show{opacity:1;transform:translateY(0)}
-    .wishlist-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:9999px;border:1px solid rgba(15,23,42,0.12);padding:.35rem .75rem;font-size:.75rem;background:#fff;color:#0f172a}
-    .wishlist-btn.active{background:#0f172a;color:#fff}
-  </style>
 </head>
 <body data-page="about" class="min-h-screen bg-gradient-to-b from-white via-soft to-soft">
   <header class="sticky top-0 z-50 border-b border-black/5 bg-white/90 backdrop-blur">
@@ -115,14 +99,14 @@
         <a class="hover:text-ink" href="index.html#selekti-plus">Selekti+</a>
         <a class="hover:text-ink" href="index.html#guides">Guides</a>
         <a class="font-semibold text-ink" href="om-os.html">Om os</a>
-        <a class="hover:text-ink" href="for-butikker.html">Bliv partner</a>
+        <a class="hover:text-ink" href="bliv-partner.html">Bliv partner</a>
       </nav>
       <div class="flex items-center gap-2">
-        <button id="wishlist-open" data-open="sheet-wishlist" class="relative inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-medium ring-1 ring-black/10">
+        <button id="wishlist-open" data-open="sheet-wishlist" class="btn ghost relative gap-2 text-sm">
           <span>Ønskeliste</span>
           <span id="wishlist-count" class="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">0</span>
         </button>
-        <button class="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-xs font-medium text-white" data-auth-action>
+        <button class="btn primary text-sm" data-auth-action>
           <span data-auth-state="label">Log ind</span>
         </button>
       </div>
@@ -201,7 +185,7 @@
         <p class="mt-2 text-sm text-ink/70">Har du spørgsmål eller ønsker du at blive informeret om nye lande? Send os en besked.</p>
         <form name="about-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-6 grid gap-4" data-success-target="contact-success">
           <input type="hidden" name="form-name" value="about-contact" />
-          <p class="hidden"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+          <p class="visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
           <label class="text-sm font-medium">Navn
             <input type="text" name="name" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" />
           </label>
@@ -211,14 +195,14 @@
           <label class="text-sm font-medium">Besked
             <textarea name="message" rows="4" class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="Fortæl os hvordan vi kan hjælpe"></textarea>
           </label>
-          <button type="submit" class="rounded-full bg-ink px-5 py-3 text-sm font-medium text-white">Send besked</button>
+          <button type="submit" class="btn primary">Send besked</button>
         </form>
         <div id="contact-success" class="mt-4 hidden rounded-2xl bg-soft p-4 text-sm text-ink/70">Tak for din besked. Vi svarer hurtigst muligt.</div>
       </div>
     </section>
   </main>
 
-  <aside id="sheet-wishlist" data-sheet class="hidden fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white p-6 shadow-soft ring-1 ring-black/10" aria-hidden="true" role="dialog">
+  <aside id="sheet-wishlist" data-sheet class="sheet hidden fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white p-6 shadow-soft ring-1 ring-black/10" aria-hidden="true" role="dialog">
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-semibold">Ønskeliste & Bestil via link</h2>
       <button type="button" data-close class="rounded-full bg-soft px-3 py-2 text-sm">Luk</button>
@@ -238,7 +222,7 @@
       <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3">
         <input type="hidden" name="form-name" value="wishlist" />
         <input type="hidden" name="items_json" value="[]" />
-        <p class="hidden"><label>Udfyld ikke: <input name="bot-field" /></label></p>
+        <p class="visually-hidden" aria-hidden="true"><label>Udfyld ikke: <input name="bot-field" /></label></p>
         <label class="text-sm font-medium">Produktlink
           <input name="product_url" type="url" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="https://butik.com/vare" />
         </label>
@@ -251,7 +235,7 @@
         <label class="text-sm font-medium">E-mail
           <input name="email" type="email" required class="mt-1 rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="din@email.dk" />
         </label>
-        <button type="submit" class="rounded-full bg-ink px-5 py-3 text-sm font-medium text-white">Send forespørgsel</button>
+        <button type="submit" class="btn primary">Send forespørgsel</button>
         <p class="text-xs text-ink/60">Vi vender tilbage inden for 24 timer med din endelige totalpris.</p>
       </form>
     </div>
@@ -279,7 +263,7 @@
       <label class="text-xs font-medium text-ink">Din besked
         <textarea id="chatbot-input" rows="2" class="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm focus:border-ocean focus:outline-none" placeholder="Spørg om et land, levering eller Selekti+"></textarea>
       </label>
-      <button type="submit" class="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-xs font-medium text-white">Send</button>
+      <button type="submit" class="btn primary text-sm">Send</button>
     </form>
   </section>
 
