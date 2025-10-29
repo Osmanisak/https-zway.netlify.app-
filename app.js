@@ -11,19 +11,19 @@ const FX_RATES = {
   KRW: 0.0051
 };
 
+const DKK_FORMATTER = new Intl.NumberFormat("da-DK", {
+  style: "currency",
+  currency: "DKK"
+});
+
 const now = new Date();
 const FX_SNAPSHOT_DATE = `${String(now.getDate()).padStart(2, "0")}-${String(now.getMonth() + 1).padStart(2, "0")}-${now.getFullYear()}`;
 const WISHLIST_KEY = "selekti_wishlist";
 const PREFILL_KEY = "selekti_prefill";
 
 const formatDKK = (value) => {
-  if (typeof value !== "number" || Number.isNaN(value)) {
-    return "—";
-  }
-  return new Intl.NumberFormat("da-DK", {
-    style: "currency",
-    currency: "DKK"
-  }).format(Math.round(value));
+  const numeric = typeof value === "number" && Number.isFinite(value) ? Math.round(value) : 0;
+  return DKK_FORMATTER.format(numeric);
 };
 
 const toDKK = (value, currency) => {
@@ -47,6 +47,34 @@ const encode = (data) =>
   Object.keys(data)
     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
     .join("&");
+
+const prefillQuote = (payload) => {
+  if (!payload || typeof payload !== "object") return;
+  const normalized = {
+    url: payload.url || "",
+    storeCode: payload.storeCode || "",
+    currency: payload.currency || "",
+    category: payload.category || "",
+    price: typeof payload.price !== "undefined" ? payload.price : "",
+    shipping: typeof payload.shipping !== "undefined" ? payload.shipping : ""
+  };
+
+  const form = document.getElementById("quoteForm");
+  if (form) {
+    document.dispatchEvent(
+      new CustomEvent("quote:prefill", {
+        detail: normalized
+      })
+    );
+    const target = document.getElementById("totalpris");
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("calculateBtn")?.focus({ preventScroll: true });
+    return;
+  }
+
+  sessionStorage.setItem(PREFILL_KEY, JSON.stringify(normalized));
+  window.location.href = "/index.html#totalpris";
+};
 
 class WishlistManager {
   constructor() {
@@ -250,42 +278,8 @@ class WishlistManager {
   prefill(item) {
     const normalized = this.normalize(item);
     if (!normalized) return;
-    const quoteLink = document.getElementById("productLink");
-    if (quoteLink) {
-      quoteLink.value = normalized.url;
-      const storeSelect = document.getElementById("storeSelect");
-      if (storeSelect && normalized.storeCode) {
-        const option = Array.from(storeSelect.options).find((opt) => opt.value === normalized.storeCode);
-        if (option) {
-          storeSelect.value = normalized.storeCode;
-          storeSelect.dispatchEvent(new Event("change"));
-        }
-      }
-      const currencySelect = document.getElementById("currencySelect");
-      if (currencySelect && normalized.currency) {
-        currencySelect.value = normalized.currency;
-        currencySelect.dispatchEvent(new Event("change"));
-      }
-      const categorySelect = document.getElementById("categorySelect");
-      if (categorySelect && normalized.category) {
-        categorySelect.value = normalized.category;
-        categorySelect.dispatchEvent(new Event("change"));
-      }
-      const priceInput = document.getElementById("productPrice");
-      if (priceInput) {
-        priceInput.value = normalized.price ? normalized.price.toString() : "";
-      }
-      const shippingInput = document.getElementById("shippingPrice");
-      if (shippingInput) {
-        shippingInput.value = normalized.shipping ? normalized.shipping.toString() : "0";
-      }
-      const calculateBtn = document.getElementById("calculateBtn");
-      calculateBtn?.focus();
-      this.close();
-      return;
-    }
-    sessionStorage.setItem(PREFILL_KEY, JSON.stringify(normalized));
-    window.location.href = "/index.html#totalpris";
+    prefillQuote(normalized);
+    this.close();
   }
 }
 
@@ -423,7 +417,7 @@ const initQuoteForm = (categories, countries) => {
 
   const resetBreakdown = () => {
     Object.values(lineItems).forEach((el) => {
-      if (el) el.textContent = "—";
+      if (el) el.textContent = formatDKK(0);
     });
     Object.values(hiddenFields).forEach((field) => {
       if (field) field.value = "";
@@ -524,6 +518,13 @@ const initQuoteForm = (categories, countries) => {
   const clearSuccess = () => {
     if (successEl) successEl.hidden = true;
   };
+
+  document.addEventListener("quote:prefill", (event) => {
+    if (!event.detail) return;
+    clearSuccess();
+    resetBreakdown();
+    applyPrefill(event.detail);
+  });
 
   const applyPrefill = (payload) => {
     if (!payload || typeof payload !== "object") return;
@@ -631,10 +632,19 @@ const initQuoteForm = (categories, countries) => {
 };
 
 const productCache = new Map();
+const storeCache = new Map();
 
 const registerProducts = (products) => {
   products.forEach((product) => {
     productCache.set(product.id, product);
+  });
+};
+
+const registerStores = (stores) => {
+  stores.forEach((store) => {
+    if (store?.code) {
+      storeCache.set(store.code, store);
+    }
   });
 };
 
@@ -645,6 +655,61 @@ const lookupCategoryName = (categories, id) => {
 
 const formatForeignPriceDisplay = (price, currency) =>
   new Intl.NumberFormat("da-DK", { style: "currency", currency }).format(price);
+
+const createStoreCard = (store, categories) => {
+  const card = document.createElement("article");
+  card.className = "store-card";
+  const categoryName = lookupCategoryName(categories, store.category);
+  const shippingValue =
+    typeof store.defaultShipping === "number"
+      ? store.defaultShipping
+      : parseAmount(store.defaultShipping || 0);
+  let shippingDisplay = "";
+  let shippingDKKDisplay = "";
+  if (!Number.isNaN(shippingValue)) {
+    try {
+      shippingDisplay = formatForeignPriceDisplay(shippingValue, store.currency);
+    } catch (error) {
+      shippingDisplay = `${store.currency} ${shippingValue.toFixed(2)}`;
+    }
+    const dkkValue = toDKK(shippingValue, store.currency);
+    if (!Number.isNaN(dkkValue)) {
+      shippingDKKDisplay = formatDKK(dkkValue);
+    }
+  }
+  const countryLabel = store.countryCode ? store.countryCode.toUpperCase() : "";
+  const shippingMeta = shippingDisplay
+    ? `<span>Fragt fra ${shippingDisplay}${shippingDKKDisplay ? ` • ${shippingDKKDisplay}` : ""}</span>`
+    : "";
+  card.innerHTML = `
+    <header>
+      <span class="badge">${categoryName}</span>
+      <strong>${store.name}</strong>
+      <span class="section-subtitle" style="margin-bottom:0">Levering ${store.leadTime || "5-7 dage"}</span>
+    </header>
+    <div class="store-meta">
+      <span>${countryLabel ? `Land ${countryLabel}` : "International"}</span>
+      <span>Valuta ${store.currency}</span>
+      ${shippingMeta}
+    </div>
+    <footer>
+      <a class="btn" href="${store.link}" target="_blank" rel="noopener">Se butik</a>
+      <button type="button" data-prefill-store="${store.code}">Få totalpris</button>
+    </footer>
+  `;
+  return card;
+};
+
+const initStoreHighlights = (stores, categories) => {
+  const container = document.getElementById("findStoreList");
+  if (!container) return;
+  container.innerHTML = "";
+  const selection = [...stores].slice(0, 8);
+  selection.forEach((store) => {
+    const card = createStoreCard(store, categories);
+    container.append(card);
+  });
+};
 
 const buildWishlistItem = (product) => ({
   id: product.id,
@@ -792,11 +857,23 @@ const initProductCatalog = (products, categories) => {
   render();
 };
 
-const initProductShowcase = (containerId, products, categories, limit = 6) => {
+const initProductShowcase = (containerId, products, categories, options = {}) => {
   const container = document.getElementById(containerId);
   if (!container) return;
-  const sorted = [...products].sort((a, b) => Date.parse(b.added || "") - Date.parse(a.added || ""));
-  const subset = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
+  let items = [...products];
+  if (Array.isArray(options.filterCategories) && options.filterCategories.length) {
+    const allowed = new Set(options.filterCategories);
+    items = items.filter((product) => allowed.has(product.category));
+  }
+  if (options.sort === "price-asc") {
+    items.sort((a, b) => priceInDKK(a) - priceInDKK(b));
+  } else if (options.sort === "price-desc") {
+    items.sort((a, b) => priceInDKK(b) - priceInDKK(a));
+  } else {
+    items.sort((a, b) => Date.parse(b.added || "") - Date.parse(a.added || ""));
+  }
+  const limit = typeof options.limit === "number" ? options.limit : 6;
+  const subset = limit > 0 ? items.slice(0, limit) : items;
   renderProductGrid(container, subset, categories);
 };
 
@@ -943,6 +1020,22 @@ document.addEventListener("click", (event) => {
       }
     }
   }
+
+  const prefillStoreBtn = target.closest("[data-prefill-store]");
+  if (prefillStoreBtn) {
+    const storeCode = prefillStoreBtn.getAttribute("data-prefill-store");
+    if (storeCode) {
+      const store = storeCache.get(storeCode);
+      if (store) {
+        prefillQuote({
+          storeCode: store.code,
+          currency: store.currency,
+          category: store.category,
+          shipping: store.defaultShipping ?? ""
+        });
+      }
+    }
+  }
 });
 
 document.addEventListener("wishlist:updated", (event) => {
@@ -978,7 +1071,9 @@ const initPartnerForm = () => {
 const applyLoadingStates = () => {
   showSkeletons(document.getElementById("storeGrid"));
   showSkeletons(document.getElementById("catalogProducts"));
-  showSkeletons(document.getElementById("popularProducts"));
+  showSkeletons(document.getElementById("findStoreList"));
+  showSkeletons(document.getElementById("featuredCarousel"));
+  showSkeletons(document.getElementById("partnerShowcase"));
   const swipeTitle = document.getElementById("swipeTitle");
   const swipeMeta = document.getElementById("swipeMeta");
   const swipeImage = document.getElementById("swipeImage");
@@ -1000,10 +1095,17 @@ const boot = async () => {
     ]);
 
     registerProducts(products);
+    registerStores(countries);
     initQuoteForm(categories, countries);
+    initStoreHighlights(countries, categories);
     initProductCatalog(products, categories);
-    initProductShowcase("popularProducts", products, categories, 6);
-    initProductShowcase("catalogProducts", products, categories, 6);
+    initProductShowcase("featuredCarousel", products, categories, { limit: 8 });
+    initProductShowcase("partnerShowcase", products, categories, {
+      limit: 8,
+      filterCategories: ["fashion", "home", "beauty", "sport", "accessories"],
+      sort: "price-desc"
+    });
+    initProductShowcase("catalogProducts", products, categories, { limit: 6 });
     initSwipe(products);
     initPartnerForm();
   } catch (error) {

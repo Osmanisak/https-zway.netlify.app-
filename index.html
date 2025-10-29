@@ -12,15 +12,18 @@
   </head>
   <body>
     <header>
-      <nav class="nav" aria-label="Primær">
+      <nav class="nav" aria-label="Primær navigation">
         <a class="nav__logo" href="/">
           <img src="assets/logo-selekti.svg" alt="Selekti" width="36" height="36" loading="lazy" />
           Selekti
         </a>
         <div class="nav__links">
           <a href="/butikker.html">Butikker</a>
-          <a href="/bliv-partner.html">Bliv partner</a>
+          <a href="#find-butik">Find butik</a>
+          <a href="#fremhaevede">Fremhævede</a>
+          <a href="#selekti-plus">Selekti+</a>
           <a href="/om-os.html">Om os</a>
+          <a href="/bliv-partner.html">Bliv partner</a>
           <button class="wishlist-button" type="button" aria-haspopup="dialog" aria-controls="wishlistDialog">
             Ønskeliste <span class="badge wishlist-badge" aria-live="polite">0</span>
           </button>
@@ -33,20 +36,24 @@
       <section class="container hero" id="hero">
         <div class="hero__content">
           <span class="tag">Verdens nye måde at handle globalt</span>
-          <h1>Køb globalt, betal lokalt – én samlet pris på hvert produkt.</h1>
-          <p>Indsæt link, se total inkl. told, moms og service. Du betaler først, når du godkender.</p>
-          <div class="features">
+          <h1>Hvor vil du shoppe i dag?</h1>
+          <p>Indsæt link eller vælg butik. Vi viser total inkl. told, moms og service — du betaler først, når du godkender.</p>
+          <div class="hero__actions">
+            <a class="btn" href="#find-butik">Find butik</a>
+            <a class="btn btn--primary" href="#totalpris">Få totalpris</a>
+          </div>
+          <div class="hero__grid">
             <div class="feature">
-              <strong>Fuldt prisoverblik</strong>
-              <p>Automatisk beregning af told, moms, servicefee og valutakurser på få sekunder.</p>
+              <strong>Køb globalt, betal lokalt</strong>
+              <p>Realistiske valutakurser, toldsatser og servicefee giver dig én samlet pris, før du siger godkendt.</p>
             </div>
             <div class="feature">
-              <strong>Levering i sikre hænder</strong>
-              <p>Selekti håndterer indkøb, import og levering direkte til din dør.</p>
+              <strong>Vi håndterer importen</strong>
+              <p>Selekti står for indkøb, toldbehandling og levering direkte til døren — uden overraskelser.</p>
             </div>
             <div class="feature">
-              <strong>Betal når du siger godkendt</strong>
-              <p>Vi reserverer aldrig penge før du har godkendt din endelige totalpris.</p>
+              <strong>Support hele vejen</strong>
+              <p>Fra første spørgsmål til retur hjælper vores team dig med sikre leverancer fra hele verden.</p>
             </div>
           </div>
         </div>
@@ -74,7 +81,7 @@
               </label>
               <label>
                 Butik / land
-                <select id="storeSelect" name="store" required>
+                <select id="storeSelect" name="store">
                   <option value="" disabled selected>Vælg butik</option>
                 </select>
               </label>
@@ -92,7 +99,7 @@
               </label>
               <label>
                 Butikkens fragt
-                <input type="number" min="0" step="0.01" name="shippingPrice" id="shippingPrice" required placeholder="0,00" />
+                <input type="number" min="0" step="0.01" name="shippingPrice" id="shippingPrice" placeholder="0,00" />
               </label>
             </div>
             <div class="form-row">
@@ -103,26 +110,102 @@
                 </select>
               </label>
             </div>
-            <div class="form-row">
+            <div class="form-row form-row--actions">
               <button type="button" id="calculateBtn">Beregn total</button>
               <button type="submit" id="submitQuote" disabled>Få tilbud nu</button>
             </div>
             <div class="calc-breakdown" aria-live="polite">
-              <div class="calc-row"><span>Vare</span><strong id="lineItemProduct">—</strong></div>
-              <div class="calc-row"><span>Fragt</span><strong id="lineItemShipping">—</strong></div>
-              <div class="calc-row"><span>Servicefee</span><strong id="lineItemService">—</strong></div>
-              <div class="calc-row"><span>Told</span><strong id="lineItemDuty">—</strong></div>
-              <div class="calc-row"><span>Moms (25 %)</span><strong id="lineItemVat">—</strong></div>
-              <div class="calc-row calc-row--total"><span>Total i DKK</span><strong id="lineItemTotal">—</strong></div>
+              <div class="calc-row"><span>Vare</span><strong id="lineItemProduct">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Fragt</span><strong id="lineItemShipping">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Servicefee</span><strong id="lineItemService">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Told</span><strong id="lineItemDuty">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Moms (25&nbsp;%)</span><strong id="lineItemVat">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row calc-row--total"><span>Total i DKK</span><strong id="lineItemTotal">0,00&nbsp;kr.</strong></div>
             </div>
             <p class="calc-error" id="calcError" hidden></p>
             <p class="note" id="quoteSuccess" hidden>Tak! Vi har modtaget din forespørgsel og vender retur inden for én arbejdsdag.</p>
-            <p class="note">Kursgrundlag opdateres manuelt (senest <span id="fxDate"></span>). Toldsatser er vejledende.</p>
+            <p class="note">Kursgrundlag opdateres manuelt (senest <span id="fxDate"></span>). Toldsatser er vejledende estimater.</p>
           </form>
         </div>
       </section>
 
-      <section class="container">
+      <section class="container find" id="find-butik">
+        <div class="find__intro">
+          <h2 class="section-title">Find butik på få sekunder</h2>
+          <p class="section-subtitle">Vælg en verificeret shop og spring direkte til din totalpris. Vi viser lead-time, standardfragt og foreslået kategori for dig.</p>
+        </div>
+        <div class="store-grid" id="findStoreList" aria-live="polite"></div>
+      </section>
+
+      <section class="container showcase" id="fremhaevede">
+        <div class="showcase__header">
+          <div>
+            <h2 class="section-title">Fremhævede butikker med eksklusive tilbud</h2>
+            <p class="section-subtitle">Giv ønskelisten nyt liv med de mest efterspurgte produkter netop nu.</p>
+          </div>
+          <a class="btn" href="/butikker.html">Se alle butikker</a>
+        </div>
+        <div class="showcase__track" id="featuredCarousel" aria-live="polite"></div>
+      </section>
+
+      <section class="container showcase" id="partner-collection">
+        <div class="showcase__header">
+          <div>
+            <h2 class="section-title">Populære partnerbutikker</h2>
+            <p class="section-subtitle">Sjældne fund i Danmark – vi sourcer, tester og leverer direkte fra de originale shops.</p>
+          </div>
+          <a class="btn" href="/butikker.html">Gennemse katalog</a>
+        </div>
+        <div class="showcase__track" id="partnerShowcase" aria-live="polite"></div>
+      </section>
+
+      <section class="container behovsboks" id="behovsboks">
+        <div class="behovsboks__content">
+          <h2 class="section-title">Hvilket behov skal vi løse?</h2>
+          <p class="section-subtitle">Selekti samler global sourcing, toldbehandling og kundeservice i én platform. Fortæl os hvad du jagter – vi klarer resten.</p>
+          <ul>
+            <li>Limited sneakers og streetwear, der sjældent når Norden.</li>
+            <li>Creator-gear til streaming, foto og video uden ekstra gebyrer.</li>
+            <li>Designobjekter og køkkenfavoritter fra nichebrands i EU og USA.</li>
+            <li>Beauty launches og tech, der kræver korrekt toldtarif fra første dag.</li>
+          </ul>
+          <div class="behovsboks__cta">
+            <a class="btn btn--primary" href="#totalpris">Start din forespørgsel</a>
+            <a class="btn" href="/bliv-partner.html">Bliv partner</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container" id="selekti-plus">
+        <div class="selekti-plus__intro">
+          <h2 class="section-title">Selekti+ medlemskab</h2>
+          <p class="section-subtitle">Fri fragt gælder kun hvis vægt og zone matcher planen. Vælg den løsning der passer bedst til dine køb.</p>
+        </div>
+        <div class="memberships">
+          <div class="membership">
+            <h3>Standard – 249 kr/md</h3>
+            <p>Til dig der handler ofte fra EU og UK. Inkluderer fri fragt op til 2 kg og 2 Mini-bokse hvert år.</p>
+            <ul>
+              <li>Fri fragt fra EU/UK ≤ 2 kg</li>
+              <li>2 Mini-bokse om året</li>
+              <li>Prioriteret kundeservice</li>
+            </ul>
+            <a class="btn" href="/om-os.html#selekti-plus">Læs mere</a>
+          </div>
+          <div class="membership">
+            <h3>Global – 329 kr/md</h3>
+            <p>Perfekt til USA- og Asienfund. Fri fragt op til 2 kg, 3 Mini-bokse og direkte adgang til vores sourcing-team.</p>
+            <ul>
+              <li>Fri fragt fra USA/Asien ≤ 2 kg</li>
+              <li>3 Mini-bokse om året</li>
+              <li>Global sourcing concierge</li>
+            </ul>
+            <a class="btn" href="/om-os.html#selekti-plus">Se fulde vilkår</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container" id="guide-flow">
         <h2 class="section-title">Sådan fungerer Selekti</h2>
         <p class="section-subtitle">Fra link til levering – vi klarer toldpapirer, betaling, import og service, så du kan handle globalt uden bekymringer.</p>
         <div class="grid">
@@ -139,12 +222,6 @@
             <p>Når du godkender totalen bestiller vi varen, sørger for importen og leverer sikkert til dig.</p>
           </div>
         </div>
-      </section>
-
-      <section class="container">
-        <h2 class="section-title">Populære produkter lige nu</h2>
-        <p class="section-subtitle">Tilføj favoritter til ønskelisten eller hop direkte til din totalpris.</p>
-        <div class="grid" id="popularProducts"></div>
       </section>
     </main>
 
