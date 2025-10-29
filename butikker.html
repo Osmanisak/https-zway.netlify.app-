@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Opdag Selektis kuraterede butikker og produkter klar til import med totalprisberegning." />
+    <meta
+      name="description"
+      content="Opdag Selektis kuraterede butikker og produkter klar til import med totalprisberegning."
+    />
     <meta name="theme-color" content="#10b981" />
     <title>Selekti – Verificerede butikker</title>
     <link rel="manifest" href="site.webmanifest" />
@@ -18,7 +21,6 @@
         </a>
         <div class="nav__links">
           <a href="/butikker.html" aria-current="page">Butikker</a>
-          <a href="/#find-butik">Find butik</a>
           <a href="/#fremhaevede">Fremhævede</a>
           <a href="/#selekti-plus">Selekti+</a>
           <a href="/om-os.html">Om os</a>
@@ -31,43 +33,57 @@
       </nav>
     </header>
 
-    <main>
-      <section class="container">
+    <main id="catalogMain">
+      <section class="catalog-hero container" id="find-butik">
+        <span class="eyebrow">Find butik</span>
         <h1 class="section-title">Kureret udvalg fra verificerede shops</h1>
-        <p class="section-subtitle">Vælg en butik og få din totalpris på sekunder.</p>
-        <div class="filters" aria-label="Filtrer butikker">
-          <label>
-            Land
+        <p class="section-subtitle">
+          Vælg en butik og få din totalpris på sekunder. Vi har samlet sjældne fund, sikre leverandører og globale favoritter,
+          så du kan handle trygt – uanset hvor varen befinder sig.
+        </p>
+        <div class="catalog-hero__actions">
+          <a class="btn" href="#butikskatalog">Se alle butikker</a>
+          <a class="nav__cta" href="/index.html#totalpris">Få totalpris</a>
+        </div>
+      </section>
+
+      <section class="catalog-controls container" id="butikskatalog" aria-label="Filtrer butikker">
+        <div class="filters">
+          <label class="filter-field">
+            <span>Land</span>
             <select id="filterCountry">
-              <option value="alle">Alle</option>
+              <option value="alle">Alle lande</option>
             </select>
           </label>
-          <label>
-            Kategori
+          <label class="filter-field">
+            <span>Kategori</span>
             <select id="filterCategory">
-              <option value="alle">Alle</option>
+              <option value="alle">Alle kategorier</option>
             </select>
           </label>
-          <label>
-            Sorter efter
+          <label class="filter-field filter-field--align-end">
+            <span>Sorter efter</span>
             <select id="filterSort">
               <option value="recent">Nyeste</option>
-              <option value="price-asc">Laveste gennemsnitlige pris</option>
-              <option value="price-desc">Højeste gennemsnitlige pris</option>
+              <option value="price-asc">Pris lav → høj</option>
+              <option value="price-desc">Pris høj → lav</option>
             </select>
           </label>
         </div>
-        <div class="grid" id="storeGrid" aria-live="polite"></div>
       </section>
 
-      <section class="container">
-        <h2 class="section-title">Produktinspiration</h2>
-        <p class="section-subtitle">Tilføj produkter til ønskelisten og fortsæt til beregneren når du er klar.</p>
-        <div class="grid" id="catalogProducts" aria-live="polite"></div>
-        <p class="section-subtitle" id="productEmpty" hidden>
-          Ingen produkter – prøv at nulstille filtre.
-          <button type="button" id="resetProductFilters">Nulstil filtre</button>
-        </p>
+      <section class="container" aria-live="polite">
+        <div id="catalogError" class="catalog-state catalog-state--error" hidden>
+          <h2>Kunne ikke hente produkter</h2>
+          <p>Der gik noget galt under indlæsning. Prøv venligst igen.</p>
+          <button type="button" id="retryCatalog">Prøv igen</button>
+        </div>
+        <div id="catalogEmpty" class="catalog-state" hidden>
+          <h2>Ingen produkter matcher dine filtre</h2>
+          <p>Justér filtrene eller start forfra for at se hele udvalget.</p>
+          <button type="button" id="resetCatalogFilters">Nulstil filtre</button>
+        </div>
+        <div class="catalog-grid" id="storeGrid" role="list"></div>
       </section>
     </main>
 

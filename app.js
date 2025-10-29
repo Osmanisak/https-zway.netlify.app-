@@ -16,10 +16,56 @@ const DKK_FORMATTER = new Intl.NumberFormat("da-DK", {
   currency: "DKK"
 });
 
+const DKK_APPROX_FORMATTER = new Intl.NumberFormat("da-DK", {
+  style: "currency",
+  currency: "DKK",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+});
+
 const now = new Date();
 const FX_SNAPSHOT_DATE = `${String(now.getDate()).padStart(2, "0")}-${String(now.getMonth() + 1).padStart(2, "0")}-${now.getFullYear()}`;
 const WISHLIST_KEY = "selekti_wishlist";
 const PREFILL_KEY = "selekti_prefill";
+
+const CATEGORY_DUTY_MAP = new Map([
+  ["elektronik & tilbehør", 0],
+  ["mobil & tablet", 0],
+  ["streaming / creator-gear", 0.02],
+  ["tøj & sko / sneakers", 0.08],
+  ["tasker & accessories", 0.05],
+  ["skønhed & personlig pleje", 0.03],
+  ["sport / outdoor", 0.04],
+  ["køkken & hjem", 0.04],
+  ["legetøj & gadgets", 0.03],
+  ["bøger & print", 0],
+  ["default", 0.05]
+]);
+
+const slugify = (value) => {
+  if (!value) return "";
+  return value
+    .toString()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/æ/g, "ae")
+    .replace(/ø/g, "oe")
+    .replace(/å/g, "aa")
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/é/g, "e")
+    .replace(/&/g, " og ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-");
+};
+
+const formatDKKApprox = (value) => {
+  const numeric = typeof value === "number" && Number.isFinite(value) ? Math.round(value) : 0;
+  return DKK_APPROX_FORMATTER.format(numeric);
+};
 
 const formatDKK = (value) => {
   const numeric = typeof value === "number" && Number.isFinite(value) ? Math.round(value) : 0;
@@ -43,6 +89,92 @@ const parseAmount = (value) => {
   return 0;
 };
 
+const normalizeCategoryList = (raw) => {
+  if (!Array.isArray(raw)) return [];
+  const results = raw
+    .map((entry) => {
+      if (typeof entry !== "string" || !entry.trim()) return null;
+      const name = entry.trim();
+      const id = slugify(name);
+      const dutyKey = name.toLowerCase();
+      const dutyRate = CATEGORY_DUTY_MAP.get(dutyKey) ?? CATEGORY_DUTY_MAP.get("default");
+      return { id, name, dutyRate: dutyRate ?? 0.05 };
+    })
+    .filter(Boolean);
+  if (!results.some((item) => item.id === "default")) {
+    results.push({ id: "default", name: "Andet", dutyRate: 0.05 });
+  }
+  return results;
+};
+
+const normalizeCountryList = (raw) => {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((entry) => {
+      if (typeof entry !== "string" || !entry.trim()) return null;
+      const name = entry.trim();
+      return { id: slugify(name) || name.toLowerCase(), name };
+    })
+    .filter(Boolean);
+};
+
+const normalizeProducts = (raw, categories) => {
+  if (!Array.isArray(raw)) return [];
+  const categoryIds = new Set(categories.map((item) => item.id));
+  return raw
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const price = parseAmount(item.price);
+      const shipping = parseAmount(item.shipping || 0);
+      const currency = typeof item.currency === "string" ? item.currency.toUpperCase() : "";
+      const country = typeof item.country === "string" ? item.country : "";
+      const countryKey = slugify(country) || country.toLowerCase();
+      const categoryIdCandidate = slugify(item.category || "");
+      const categoryId = categoryIds.has(categoryIdCandidate) ? categoryIdCandidate : "default";
+      const storeName = typeof item.store === "string" ? item.store : "";
+      const codeSource = `${storeName}-${country}`.trim();
+      const storeCode = slugify(codeSource) || item.id || slugify(storeName) || "store";
+      return {
+        id: item.id || slugify(`${storeName}-${item.title || "produkt"}`),
+        name: item.title || item.name || "Produkt",
+        store: storeName,
+        storeCountry: country,
+        storeCountryCode: countryKey,
+        category: categoryId,
+        price,
+        currency,
+        shipping,
+        image: item.image || "",
+        imageAlt: item.imageAlt || item.title || item.name || "Produktbillede",
+        url: item.url || "",
+        added: item.added || "",
+        storeCode
+      };
+    })
+    .filter((item) => item !== null);
+};
+
+const deriveStoreList = (products) => {
+  const map = new Map();
+  products.forEach((product) => {
+    const code = product.storeCode || product.id;
+    if (map.has(code)) return;
+    const hasCountry = Boolean(product.storeCountry);
+    map.set(code, {
+      code,
+      name: hasCountry ? `${product.store} – ${product.storeCountry}` : product.store,
+      currency: product.currency,
+      category: product.category,
+      defaultShipping: product.shipping,
+      leadTime: "5-8 dage",
+      link: product.url,
+      countryCode: product.storeCountryCode,
+      country: product.storeCountry
+    });
+  });
+  return Array.from(map.values());
+};
+
 const encode = (data) =>
   Object.keys(data)
     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
@@ -53,10 +185,17 @@ const prefillQuote = (payload) => {
   const normalized = {
     url: payload.url || "",
     storeCode: payload.storeCode || "",
-    currency: payload.currency || "",
+    currency: typeof payload.currency === "string" ? payload.currency.toUpperCase() : "",
     category: payload.category || "",
-    price: typeof payload.price !== "undefined" ? payload.price : "",
-    shipping: typeof payload.shipping !== "undefined" ? payload.shipping : ""
+    price:
+      typeof payload.price !== "undefined" && payload.price !== null
+        ? String(payload.price)
+        : "",
+    shipping:
+      typeof payload.shipping !== "undefined" && payload.shipping !== null
+        ? String(payload.shipping)
+        : "",
+    country: payload.country || payload.storeCountry || ""
   };
 
   const form = document.getElementById("quoteForm");
@@ -72,8 +211,18 @@ const prefillQuote = (payload) => {
     return;
   }
 
+  const targetUrl = new URL("/index.html", window.location.origin);
+  if (normalized.url) targetUrl.searchParams.set("link", normalized.url);
+  if (normalized.storeCode) targetUrl.searchParams.set("store", normalized.storeCode);
+  if (normalized.currency) targetUrl.searchParams.set("currency", normalized.currency);
+  if (normalized.category) targetUrl.searchParams.set("category", normalized.category);
+  if (normalized.price !== "") targetUrl.searchParams.set("price", normalized.price);
+  if (normalized.shipping !== "") targetUrl.searchParams.set("shipping", normalized.shipping);
+  if (normalized.country) targetUrl.searchParams.set("country", normalized.country);
+  targetUrl.hash = "totalpris";
+
   sessionStorage.setItem(PREFILL_KEY, JSON.stringify(normalized));
-  window.location.href = "/index.html#totalpris";
+  window.location.href = targetUrl.toString();
 };
 
 class WishlistManager {
@@ -94,7 +243,7 @@ class WishlistManager {
     if (!item || typeof item !== "object") return null;
     const normalized = {
       id: item.id,
-      name: item.name || "Ukendt produkt",
+      name: item.name || item.title || "Ukendt produkt",
       url: item.url || "",
       store: item.store || "",
       price: parseAmount(item.price) || 0,
@@ -106,7 +255,8 @@ class WishlistManager {
       shipping: parseAmount(item.shipping) || 0,
       category: item.category || "default",
       storeCode: item.storeCode || "",
-      image: item.image || ""
+      image: item.image || "",
+      country: item.country || item.storeCountry || ""
     };
     if (!normalized.id) return null;
     return normalized;
@@ -295,6 +445,7 @@ const fetchJSON = async (path) => {
 
 const populateSelect = (select, options) => {
   if (!select) return;
+  Array.from(select.querySelectorAll("option[data-dynamic='true']")).forEach((opt) => opt.remove());
   const existingValues = new Set(Array.from(select.options).map((opt) => opt.value));
   options.forEach((option) => {
     if (existingValues.has(option.value)) return;
@@ -349,7 +500,7 @@ const calculateQuote = ({ price, shipping, currency, categoryId, categories }) =
   };
 };
 
-const initQuoteForm = (categories, countries) => {
+const initQuoteForm = (categories, stores = []) => {
   const form = document.getElementById("quoteForm");
   if (!form) return;
 
@@ -373,14 +524,14 @@ const initQuoteForm = (categories, countries) => {
   );
   populateSelect(
     storeSelect,
-    countries.map((store) => ({
+    (stores || []).map((store) => ({
       value: store.code,
       label: store.name,
       dataset: {
-        currency: store.currency,
-        category: store.category,
-        shipping: store.defaultShipping ?? "",
-        country: store.countryCode || ""
+        currency: store.currency || "",
+        category: store.category || "",
+        shipping: typeof store.defaultShipping !== "undefined" ? String(store.defaultShipping) : "",
+        country: store.countryCode || store.country || ""
       }
     }))
   );
@@ -570,6 +721,32 @@ const initQuoteForm = (categories, countries) => {
     sessionStorage.removeItem(PREFILL_KEY);
   }
 
+  const applyQueryPrefill = () => {
+    const params = new URLSearchParams(window.location.search);
+    const hasParams = ["link", "price", "currency", "category", "shipping", "store", "country"].some((key) =>
+      params.has(key)
+    );
+    if (!hasParams) return;
+    const payload = {
+      url: params.get("link") || "",
+      storeCode: params.get("store") || "",
+      currency: params.get("currency") || "",
+      category: params.get("category") || "",
+      price: params.get("price") || "",
+      shipping: params.get("shipping") || "",
+      country: params.get("country") || ""
+    };
+    applyPrefill(payload);
+    updateActionState();
+    if (typeof window.history.replaceState === "function") {
+      const url = new URL(window.location.href);
+      url.search = "";
+      window.history.replaceState({}, document.title, `${url.pathname}${url.hash}`);
+    }
+  };
+
+  applyQueryPrefill();
+
   storeSelect?.addEventListener("change", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLSelectElement)) return;
@@ -653,8 +830,14 @@ const lookupCategoryName = (categories, id) => {
   return match ? match.name : "Andet";
 };
 
-const formatForeignPriceDisplay = (price, currency) =>
-  new Intl.NumberFormat("da-DK", { style: "currency", currency }).format(price);
+const formatForeignPriceDisplay = (price, currency) => {
+  try {
+    return new Intl.NumberFormat("da-DK", { style: "currency", currency }).format(price);
+  } catch (error) {
+    const amount = typeof price === "number" && Number.isFinite(price) ? price.toFixed(2) : price;
+    return `${currency || ""} ${amount}`.trim();
+  }
+};
 
 const createStoreCard = (store, categories) => {
   const card = document.createElement("article");
@@ -677,7 +860,7 @@ const createStoreCard = (store, categories) => {
       shippingDKKDisplay = formatDKK(dkkValue);
     }
   }
-  const countryLabel = store.countryCode ? store.countryCode.toUpperCase() : "";
+  const countryLabel = store.country || (store.countryCode ? store.countryCode.toUpperCase() : "");
   const shippingMeta = shippingDisplay
     ? `<span>Fragt fra ${shippingDisplay}${shippingDKKDisplay ? ` • ${shippingDKKDisplay}` : ""}</span>`
     : "";
@@ -721,7 +904,8 @@ const buildWishlistItem = (product) => ({
   shipping: product.shipping,
   category: product.category,
   storeCode: product.storeCode || "",
-  image: product.image
+  image: product.image,
+  country: product.storeCountry
 });
 
 const priceInDKK = (product) => {
@@ -731,7 +915,7 @@ const priceInDKK = (product) => {
 
 const updateWishlistButton = (button, isActive) => {
   if (!button) return;
-  button.textContent = isActive ? "✓ På ønskelisten" : "♡ Ønskeliste";
+  button.textContent = isActive ? "✓ Tilføjet" : "♡ Ønskeliste";
   button.setAttribute("aria-pressed", isActive ? "true" : "false");
   button.classList.toggle("wishlist-active", isActive);
 };
@@ -746,20 +930,26 @@ const syncWishlistButtons = (productId) => {
 const createProductCard = (product, categories) => {
   const card = document.createElement("article");
   card.className = "product-card";
+  card.setAttribute("role", "listitem");
   const dkkValue = toDKK(product.price, product.currency);
-  const dkkDisplay = Number.isNaN(dkkValue) ? "" : formatDKK(dkkValue);
+  const dkkDisplay = Number.isNaN(dkkValue) ? "" : formatDKKApprox(dkkValue);
+  const categoryName = lookupCategoryName(categories, product.category);
+  const storeMeta = [product.store, product.storeCountry].filter(Boolean).join(" · ");
   card.innerHTML = `
-    <img src="${product.image}" alt="${product.imageAlt || product.name}" loading="lazy" />
-    <div>
-      <strong>${product.name}</strong>
-      <p class="section-subtitle" style="margin-bottom:0">${product.store} · ${product.storeCountry}</p>
-      <p class="section-subtitle" style="margin-bottom:0">${formatForeignPriceDisplay(product.price, product.currency)}${dkkDisplay ? ` • fra ${dkkDisplay}` : ""}</p>
-      <span class="badge">${lookupCategoryName(categories, product.category)}</span>
+    <div class="product-card__media">
+      <img src="${product.image}" alt="${product.imageAlt || product.name}" loading="lazy" />
+      <span class="badge product-card__badge">${categoryName}</span>
     </div>
-    <div class="product-actions">
-      <a class="nav__cta" href="${product.url}" target="_blank" rel="noopener">Se</a>
+    <div class="product-card__body">
+      <h3>${product.name}</h3>
+      <p class="product-card__meta">${storeMeta || "International butik"}</p>
+      <p class="product-card__price">${formatForeignPriceDisplay(product.price, product.currency)}</p>
+      ${dkkDisplay ? `<p class="product-card__price product-card__price--muted">≈ ${dkkDisplay}</p>` : ""}
+    </div>
+    <div class="product-card__actions">
       <button type="button" data-wishlist-toggle="${product.id}" aria-pressed="false">♡ Ønskeliste</button>
-      <button type="button" data-prefill-product="${product.id}">Få totalpris</button>
+      <a href="${product.url}" target="_blank" rel="noopener">Se</a>
+      <button type="button" class="product-card__cta" data-prefill-product="${product.id}">Få totalpris</button>
     </div>
   `;
   return card;
@@ -785,27 +975,60 @@ const showSkeletons = (container, count = 6) => {
   }
 };
 
-const initProductCatalog = (products, categories) => {
+const showCatalogError = () => {
+  const grid = document.getElementById("storeGrid");
+  if (grid) grid.innerHTML = "";
+  const errorState = document.getElementById("catalogError");
+  const emptyState = document.getElementById("catalogEmpty");
+  if (emptyState) emptyState.hidden = true;
+  if (errorState) errorState.hidden = false;
+};
+
+const configureCatalogRetry = () => {
+  const retryBtn = document.getElementById("retryCatalog");
+  if (!retryBtn || retryBtn.dataset.bound === "true") return;
+  retryBtn.dataset.bound = "true";
+  retryBtn.addEventListener("click", () => {
+    retryBtn.disabled = true;
+    window.location.reload();
+  });
+};
+
+const initProductCatalog = (products, categories, countries = []) => {
   const storeGrid = document.getElementById("storeGrid");
   if (!storeGrid) return;
 
   const filterCountry = document.getElementById("filterCountry");
   const filterCategory = document.getElementById("filterCategory");
   const filterSort = document.getElementById("filterSort");
-  const emptyState = document.getElementById("productEmpty");
-  const resetFiltersBtn = document.getElementById("resetProductFilters");
+  const emptyState = document.getElementById("catalogEmpty");
+  const errorState = document.getElementById("catalogError");
+  const resetFiltersBtn = document.getElementById("resetCatalogFilters");
 
-  const uniqueCountries = Array.from(
-    new Map(
-      products.map((product) => [product.storeCountryCode, product.storeCountry])
-    )
-  )
-    .filter(([code]) => code)
-    .sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB, "da"));
+  if (errorState) errorState.hidden = true;
+  if (emptyState) emptyState.hidden = true;
 
+  const countryOptions = new Map();
+  countries.forEach((entry) => {
+    if (entry?.id) {
+      countryOptions.set(entry.id, entry.name);
+    }
+  });
+  products.forEach((product) => {
+    if (product.storeCountryCode && product.storeCountry) {
+      const key = product.storeCountryCode;
+      if (!countryOptions.has(key)) {
+        countryOptions.set(key, product.storeCountry);
+      }
+    }
+  });
+
+  const countryEntries = Array.from(countryOptions.entries()).sort((a, b) =>
+    a[1].localeCompare(b[1], "da")
+  );
   populateSelect(
     filterCountry,
-    uniqueCountries.map(([code, name]) => ({ value: code, label: name }))
+    countryEntries.map(([value, label]) => ({ value, label }))
   );
   populateSelect(
     filterCategory,
@@ -843,15 +1066,20 @@ const initProductCatalog = (products, categories) => {
     renderProductGrid(storeGrid, items, categories);
   };
 
+  const handleChange = () => {
+    if (emptyState) emptyState.hidden = true;
+    render();
+  };
+
   [filterCountry, filterCategory, filterSort].forEach((input) => {
-    input?.addEventListener("change", render);
+    input?.addEventListener("change", handleChange);
   });
 
   resetFiltersBtn?.addEventListener("click", () => {
     if (filterCountry) filterCountry.value = "alle";
     if (filterCategory) filterCategory.value = "alle";
     if (filterSort) filterSort.value = "recent";
-    render();
+    handleChange();
   });
 
   render();
@@ -1031,7 +1259,8 @@ document.addEventListener("click", (event) => {
           storeCode: store.code,
           currency: store.currency,
           category: store.category,
-          shipping: store.defaultShipping ?? ""
+          shipping: store.defaultShipping ?? "",
+          country: store.country || store.countryCode || ""
         });
       }
     }
@@ -1069,7 +1298,7 @@ const initPartnerForm = () => {
 };
 
 const applyLoadingStates = () => {
-  showSkeletons(document.getElementById("storeGrid"));
+  showSkeletons(document.getElementById("storeGrid"), 12);
   showSkeletons(document.getElementById("catalogProducts"));
   showSkeletons(document.getElementById("findStoreList"));
   showSkeletons(document.getElementById("featuredCarousel"));
@@ -1086,23 +1315,35 @@ const applyLoadingStates = () => {
 };
 
 const boot = async () => {
+  configureCatalogRetry();
   applyLoadingStates();
   try {
-    const [categories, countries, products] = await Promise.all([
+    const [rawCategories, rawCountries, rawProducts] = await Promise.all([
       fetchJSON("data/categories.json"),
       fetchJSON("data/countries.json"),
       fetchJSON("data/products.json")
     ]);
 
+    const categories = normalizeCategoryList(rawCategories);
+    const countries = normalizeCountryList(rawCountries);
+    const products = normalizeProducts(rawProducts, categories);
+    const stores = deriveStoreList(products);
+
     registerProducts(products);
-    registerStores(countries);
-    initQuoteForm(categories, countries);
-    initStoreHighlights(countries, categories);
-    initProductCatalog(products, categories);
+    registerStores(stores);
+    initQuoteForm(categories, stores);
+    initStoreHighlights(stores, categories);
+    initProductCatalog(products, categories, countries);
     initProductShowcase("featuredCarousel", products, categories, { limit: 8 });
     initProductShowcase("partnerShowcase", products, categories, {
       limit: 8,
-      filterCategories: ["fashion", "home", "beauty", "sport", "accessories"],
+      filterCategories: [
+        "toej-og-sko-sneakers",
+        "koekken-og-hjem",
+        "skoenhed-og-personlig-pleje",
+        "sport-outdoor",
+        "tasker-og-accessories"
+      ],
       sort: "price-desc"
     });
     initProductShowcase("catalogProducts", products, categories, { limit: 6 });
@@ -1110,6 +1351,8 @@ const boot = async () => {
     initPartnerForm();
   } catch (error) {
     console.error(error);
+    showCatalogError();
+    configureCatalogRetry();
   }
 };
 
