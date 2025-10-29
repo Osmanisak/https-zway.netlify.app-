@@ -364,6 +364,32 @@ button:disabled {
   text-decoration: none;
 }
 
+#productEmpty button {
+  margin-left: 0.5rem;
+}
+
+.wishlist-active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.skeleton-card {
+  border-radius: 1rem;
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.12) 37%, rgba(15, 23, 42, 0.05) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  min-height: 220px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
 .fab {
   position: fixed;
   bottom: 1.5rem;

@@ -55,7 +55,10 @@
           <form id="quoteForm" class="form-grid" data-netlify="true" name="selekti-quote">
             <input type="hidden" name="form-name" value="selekti-quote" />
             <input type="hidden" name="fxRate" id="fxRate" />
+            <input type="hidden" name="productDkk" id="productDkk" />
+            <input type="hidden" name="shippingDkk" id="shippingDkk" />
             <input type="hidden" name="serviceFeeDkk" id="serviceFeeDkk" />
+            <input type="hidden" name="dutyRate" id="dutyRate" />
             <input type="hidden" name="dutyDkk" id="dutyDkk" />
             <input type="hidden" name="vatDkk" id="vatDkk" />
             <input type="hidden" name="totalDkk" id="totalDkk" />
@@ -114,7 +117,7 @@
             </div>
             <p class="calc-error" id="calcError" hidden></p>
             <p class="note" id="quoteSuccess" hidden>Tak! Vi har modtaget din forespørgsel og vender retur inden for én arbejdsdag.</p>
-            <p class="note">Kursgrundlag opdateres manuelt (senest <span id="fxDate">01-08-2024</span>). Toldsatser er vejledende.</p>
+            <p class="note">Kursgrundlag opdateres manuelt (senest <span id="fxDate"></span>). Toldsatser er vejledende.</p>
           </form>
         </div>
       </section>
