@@ -1,0 +1,14 @@
+[
+  { "code": "us", "name": "USA – B&H Photo", "currency": "USD", "leadTime": "5-7 dage", "category": "electronics" },
+  { "code": "gb", "name": "Storbritannien – END.", "currency": "GBP", "leadTime": "4-6 dage", "category": "fashion" },
+  { "code": "de", "name": "Tyskland – Thomann", "currency": "EUR", "leadTime": "3-5 dage", "category": "creator" },
+  { "code": "jp", "name": "Japan – Rakuten Global", "currency": "JPY", "leadTime": "7-10 dage", "category": "electronics" },
+  { "code": "fr", "name": "Frankrig – Merci", "currency": "EUR", "leadTime": "4-6 dage", "category": "accessories" },
+  { "code": "dk", "name": "Danmark – Normann Copenhagen", "currency": "DKK", "leadTime": "1-3 dage", "category": "home" },
+  { "code": "se", "name": "Sverige – Sneakersnstuff", "currency": "SEK", "leadTime": "3-5 dage", "category": "fashion" },
+  { "code": "no", "name": "Norge – Fjellsport", "currency": "NOK", "leadTime": "4-6 dage", "category": "sport" },
+  { "code": "kr", "name": "Sydkorea – KTown4U", "currency": "KRW", "leadTime": "7-9 dage", "category": "toys" },
+  { "code": "cn", "name": "Kina – Xiaomi Official", "currency": "CNY", "leadTime": "6-9 dage", "category": "electronics" },
+  { "code": "hk", "name": "Hongkong – OnTheList", "currency": "HKD", "leadTime": "6-8 dage", "category": "accessories" },
+  { "code": "ca", "name": "Canada – Article", "currency": "USD", "leadTime": "6-8 dage", "category": "home" }
+]

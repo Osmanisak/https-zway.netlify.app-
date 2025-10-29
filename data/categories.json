@@ -1,0 +1,13 @@
+[
+  { "id": "electronics", "name": "Elektronik & tilbehør", "dutyRate": 0 },
+  { "id": "mobile", "name": "Mobil & Tablet", "dutyRate": 0 },
+  { "id": "creator", "name": "Streaming / Creator-gear", "dutyRate": 0.02 },
+  { "id": "fashion", "name": "Tøj & Sko / Sneakers", "dutyRate": 0.08 },
+  { "id": "accessories", "name": "Tasker & Accessories", "dutyRate": 0.05 },
+  { "id": "beauty", "name": "Skønhed & Personlig pleje", "dutyRate": 0.03 },
+  { "id": "sport", "name": "Sport / Outdoor", "dutyRate": 0.04 },
+  { "id": "home", "name": "Køkken & Hjem", "dutyRate": 0.04 },
+  { "id": "toys", "name": "Legetøj & Gadgets", "dutyRate": 0.03 },
+  { "id": "books", "name": "Bøger & Print", "dutyRate": 0 },
+  { "id": "default", "name": "Andet", "dutyRate": 0.05 }
+]

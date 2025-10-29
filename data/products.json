@@ -1,0 +1,152 @@
+[
+  {
+    "id": "sony-a7c2",
+    "name": "Sony A7C II Mirrorless",
+    "price": 2099,
+    "currency": "USD",
+    "category": "electronics",
+    "store": "B&H Photo",
+    "image": "https://images.unsplash.com/photo-1519181245277-cffeb31da2fb?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.bhphotovideo.com"
+  },
+  {
+    "id": "marshall-monitor",
+    "name": "Marshall Monitor II ANC",
+    "price": 299,
+    "currency": "USD",
+    "category": "electronics",
+    "store": "Amazon US",
+    "image": "https://images.unsplash.com/photo-1518444028784-bc6f61a2131a?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.amazon.com"
+  },
+  {
+    "id": "nike-dunk-low",
+    "name": "Nike Dunk Low Retro",
+    "price": 129,
+    "currency": "GBP",
+    "category": "fashion",
+    "store": "END.",
+    "image": "https://images.unsplash.com/photo-1616120258775-611fe299c9f7?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.endclothing.com"
+  },
+  {
+    "id": "acne-scarf",
+    "name": "Acne Studios Canada Scarf",
+    "price": 220,
+    "currency": "EUR",
+    "category": "accessories",
+    "store": "Acne Studios",
+    "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.acnestudios.com"
+  },
+  {
+    "id": "dyson-airwrap",
+    "name": "Dyson Airwrap Complete",
+    "price": 549,
+    "currency": "EUR",
+    "category": "beauty",
+    "store": "Dyson EU",
+    "image": "https://images.unsplash.com/photo-1598514982411-e7f0f6a29e72?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.dyson.dk"
+  },
+  {
+    "id": "garmin-fenix",
+    "name": "Garmin Fenix 7 Sapphire",
+    "price": 799,
+    "currency": "USD",
+    "category": "sport",
+    "store": "Garmin",
+    "image": "https://images.unsplash.com/photo-1516571137133-1be29e37143b?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.garmin.com"
+  },
+  {
+    "id": "lecreuset",
+    "name": "Le Creuset Oval Gryde",
+    "price": 349,
+    "currency": "EUR",
+    "category": "home",
+    "store": "Le Creuset",
+    "image": "https://images.unsplash.com/photo-1602872029708-84a3ed8e0d8b?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.lecreuset.fr"
+  },
+  {
+    "id": "lego-r2d2",
+    "name": "LEGO Star Wars R2-D2",
+    "price": 199,
+    "currency": "USD",
+    "category": "toys",
+    "store": "LEGO",
+    "image": "https://images.unsplash.com/photo-1585362028211-1a4c1c00a6ef?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.lego.com"
+  },
+  {
+    "id": "kindle-scribe",
+    "name": "Amazon Kindle Scribe",
+    "price": 369,
+    "currency": "USD",
+    "category": "electronics",
+    "store": "Amazon US",
+    "image": "https://images.unsplash.com/photo-1611078489935-0cb964de46d1?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.amazon.com"
+  },
+  {
+    "id": "sony-zv-e10",
+    "name": "Sony ZV-E10 Creator Kit",
+    "price": 799,
+    "currency": "USD",
+    "category": "creator",
+    "store": "Sony",
+    "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.sony.com"
+  },
+  {
+    "id": "cosori-airfryer",
+    "name": "Cosori Premium Airfryer",
+    "price": 189,
+    "currency": "USD",
+    "category": "home",
+    "store": "Best Buy",
+    "image": "https://images.unsplash.com/photo-1606813902915-0288aa98fa54?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.bestbuy.com"
+  },
+  {
+    "id": "ipad-mini",
+    "name": "Apple iPad Mini 256GB",
+    "price": 649,
+    "currency": "USD",
+    "category": "mobile",
+    "store": "Apple",
+    "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.apple.com"
+  },
+  {
+    "id": "omuleta-pan",
+    "name": "Our Place Always Pan 2.0",
+    "price": 150,
+    "currency": "USD",
+    "category": "home",
+    "store": "Our Place",
+    "image": "https://images.unsplash.com/photo-1600180758890-d2ed5cc40a7b?auto=format&fit=crop&w=900&q=80",
+    "url": "https://fromourplace.com"
+  },
+  {
+    "id": "northface-jacket",
+    "name": "The North Face Nuptse",
+    "price": 320,
+    "currency": "GBP",
+    "category": "fashion",
+    "store": "The North Face",
+    "image": "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.thenorthface.co.uk"
+  },
+  {
+    "id": "moleskine-notebook",
+    "name": "Moleskine Classic Notebook",
+    "price": 24,
+    "currency": "EUR",
+    "category": "books",
+    "store": "Moleskine",
+    "image": "https://images.unsplash.com/photo-1513475382585-d06e58bcb0ea?auto=format&fit=crop&w=900&q=80",
+    "url": "https://www.moleskine.com"
+  }
+]
