@@ -1,170 +1,122 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bliv partner – Selekti</title>
-  <meta name="description" content="Bliv Selekti-partner og få adgang til danske kunder med totalpris og concierge support." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/styles/base.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bliv Selekti partner</title>
+  <meta name="description" content="Tiltræk danske kunder uden egen webshop. Selekti håndterer told, moms og kundeservice for dine internationale ordrer.">
+  <meta name="theme-color" content="#10b981">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" href="/assets/logo-selekti.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles/base.css">
   <script src="/app.js" defer></script>
 </head>
 <body data-page="partners">
-  <header class="site-header">
-    <div class="container inner">
-      <a class="logo" href="/index.html" aria-label="Selekti forside">
-        <span class="logo-mark">ET</span>
+  <header class="site-header" role="banner">
+    <div class="container bar">
+      <a class="brand" href="/">
+        <img src="/assets/logo-selekti.svg" alt="Selekti" width="36" height="36">
+        <span>Selekti</span>
       </a>
-      <form id="global-search" class="global-search" role="search">
-        <input id="global-search-input" type="search" placeholder="Søg butik, brand eller produkt" aria-label="Global søgning" />
-        <button class="btn primary" type="submit">Søg</button>
-      </form>
-      <nav class="primary-nav">
-        <a href="/butikker.html">Butikker</a>
-        <a href="/index.html#selekti-plus">Selekti+</a>
-        <a href="/om-os.html">Om os</a>
+      <nav class="primary-nav" aria-label="Hovednavigation">
+        <a href="/#featured">Fremhævede</a>
+        <a href="/butikker.html">Butikker & produkter</a>
+        <a href="/bliv-partner.html" class="active">Bliv partner</a>
+        <button id="wishlistOpen" class="btn btn-ghost" type="button" aria-haspopup="dialog" aria-controls="wishlistDialog">Ønskeliste <span data-wish-badge>0</span></button>
       </nav>
-      <div class="cta-group">
-        <button id="wishlist-open" data-open="sheet-wishlist" class="btn ghost">Ønskeliste <span id="wishlist-count" class="badge">0</span></button>
-        <button class="btn primary" data-auth-action>Log ind</button>
-      </div>
+      <button class="btn btn-ghost" id="wishlistOpenMobile" type="button" aria-label="Åbn ønskeliste" aria-haspopup="dialog" aria-controls="wishlistDialog">
+        ♡ <span data-wish-badge>0</span>
+      </button>
     </div>
   </header>
 
-  <main>
-    <section class="section">
-      <div class="container partner-hero">
-        <div>
-          <h1>Bliv Selekti-partner</h1>
-          <p>Vi hjælper internationale butikker og danske brands med at sælge til danske kunder. Selekti håndterer told, moms, kundesupport og logistik.</p>
-          <ul class="badge-column">
-            <li class="badge">Ingen opstart – betaling pr. ordre</li>
-            <li class="badge">Totalpris til kunden fra dag ét</li>
-            <li class="badge">Dansk support & returhåndtering</li>
-          </ul>
-        </div>
-        <div class="card partner-benefits">
-          <h2>Sådan fungerer det</h2>
-          <ol>
-            <li>Send dine butik- og produktdata via vores onboarding</li>
-            <li>Vi opsætter totalpris, betalingsflow og logistik</li>
-            <li>Butikken bliver vist i Selekti app og kampagner</li>
-            <li>Udbetaling ugentligt via aftalt metode</li>
-          </ol>
-        </div>
-      </div>
+  <main class="container" style="padding-top:3rem; padding-bottom:4rem;">
+    <section class="card" style="display:grid;gap:1.25rem;">
+      <p class="badge-muted">Partnerprogram</p>
+      <h1>Bliv Selekti partner</h1>
+      <p class="muted">Vi forbinder globale butikker med danske kunder. Selekti håndterer told, moms, forsendelse, kundeservice og returflow, så du kan fokusere på produktet.</p>
+      <ul class="muted" style="display:grid;gap:0.5rem;padding-left:1.1rem;">
+        <li>Vi prissætter totalpris til kunden – du får forudsigelige udbetalinger.</li>
+        <li>Din butik fremhæves i “Udforsk” og i kataloget.</li>
+        <li>Support på dansk og engelsk med 24 timers svargaranti.</li>
+      </ul>
     </section>
 
-    <section class="section light">
-      <div class="container partner-form">
-        <h2>Ansøg om partnerskab</h2>
-        <form name="partner-apply" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="partner-form-inner">
-          <input type="hidden" name="form-name" value="partner-apply" />
-          <p class="hp"><label>Du må ikke udfylde <input name="bot-field" /></label></p>
-          <label>Butiksnavn
-            <input type="text" name="store" required />
+    <section class="card" style="margin-top:2rem;" aria-labelledby="partner-form-title">
+      <h2 id="partner-form-title">Tilmeldingsformular</h2>
+      <form id="partner-form" name="partner" method="POST" data-netlify="true" novalidate>
+        <input type="hidden" name="form-name" value="partner">
+        <p class="visually-hidden" aria-hidden="true">
+          <label>Efterlad tomt <input name="bot-field" tabindex="-1"></label>
+        </p>
+        <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+          <label class="field" for="partner-store">Butiknavn
+            <input id="partner-store" name="store" required placeholder="Butiksnavn">
           </label>
-          <label>Website
-            <input type="url" name="url" required />
+          <label class="field" for="partner-url">Website
+            <input id="partner-url" name="website" type="url" required placeholder="https://">
           </label>
-          <label>Kontaktperson
-            <input type="text" name="contact" required />
+          <label class="field" for="partner-contact">Kontaktperson
+            <input id="partner-contact" name="contact" required>
           </label>
-          <label>E-mail
-            <input type="email" name="email" required />
+          <label class="field" for="partner-email">E-mail
+            <input id="partner-email" name="email" type="email" required>
           </label>
-          <label>Lande I kan sende fra
-            <input type="text" name="countries" placeholder="fx Japan, USA" />
-          </label>
-          <label>Kategorier
-            <input type="text" name="categories" placeholder="fx sneakers, hi-fi" />
-          </label>
-          <label>Besked
-            <textarea name="message" rows="4" placeholder="Fortæl kort om jeres setup"></textarea>
-          </label>
-          <button class="btn primary" type="submit">Send ansøgning</button>
-          <p class="note">Tak – vi svarer inden for 24–48 timer.</p>
-        </form>
-      </div>
+        </div>
+        <label class="field" for="partner-notes">Besked
+          <textarea id="partner-notes" name="message" rows="4" placeholder="Fortæl kort om jeres sortiment og lande"></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Send tilmelding</button>
+        <p id="partner-status" class="muted" aria-live="polite"></p>
+      </form>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <img src="/assets/logo-et.svg" alt="Selekti" width="120" />
-        <p>Din danske partner til global shopping.</p>
-      </div>
-      <div>
-        <h3>Navigation</h3>
-        <ul>
-          <li><a href="/index.html">Forside</a></li>
-          <li><a href="/butikker.html">Butikker</a></li>
-          <li><a href="/om-os.html">Om os</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Kontakt</h3>
-        <ul>
-          <li><a href="mailto:team@selekti.dk">team@selekti.dk</a></li>
-          <li><button class="btn ghost" data-open="sheet-wishlist">Bestil via link</button></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Nyheder</h3>
-        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="newsletter" />
-          <p class="hp"><label>Du må ikke udfylde <input name="bot-field" /></label></p>
-          <input type="email" name="email" required placeholder="din@email.dk" />
-          <button class="btn primary" type="submit">Tilmeld</button>
-        </form>
-      </div>
+    <div class="container wrap">
+      <strong>Selekti</strong>
+      <p>Dansk concierge til global shopping. Kontakt <a href="mailto:team@selekti.dk">team@selekti.dk</a>.</p>
+      <small>© <span id="year"></span> Selekti.</small>
     </div>
   </footer>
 
-  <div id="sheet-dim" class="sheet-dim" hidden></div>
-  <aside id="sheet-wishlist" class="sheet" role="dialog" aria-modal="true" aria-labelledby="wishlist-title">
-    <div class="sheet-header">
+  <dialog id="wishlistDialog" class="dialog-panel dialog-backdrop" aria-labelledby="wishlist-title">
+    <header>
       <h2 id="wishlist-title">Ønskeliste & bestil via link</h2>
-      <button class="btn ghost" data-close>Luk</button>
-    </div>
-    <div class="sheet-body">
-      <section>
-        <div id="wishlist-empty" class="wishlist-empty">
-          <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" class="mascot" />
-          <p>Din liste er tom. Find noget unikt – tryk ♡</p>
+      <button type="button" class="btn btn-ghost" data-close-dialog>Luk</button>
+    </header>
+    <div class="body">
+      <section aria-live="polite">
+        <div id="wishlist-empty" class="empty-state">
+          <img src="/assets/illustrations/mascot.svg" alt="">
+          <p>Gem dine favoritlinks – vi holder styr på dem for dig.</p>
         </div>
-        <div id="wishlist-list" class="wishlist-list"></div>
-        <div id="wishlist-actions" hidden>
-          <button id="wishlist-clear" class="btn ghost" type="button">Ryd ønskeliste</button>
-        </div>
+        <div id="wishlist-items" class="wishlist-items" hidden></div>
+        <button id="wishlist-share" class="btn btn-ghost" type="button" hidden>Kopiér alle links</button>
       </section>
-      <section>
-        <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="wishlist" />
-          <input type="hidden" name="items_json" id="wishlist-json" value="[]" />
-          <p class="hp"><label>Du må ikke udfylde <input name="bot-field" /></label></p>
-          <label>Produktlink
-            <input id="wishlist-product-url" name="product_url" type="url" required placeholder="https://butik.com/vare" />
-          </label>
-          <label>Variant / størrelse
-            <input name="variant" type="text" placeholder="fx Medium" />
-          </label>
-          <label>Noter
-            <textarea name="notes" rows="3" placeholder="Fortæl os hvad du ønsker"></textarea>
-          </label>
-          <label>E-mail
-            <input name="email" type="email" required placeholder="din@email.dk" />
-          </label>
-          <button class="btn primary" type="submit">Send forespørgsel</button>
-          <p class="note">Estimat. Endelig pris bekræftes på mail.</p>
-        </form>
-      </section>
+      <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" novalidate>
+        <input type="hidden" name="form-name" value="wishlist">
+        <p class="visually-hidden" aria-hidden="true">
+          <label>Efterlad tomt <input name="bot-field" tabindex="-1"></label>
+        </p>
+        <input type="hidden" name="items_json" value="[]">
+        <label class="field" for="wishlist-link">Produktlink
+        <input id="wishlist-link" name="product_url" type="url" required placeholder="https://butik.com/vare" aria-describedby="wishlist-help">
+        </label>
+        <small id="wishlist-help" class="muted">Vi bruger linket til at beregne totalpris og vender tilbage inden for 24 timer.</small>
+        <label class="field" for="wishlist-email">Din e-mail
+        <input id="wishlist-email" name="email" type="email" required placeholder="navn@email.dk">
+        </label>
+        <label class="field" for="wishlist-notes">Noter
+        <textarea id="wishlist-notes" name="notes" rows="3" placeholder="Størrelse, farve eller andre ønsker"></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Send forespørgsel</button>
+        <p id="wishlist-status" class="muted" aria-live="polite"></p>
+      </form>
     </div>
-  </aside>
-
-  <div id="toasts" class="toast-container" aria-live="polite"></div>
+  </dialog>
 </body>
 </html>

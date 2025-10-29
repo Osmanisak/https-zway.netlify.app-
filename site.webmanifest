@@ -1,0 +1,15 @@
+{
+  "name": "Selekti",
+  "short_name": "Selekti",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/assets/logo-selekti.svg",
+      "sizes": "120x120",
+      "type": "image/svg+xml"
+    }
+  ]
+}

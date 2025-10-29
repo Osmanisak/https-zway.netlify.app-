@@ -1,10 +1,15 @@
 [
-  { "code": "JP", "label": "Japan" },
-  { "code": "KR", "label": "Sydkorea" },
-  { "code": "UK", "label": "Storbritannien" },
-  { "code": "US", "label": "USA" },
-  { "code": "CN", "label": "Kina" },
-  { "code": "IN", "label": "Indien" },
-  { "code": "DE", "label": "Tyskland" },
-  { "code": "CA", "label": "Canada" }
+  {"code":"DK","label":"Danmark"},
+  {"code":"DE","label":"Tyskland"},
+  {"code":"SE","label":"Sverige"},
+  {"code":"UK","label":"Storbritannien"},
+  {"code":"US","label":"USA"},
+  {"code":"CA","label":"Canada"},
+  {"code":"CN","label":"Kina"},
+  {"code":"JP","label":"Japan"},
+  {"code":"KR","label":"Sydkorea"},
+  {"code":"FR","label":"Frankrig"},
+  {"code":"ES","label":"Spanien"},
+  {"code":"IT","label":"Italien"},
+  {"code":"NL","label":"Holland"}
 ]

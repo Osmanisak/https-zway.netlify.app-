@@ -1,10 +1,11 @@
 [
-  { "id": "elektronik", "label": "Elektronik" },
-  { "id": "audio", "label": "Lyd" },
-  { "id": "beauty", "label": "Skønhed" },
-  { "id": "tøj", "label": "Tøj" },
-  { "id": "sneakers", "label": "Sneakers" },
-  { "id": "home", "label": "Bolig" },
-  { "id": "foto", "label": "Foto" },
-  { "id": "gaming", "label": "Gaming" }
+  {"id":"gadgets","label":"Gadgets"},
+  {"id":"audio","label":"Lyd & Streaming"},
+  {"id":"creator","label":"Creator gear"},
+  {"id":"wellness","label":"Wellness"},
+  {"id":"kitchen","label":"Køkken"},
+  {"id":"outdoor","label":"Outdoor"},
+  {"id":"beauty","label":"Beauty"},
+  {"id":"home","label":"Bolig"},
+  {"id":"travel","label":"Rejse"}
 ]

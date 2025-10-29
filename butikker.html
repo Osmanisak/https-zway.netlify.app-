@@ -1,173 +1,129 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Butikker & produkter – Selekti</title>
-  <meta name="description" content="Filtrer og søg blandt Selektis udvalgte partnerbutikker og produkter på tværs af lande." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/styles/base.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Selekti katalog – Butikker & produkter</title>
+  <meta name="description" content="Udforsk Selekti kataloget. Filtrér på lande og kategorier, gem links på ønskelisten og bestil via vores concierge.">
+  <meta name="theme-color" content="#10b981">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" href="/assets/logo-selekti.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles/base.css">
   <script src="/app.js" defer></script>
 </head>
 <body data-page="directory">
-  <header class="site-header">
-    <div class="container inner">
-      <a class="logo" href="/index.html" aria-label="Selekti forside">
-        <span class="logo-mark">ET</span>
+  <header class="site-header" role="banner">
+    <div class="container bar">
+      <a class="brand" href="/">
+        <img src="/assets/logo-selekti.svg" alt="Selekti" width="36" height="36">
+        <span>Selekti</span>
       </a>
-      <form id="global-search" class="global-search" role="search">
-        <input id="global-search-input" type="search" placeholder="Søg butik, brand eller produkt" aria-label="Global søgning" />
-        <button class="btn primary" type="submit">Søg</button>
-      </form>
       <nav class="primary-nav" aria-label="Hovednavigation">
-        <a href="/butikker.html" aria-current="page">Butikker & produkter</a>
-        <a href="/index.html#selekti-plus">Selekti+</a>
-        <a href="/index.html#guides">Guides</a>
-        <a href="/om-os.html">Om os</a>
+        <a href="/#featured">Fremhævede</a>
+        <a href="/butikker.html" class="active">Butikker & produkter</a>
         <a href="/bliv-partner.html">Bliv partner</a>
+        <button id="wishlistOpen" class="btn btn-ghost" type="button" aria-haspopup="dialog" aria-controls="wishlistDialog">Ønskeliste <span data-wish-badge>0</span></button>
       </nav>
-      <div class="cta-group">
-        <button id="wishlist-open" data-open="sheet-wishlist" class="btn ghost">Ønskeliste <span id="wishlist-count" class="badge">0</span></button>
-        <button class="btn primary" data-auth-action>Log ind</button>
-      </div>
+      <button class="btn btn-ghost" id="wishlistOpenMobile" type="button" aria-label="Åbn ønskeliste" aria-haspopup="dialog" aria-controls="wishlistDialog">
+        ♡ <span data-wish-badge>0</span>
+      </button>
     </div>
   </header>
 
-  <main>
-    <section class="section">
-      <div class="container directory-hero">
-        <div>
-          <h1>Find produkter på tværs af lande</h1>
-          <p>Filtrer på land, kategori eller butik, og tilføj dine fund til ønskelisten. Alle totalpriser sendes via Selekti concierge.</p>
-          <div class="badge-row">
-            <span class="badge">1. Indsæt link</span>
-            <span class="badge">2. Få totalpris</span>
-            <span class="badge">3. Vi bestiller for dig</span>
-          </div>
-        </div>
-        <form id="directory-search" class="directory-search" role="search">
-          <label class="sr-only" for="directory-search-input">Søg i produkter</label>
-          <input id="directory-search-input" type="search" placeholder="Søg efter produktnavn eller butik" />
-          <button class="btn primary" type="submit">Søg</button>
-        </form>
+  <main class="container" style="padding-top:3rem; padding-bottom:4rem;">
+    <header class="section-header" style="align-items:flex-end;">
+      <div>
+        <p class="badge-muted">Katalog</p>
+        <h1>Butikker & produkter</h1>
       </div>
-    </section>
+      <button class="btn btn-primary" data-open-wishlist type="button">Bestil via link</button>
+    </header>
 
-    <section class="section light">
-      <div class="container directory-filters">
-        <div class="filter-group">
-          <h2>Land</h2>
-          <div id="filter-countries" class="filter-chip-row"></div>
+    <section class="filter-bar" aria-label="Filtrering">
+      <form id="filters" class="filters" novalidate>
+        <div class="search-group">
+          <label class="visually-hidden" for="products-search">Søg</label>
+          <input id="products-search" type="search" placeholder="Søg produkter eller butikker" autocomplete="off">
+          <button class="btn btn-ghost" type="submit">Søg</button>
         </div>
-        <div class="filter-group">
-          <h2>Kategori</h2>
-          <div id="filter-categories" class="filter-chip-row"></div>
-        </div>
-        <div class="filter-group">
-          <h2>Sortering</h2>
-          <select id="directory-sort">
-            <option value="popular">Udvalgte først</option>
-            <option value="price_asc">Pris stigende</option>
-            <option value="price_desc">Pris faldende</option>
-            <option value="new">Nyeste</option>
+        <label class="field" for="filter-country">Land
+          <select id="filter-country">
+            <option value="">Alle lande</option>
           </select>
-        </div>
-      </div>
+        </label>
+        <label class="field" for="filter-category">Kategori
+          <select id="filter-category">
+            <option value="">Alle kategorier</option>
+          </select>
+        </label>
+        <label class="field" for="filter-sort">Sortering
+          <select id="filter-sort">
+            <option value="">Populære</option>
+            <option value="price-asc">Pris (lav → høj)</option>
+            <option value="price-desc">Pris (høj → lav)</option>
+            <option value="newest">Nyeste</option>
+          </select>
+        </label>
+      </form>
+      <div class="muted" id="products-count" aria-live="polite"></div>
     </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="directory-meta">
-          <p><strong id="directory-count">0</strong> produkter</p>
-          <div id="active-filters" class="active-filters"></div>
-        </div>
-        <div id="directory-featured" class="row-scroll"></div>
-        <div id="directory-grid" class="product-grid"></div>
-        <div id="directory-empty" class="empty-state" hidden>
-          <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" />
-          <p>Ingen fundet – prøv lignende kategorier.</p>
-          <div id="empty-suggestions" class="filter-chip-row"></div>
-        </div>
-      </div>
+    <section id="products-empty" class="empty-state" hidden>
+      <img src="/assets/illustrations/mascot.svg" alt="">
+      <h2>Ingen resultater</h2>
+      <p>Prøv at ændre søgning eller indsæt linket direkte og få en pris.</p>
+      <div id="empty-suggestions" class="chips"></div>
+      <button class="btn btn-primary" data-open-wishlist type="button">Bestil via link</button>
     </section>
+
+    <section id="products-grid" class="card-grid" aria-live="polite"></section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <img src="/assets/logo-et.svg" alt="Selekti" width="120" />
-        <p>Global shopping, dansk tryghed.</p>
-      </div>
-      <div>
-        <h3>Navigation</h3>
-        <ul>
-          <li><a href="/index.html">Forside</a></li>
-          <li><a href="/bliv-partner.html">Bliv partner</a></li>
-          <li><a href="/om-os.html">Om os</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Kontakt</h3>
-        <ul>
-          <li><a href="mailto:team@selekti.dk">team@selekti.dk</a></li>
-          <li><button class="btn ghost" data-open="sheet-wishlist">Bestil via link</button></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Nyheder</h3>
-        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="newsletter" />
-          <p class="hp"><label>Udfyld ikke <input name="bot-field" /></label></p>
-          <input type="email" name="email" required placeholder="din@email.dk" />
-          <button class="btn primary" type="submit">Tilmeld</button>
-        </form>
-      </div>
+    <div class="container wrap">
+      <strong>Selekti</strong>
+      <p>Dansk concierge til global shopping. Kontakt <a href="mailto:team@selekti.dk">team@selekti.dk</a>.</p>
+      <small>© <span id="year"></span> Selekti.</small>
     </div>
   </footer>
 
-  <div id="sheet-dim" class="sheet-dim" hidden></div>
-  <aside id="sheet-wishlist" class="sheet" role="dialog" aria-modal="true" aria-labelledby="wishlist-title">
-    <div class="sheet-header">
+  <dialog id="wishlistDialog" class="dialog-panel dialog-backdrop" aria-labelledby="wishlist-title">
+    <header>
       <h2 id="wishlist-title">Ønskeliste & bestil via link</h2>
-      <button class="btn ghost" data-close>Luk</button>
-    </div>
-    <div class="sheet-body">
-      <section>
-        <div id="wishlist-empty" class="wishlist-empty">
-          <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" class="mascot" />
-          <p>Din liste er tom. Find noget unikt – tryk ♡</p>
+      <button type="button" class="btn btn-ghost" data-close-dialog>Luk</button>
+    </header>
+    <div class="body">
+      <section aria-live="polite">
+        <div id="wishlist-empty" class="empty-state">
+          <img src="/assets/illustrations/mascot.svg" alt="">
+          <p>Gem dine favoritlinks – vi holder styr på dem for dig.</p>
         </div>
-        <div id="wishlist-list" class="wishlist-list"></div>
-        <div id="wishlist-actions" hidden>
-          <button id="wishlist-clear" class="btn ghost" type="button">Ryd ønskeliste</button>
-        </div>
+        <div id="wishlist-items" class="wishlist-items" hidden></div>
+        <button id="wishlist-share" class="btn btn-ghost" type="button" hidden>Kopiér alle links</button>
       </section>
-      <section>
-        <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="wishlist" />
-          <input type="hidden" name="items_json" id="wishlist-json" value="[]" />
-          <p class="hp"><label>Du må ikke udfylde <input name="bot-field" /></label></p>
-          <label>Produktlink
-            <input id="wishlist-product-url" name="product_url" type="url" required placeholder="https://butik.com/vare" />
-          </label>
-          <label>Variant / størrelse
-            <input name="variant" type="text" placeholder="fx Medium" />
-          </label>
-          <label>Noter
-            <textarea name="notes" rows="3" placeholder="Fortæl os hvad du ønsker"></textarea>
-          </label>
-          <label>E-mail
-            <input name="email" type="email" required placeholder="din@email.dk" />
-          </label>
-          <button class="btn primary" type="submit">Send forespørgsel</button>
-          <p class="note">Estimat. Endelig pris bekræftes på mail.</p>
-        </form>
-      </section>
+      <form id="wishlist-form" name="wishlist" method="POST" data-netlify="true" novalidate>
+        <input type="hidden" name="form-name" value="wishlist">
+        <p class="visually-hidden" aria-hidden="true">
+          <label>Efterlad tomt <input name="bot-field" tabindex="-1"></label>
+        </p>
+        <input type="hidden" name="items_json" value="[]">
+        <label class="field" for="wishlist-link">Produktlink
+        <input id="wishlist-link" name="product_url" type="url" required placeholder="https://butik.com/vare" aria-describedby="wishlist-help">
+        </label>
+        <small id="wishlist-help" class="muted">Vi bruger linket til at beregne totalpris og vender tilbage inden for 24 timer.</small>
+        <label class="field" for="wishlist-email">Din e-mail
+        <input id="wishlist-email" name="email" type="email" required placeholder="navn@email.dk">
+        </label>
+        <label class="field" for="wishlist-notes">Noter
+        <textarea id="wishlist-notes" name="notes" rows="3" placeholder="Størrelse, farve eller andre ønsker"></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Send forespørgsel</button>
+        <p id="wishlist-status" class="muted" aria-live="polite"></p>
+      </form>
     </div>
-  </aside>
-
-  <div id="toasts" class="toast-container" aria-live="polite"></div>
+  </dialog>
 </body>
 </html>

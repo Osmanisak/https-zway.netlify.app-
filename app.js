@@ -1,914 +1,770 @@
-const DB = {
+const DATA = {
   products: [],
-  stores: [],
   categories: [],
   countries: [],
-  shipping: null
+  countryLabel: new Map()
 };
 
-const state = {
-  wishlist: [],
-  quotes: new Map(),
-  chatOpen: false
+const WISHLIST_KEY = 'selekti_wishlist';
+let wishlist = [];
+let lastDialogTrigger = new WeakMap();
+
+const formatCurrency = (value) =>
+  typeof value === 'number' && !Number.isNaN(value)
+    ? new Intl.NumberFormat('da-DK', { style: 'currency', currency: 'DKK' }).format(value)
+    : '—';
+
+const readWishlist = () => {
+  if (typeof localStorage === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(WISHLIST_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((item) => item && typeof item.link === 'string');
+    }
+  } catch (error) {
+    console.warn('Kunne ikke læse ønskeliste', error);
+  }
+  return [];
 };
 
-const WIS_KEY = 'selekti_wishlist';
+const persistWishlist = () => {
+  try {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
+  } catch (error) {
+    console.warn('Kunne ikke gemme ønskeliste', error);
+  }
+  updateWishlistUI();
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-  initSheets();
-  initGlobalSearch();
-  initAuthMock();
-  initWishlist();
-  initChatbot();
-  loadData().then(() => {
-    const page = document.body.dataset.page;
-    switch (page) {
-      case 'landing':
-        initLanding();
+const updateWishlistUI = () => {
+  document.querySelectorAll('[data-wish-badge]').forEach((el) => {
+    el.textContent = String(wishlist.length);
+  });
+
+  const itemsWrap = document.getElementById('wishlist-items');
+  const emptyState = document.getElementById('wishlist-empty');
+  const shareBtn = document.getElementById('wishlist-share');
+  if (!itemsWrap || !emptyState) return;
+
+  if (wishlist.length === 0) {
+    itemsWrap.hidden = true;
+    emptyState.hidden = false;
+    if (shareBtn) shareBtn.hidden = true;
+  } else {
+    itemsWrap.hidden = false;
+    emptyState.hidden = true;
+    itemsWrap.innerHTML = '';
+    wishlist
+      .slice()
+      .sort((a, b) => b.added - a.added)
+      .forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'wishlist-item';
+        const link = document.createElement('a');
+        link.href = item.link;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = item.link;
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'btn btn-ghost';
+        removeBtn.type = 'button';
+        removeBtn.dataset.removeLink = item.link;
+        removeBtn.textContent = 'Fjern';
+        row.append(link, removeBtn);
+        itemsWrap.appendChild(row);
+      });
+    if (shareBtn) shareBtn.hidden = false;
+  }
+
+  document.querySelectorAll('[data-wishlist-link]').forEach((btn) => {
+    const link = btn.getAttribute('data-wishlist-link');
+    const isSaved = wishlist.some((item) => item.link === link);
+    btn.classList.toggle('btn-primary', isSaved);
+    btn.classList.toggle('btn-ghost', !isSaved);
+    btn.setAttribute('aria-pressed', isSaved ? 'true' : 'false');
+    btn.textContent = isSaved ? '♡ På ønskeliste' : '♡ Ønskeliste';
+  });
+
+  const hiddenField = document.querySelector('input[name="items_json"]');
+  if (hiddenField) {
+    hiddenField.value = JSON.stringify(wishlist);
+  }
+};
+
+const toggleWishlist = (link) => {
+  if (!link) return;
+  const index = wishlist.findIndex((item) => item.link === link);
+  if (index > -1) {
+    wishlist.splice(index, 1);
+  } else {
+    wishlist.push({ link, added: Date.now() });
+  }
+  persistWishlist();
+};
+
+const ensureWishlist = (link) => {
+  if (!link || wishlist.some((item) => item.link === link)) return;
+  wishlist.push({ link, added: Date.now() });
+  persistWishlist();
+};
+
+const fetchJSON = async (path) => {
+  try {
+    const response = await fetch(path, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn(`Kunne ikke hente ${path}`, error);
+    return null;
+  }
+};
+
+const loadData = async () => {
+  const [products, categories, countries] = await Promise.all([
+    fetchJSON('/data/products.json'),
+    fetchJSON('/data/categories.json'),
+    fetchJSON('/data/countries.json')
+  ]);
+
+  if (Array.isArray(products)) {
+    DATA.products = products.filter((p) => p && typeof p.url === 'string');
+  }
+  if (Array.isArray(categories)) {
+    DATA.categories = categories;
+  }
+  if (Array.isArray(countries)) {
+    DATA.countries = countries;
+    DATA.countryLabel = new Map(countries.map((c) => [c.code, c.label]));
+  }
+};
+
+const initYear = () => {
+  const now = new Date().getFullYear();
+  document.querySelectorAll('#year').forEach((el) => {
+    el.textContent = String(now);
+  });
+};
+
+const dialogFocusable = (dialog) =>
+  dialog.querySelector(
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  );
+
+const openDialog = (dialog, trigger) => {
+  if (!dialog) return;
+  if (trigger) {
+    lastDialogTrigger.set(dialog, trigger);
+  }
+  if (typeof dialog.showModal === 'function') {
+    dialog.showModal();
+  } else {
+    dialog.setAttribute('open', '');
+  }
+  const first = dialogFocusable(dialog);
+  if (first) first.focus();
+};
+
+const closeDialog = (dialog) => {
+  if (!dialog) return;
+  dialog.close();
+  const trigger = lastDialogTrigger.get(dialog);
+  if (trigger) trigger.focus();
+};
+
+const handleDialogSetup = () => {
+  document.querySelectorAll('dialog').forEach((dialog) => {
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeDialog(dialog);
+    });
+  });
+
+  document.body.addEventListener('click', (event) => {
+    const openWishlist = event.target.closest('[data-open-wishlist]');
+    if (openWishlist) {
+      event.preventDefault();
+      const dialog = document.getElementById('wishlistDialog');
+      const url = openWishlist.getAttribute('data-prefill-url');
+      if (url) {
+        const input = document.getElementById('wishlist-link');
+        if (input) input.value = url;
+      }
+      openDialog(dialog, openWishlist);
+      return;
+    }
+
+    const openWishlistButtons = event.target.closest('#wishlistOpen, #wishlistOpenMobile');
+    if (openWishlistButtons) {
+      event.preventDefault();
+      openDialog(document.getElementById('wishlistDialog'), openWishlistButtons);
+      return;
+    }
+
+    const closeBtn = event.target.closest('[data-close-dialog]');
+    if (closeBtn) {
+      const dialog = closeBtn.closest('dialog');
+      closeDialog(dialog);
+      return;
+    }
+
+    const toggleBtn = event.target.closest('[data-wishlist-link]');
+    if (toggleBtn) {
+      event.preventDefault();
+      const link = toggleBtn.getAttribute('data-wishlist-link');
+      toggleWishlist(link);
+      return;
+    }
+
+    const removeBtn = event.target.closest('[data-remove-link]');
+    if (removeBtn) {
+      event.preventDefault();
+      const link = removeBtn.getAttribute('data-remove-link');
+      const index = wishlist.findIndex((item) => item.link === link);
+      if (index > -1) {
+        wishlist.splice(index, 1);
+        persistWishlist();
+      }
+      return;
+    }
+  });
+
+  const shareButton = document.getElementById('wishlist-share');
+  if (shareButton) {
+    shareButton.addEventListener('click', async () => {
+      if (!wishlist.length) return;
+      const text = wishlist.map((item) => item.link).join('\n');
+      try {
+        await navigator.clipboard.writeText(text);
+        shareButton.textContent = 'Kopieret!';
+        setTimeout(() => {
+          shareButton.textContent = 'Kopiér alle links';
+        }, 2000);
+      } catch (error) {
+        shareButton.textContent = 'Kunne ikke kopiere';
+        setTimeout(() => {
+          shareButton.textContent = 'Kopiér alle links';
+        }, 2500);
+      }
+    });
+  }
+};
+
+const handleEstimator = () => {
+  const form = document.getElementById('estimator');
+  if (!form) return;
+  const priceInput = document.getElementById('est-price');
+  const shipInput = document.getElementById('est-ship');
+  const output = document.getElementById('est-total');
+  const breakdown = document.getElementById('est-breakdown');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const price = Number.parseFloat(priceInput.value.replace(',', '.')) || 0;
+    const ship = Number.parseFloat(shipInput.value.replace(',', '.')) || 0;
+
+    if (price <= 0) {
+      output.textContent = '—';
+      breakdown.innerHTML = '';
+      return;
+    }
+
+    const service = Math.max(49, 0.12 * (price + ship));
+    const duty = 0.05 * price;
+    const vat = 0.25 * (price + ship + duty + service);
+    const total = Math.round(price + ship + duty + service + vat);
+
+    output.textContent = formatCurrency(total);
+    breakdown.innerHTML = `
+      <li>Vare: ${formatCurrency(price)}</li>
+      <li>Fragt: ${formatCurrency(ship)}</li>
+      <li>Service (12%, min. 49 kr.): ${formatCurrency(Math.round(service))}</li>
+      <li>Told (5%): ${formatCurrency(Math.round(duty))}</li>
+      <li>Moms 25%: ${formatCurrency(Math.round(vat))}</li>
+    `;
+  });
+};
+
+const renderProductCard = (product) => {
+  const price = typeof product.price === 'number' ? formatCurrency(product.price) : '';
+  const country = DATA.countryLabel.get(product.country) || product.country || '';
+  const isSaved = wishlist.some((item) => item.link === product.url);
+  return `
+    <article class="card-product" data-product-id="${product.id}">
+      <figure>
+        <img src="${product.image}" alt="${product.title}" loading="lazy" decoding="async">
+      </figure>
+      <div class="content">
+        <div class="meta">
+          <span>${product.store}</span>
+          <span class="badge">${country}</span>
+        </div>
+        <h3>${product.title}</h3>
+        ${price ? `<div class="meta"><span class="price">${price}</span><button class="btn ${
+          isSaved ? 'btn-primary' : 'btn-ghost'
+        }" type="button" data-wishlist-link="${product.url}" aria-pressed="${isSaved}">${
+    isSaved ? '♡ På ønskeliste' : '♡ Ønskeliste'
+  }</button></div>` : ''}
+        <div class="actions">
+          <button class="btn btn-primary" type="button" data-open-wishlist data-prefill-url="${product.url}">Bestil via link</button>
+          <a class="btn btn-ghost" href="${product.url}" target="_blank" rel="noopener">Se produkt</a>
+        </div>
+      </div>
+    </article>
+  `;
+};
+
+const renderFeatured = () => {
+  const container = document.getElementById('featured-card');
+  if (!container) return;
+  const [featured] = DATA.products;
+  if (!featured) {
+    container.innerHTML = '<div class="muted">Tilføj produkter i data/products.json for at se fremhævede elementer.</div>';
+    return;
+  }
+  container.innerHTML = renderProductCard(featured);
+  updateWishlistUI();
+};
+
+const renderLatest = () => {
+  const grid = document.getElementById('latest-grid');
+  if (!grid) return;
+  const latest = DATA.products
+    .slice()
+    .sort((a, b) => new Date(b.added || 0) - new Date(a.added || 0))
+    .slice(0, 3);
+  grid.innerHTML = latest.map(renderProductCard).join('');
+  updateWishlistUI();
+};
+
+const initLanding = () => {
+  handleEstimator();
+  renderFeatured();
+  renderLatest();
+  initExplore();
+};
+
+const initFilters = () => {
+  const countrySelect = document.getElementById('filter-country');
+  const categorySelect = document.getElementById('filter-category');
+  if (!countrySelect || !categorySelect) return;
+
+  DATA.countries.forEach((country) => {
+    const option = document.createElement('option');
+    option.value = country.code;
+    option.textContent = country.label;
+    countrySelect.appendChild(option);
+  });
+
+  DATA.categories.forEach((category) => {
+    const option = document.createElement('option');
+    option.value = category.id;
+    option.textContent = category.label;
+    categorySelect.appendChild(option);
+  });
+};
+
+const initDirectory = () => {
+  initFilters();
+  const params = new URLSearchParams(location.search);
+  const state = {
+    q: params.get('q') || '',
+    country: params.get('country') || '',
+    category: params.get('category') || params.get('cat') || '',
+    sort: params.get('sort') || ''
+  };
+
+  const searchInput = document.getElementById('products-search');
+  const countrySelect = document.getElementById('filter-country');
+  const categorySelect = document.getElementById('filter-category');
+  const sortSelect = document.getElementById('filter-sort');
+  const form = document.getElementById('filters');
+  const countEl = document.getElementById('products-count');
+  const grid = document.getElementById('products-grid');
+  const empty = document.getElementById('products-empty');
+  const suggestions = document.getElementById('empty-suggestions');
+
+  if (searchInput) searchInput.value = state.q;
+  if (countrySelect) countrySelect.value = state.country;
+  if (categorySelect) categorySelect.value = state.category;
+  if (sortSelect) sortSelect.value = state.sort;
+
+  const writeStateToURL = () => {
+    const next = new URLSearchParams();
+    if (state.q) next.set('q', state.q);
+    if (state.country) next.set('country', state.country);
+    if (state.category) next.set('category', state.category);
+    if (state.sort) next.set('sort', state.sort);
+    const qs = next.toString();
+    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+  };
+
+  const applyFilters = () => {
+    let list = DATA.products.slice();
+    if (state.q) {
+      const q = state.q.toLowerCase();
+      list = list.filter((product) =>
+        [product.title, product.store]
+          .join(' ')
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    if (state.country) {
+      list = list.filter((product) => product.country === state.country);
+    }
+    if (state.category) {
+      list = list.filter((product) => product.category === state.category);
+    }
+    switch (state.sort) {
+      case 'price-asc':
+        list.sort((a, b) => (a.price || 0) - (b.price || 0));
         break;
-      case 'directory':
-        initDirectory();
+      case 'price-desc':
+        list.sort((a, b) => (b.price || 0) - (a.price || 0));
         break;
-      case 'country':
-        initCountry();
-        break;
-      case 'partners':
-        initPartners();
-        break;
-      case 'about':
-        initAbout();
+      case 'newest':
+        list.sort((a, b) => new Date(b.added || 0) - new Date(a.added || 0));
         break;
       default:
         break;
     }
-  }).catch(console.error);
-});
 
-async function loadData() {
-  const files = ['products', 'stores', 'categories', 'countries'];
-  await Promise.all(files.map(async key => {
-    try {
-      const res = await fetch(`/data/${key}.json`, { cache: 'no-store' });
-      DB[key] = await res.json();
-    } catch (err) {
-      console.error('Failed to load', key, err);
-      DB[key] = [];
-    }
-  }));
-  try {
-    const res = await fetch('/data/shipping-config.json', { cache: 'no-store' });
-    DB.shipping = await res.json();
-  } catch (err) {
-    console.error('Failed to load shipping config', err);
-    DB.shipping = null;
-  }
-}
+    if (countEl) countEl.textContent = `${list.length} produkter`;
 
-function initGlobalSearch() {
-  const form = document.querySelector('#global-search');
-  if (!form) return;
-  form.addEventListener('submit', evt => {
-    evt.preventDefault();
-    const input = form.querySelector('#global-search-input');
-    const value = input ? input.value.trim() : '';
-    const target = value ? `/butikker.html?q=${encodeURIComponent(value)}` : '/butikker.html';
-    window.location.href = target;
-  });
-}
-
-function initAuthMock() {
-  const authButtons = document.querySelectorAll('[data-auth-action]');
-  authButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      toast('Login er ikke aktivt i denne version – brug ønskelisten for at komme i gang');
-    });
-  });
-}
-
-function initSheets() {
-  const dim = document.querySelector('#sheet-dim');
-  if (dim) {
-    dim.addEventListener('click', closeSheets);
-  }
-  document.body.addEventListener('click', evt => {
-    const openBtn = evt.target.closest('[data-open]');
-    if (openBtn) {
-      evt.preventDefault();
-      const id = openBtn.dataset.open;
-      if (id === 'sheet-wishlist') {
-        const prefill = openBtn.dataset.prefillUrl;
-        if (prefill) {
-          const input = document.querySelector('#wishlist-product-url');
-          if (input) input.value = prefill;
-        }
-      }
-      openSheet(id);
-    }
-    const closeBtn = evt.target.closest('[data-close]');
-    if (closeBtn) {
-      evt.preventDefault();
-      closeSheets();
-    }
-    const toggle = evt.target.closest('[data-toggle="est-breakdown"]');
-    if (toggle) {
-      const list = document.querySelector('#est-breakdown');
-      if (list) {
-        list.hidden = !list.hidden;
-      }
-    }
-    const addWishlistBtn = evt.target.closest('[data-add-to-wishlist]');
-    if (addWishlistBtn) {
-      evt.preventDefault();
-      toggleWishlistItem(datasetToProduct(addWishlistBtn.dataset));
-    }
-    const prefillBtn = evt.target.closest('[data-prefill-url]');
-    if (prefillBtn) {
-      const url = prefillBtn.dataset.prefillUrl;
-      if (url) {
-        const input = document.querySelector('#wishlist-product-url');
-        if (input) input.value = url;
-      }
-    }
-  });
-}
-
-function openSheet(id) {
-  const sheet = document.querySelector(`#${id}`);
-  const dim = document.querySelector('#sheet-dim');
-  if (!sheet) return;
-  sheet.classList.add('open');
-  sheet.removeAttribute('hidden');
-  if (dim) {
-    dim.classList.add('visible');
-    dim.removeAttribute('hidden');
-  }
-}
-
-function closeSheets() {
-  document.querySelectorAll('.sheet.open').forEach(sheet => sheet.classList.remove('open'));
-  const dim = document.querySelector('#sheet-dim');
-  if (dim) {
-    dim.classList.remove('visible');
-    dim.setAttribute('hidden', '');
-  }
-  setTimeout(() => {
-    document.querySelectorAll('.sheet').forEach(sheet => {
-      sheet.classList.remove('open');
-      sheet.setAttribute('hidden', '');
-    });
-  }, 200);
-}
-
-function initWishlist() {
-  try {
-    const stored = localStorage.getItem(WIS_KEY);
-    state.wishlist = stored ? JSON.parse(stored) : [];
-  } catch (err) {
-    console.warn('Wishlist storage unavailable', err);
-    state.wishlist = [];
-  }
-  renderWishlist();
-  updateWishlistBadge();
-  const form = document.querySelector('#wishlist-form');
-  if (form) {
-    form.addEventListener('submit', evt => {
-      evt.preventDefault();
-      submitNetlifyForm(form);
-    });
-  }
-  const clearBtn = document.querySelector('#wishlist-clear');
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      state.wishlist = [];
-      persistWishlist();
-      toast('Ønskeliste ryddet');
-    });
-  }
-}
-
-function datasetToProduct(data) {
-  return {
-    id: data.id,
-    title: data.title,
-    img: data.img,
-    priceDKK: Number(data.price) || 0,
-    url: data.url
-  };
-}
-
-function toggleWishlistItem(item) {
-  const index = state.wishlist.findIndex(entry => entry.id === item.id);
-  if (index >= 0) {
-    state.wishlist.splice(index, 1);
-    toast('Fjernet fra ønskeliste');
-  } else {
-    state.wishlist.push(item);
-    toast('Tilføjet til ønskeliste');
-  }
-  persistWishlist();
-}
-
-function persistWishlist() {
-  try {
-    localStorage.setItem(WIS_KEY, JSON.stringify(state.wishlist));
-  } catch (err) {
-    console.warn('Unable to persist wishlist', err);
-  }
-  renderWishlist();
-  updateWishlistBadge();
-}
-
-function renderWishlist() {
-  const list = document.querySelector('#wishlist-list');
-  const empty = document.querySelector('#wishlist-empty');
-  const actions = document.querySelector('#wishlist-actions');
-  const jsonField = document.querySelector('#wishlist-json');
-  if (!list || !empty) return;
-  list.innerHTML = '';
-  if (state.wishlist.length === 0) {
-    empty.hidden = false;
-    if (actions) actions.hidden = true;
-  } else {
-    empty.hidden = true;
-    if (actions) actions.hidden = false;
-    const frag = document.createDocumentFragment();
-    state.wishlist.forEach(item => {
-      const article = document.createElement('article');
-      article.className = 'card wishlist-item';
-      article.innerHTML = `
-        <img src="${item.img || 'https://via.placeholder.com/320x200?text=Selekti'}" alt="${item.title}" loading="lazy" />
-        <div class="wishlist-item-body">
-          <h3>${item.title}</h3>
-          <p>${item.priceDKK ? `Ca. ${item.priceDKK.toLocaleString('da-DK')} kr.` : ''}</p>
-          <div class="wishlist-item-actions">
-            <a class="btn ghost" href="${item.url}" target="_blank" rel="noopener">Åbn butik</a>
-            <button class="btn primary" data-remove="${item.id}">Fjern</button>
-          </div>
-        </div>`;
-      frag.appendChild(article);
-    });
-    list.appendChild(frag);
-    list.querySelectorAll('[data-remove]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-remove');
-        state.wishlist = state.wishlist.filter(item => item.id !== id);
-        persistWishlist();
-      });
-    });
-  }
-  if (jsonField) {
-    jsonField.value = JSON.stringify(state.wishlist);
-  }
-}
-
-function updateWishlistBadge() {
-  const badge = document.querySelector('#wishlist-count');
-  if (badge) badge.textContent = String(state.wishlist.length);
-}
-
-function initLanding() {
-  renderFeaturedStores();
-  renderFeaturedProducts();
-  renderGuides();
-  initEstimator();
-  initHeroEstimator();
-  initWishlistSubmitButton();
-}
-
-function initWishlistSubmitButton() {
-  document.querySelectorAll('form[data-netlify="true"]').forEach(form => {
-    if (!form.dataset.boundSubmit) {
-      form.dataset.boundSubmit = 'true';
-      form.addEventListener('submit', evt => {
-        evt.preventDefault();
-        submitNetlifyForm(form);
-      });
-    }
-  });
-}
-
-function renderFeaturedStores() {
-  const container = document.querySelector('#featured-stores');
-  if (!container) return;
-  container.innerHTML = '';
-  const stores = DB.stores.filter(store => store.featured || store.premium).sort((a, b) => (b.premium ? 1 : 0) - (a.premium ? 1 : 0));
-  stores.slice(0, 8).forEach(store => {
-    const card = document.createElement('article');
-    card.className = 'card store-card';
-    card.innerHTML = `
-      <div class="store-card-header">
-        <img src="${store.logo || 'https://via.placeholder.com/120?text=Store'}" alt="${store.name}" loading="lazy" />
-        ${store.premium ? '<span class="badge">Premium-partner</span>' : ''}
-      </div>
-      <div class="store-card-body">
-        <h3>${store.name}</h3>
-        <p>${store.deliveryHint || ''}</p>
-        <div class="store-card-actions">
-          <a class="btn primary" href="/butikker.html?store=${encodeURIComponent(store.id)}">Se produkter</a>
-          <button class="btn ghost" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
-        </div>
-      </div>`;
-    container.appendChild(card);
-  });
-}
-
-function renderFeaturedProducts() {
-  const container = document.querySelector('#featured-products');
-  if (!container) return;
-  container.innerHTML = '';
-  const products = DB.products.filter(product => product.featured).slice(0, 12);
-  products.forEach(product => {
-    container.appendChild(productCard(product));
-  });
-}
-
-function renderGuides() {
-  const guidesContainer = document.querySelector('#landing-guides');
-  if (!guidesContainer) return;
-  const guides = [
-    { country: 'JP', title: 'Guide: Japanske sneakers', url: '/japan.html', video: 'https://www.youtube.com/embed/1' },
-    { country: 'KR', title: 'Guide: K-Beauty essentials', url: '/sydkorea.html', video: 'https://www.youtube.com/embed/2' },
-    { country: 'US', title: 'Guide: Kameraudstyr fra USA', url: '/usa.html', video: 'https://www.youtube.com/embed/3' }
-  ];
-  guidesContainer.innerHTML = guides.map(guide => `
-    <article class="card guide-card">
-      <div class="guide-media">
-        <iframe src="${guide.video}" title="${guide.title}" loading="lazy" allowfullscreen></iframe>
-      </div>
-      <div class="guide-body">
-        <h3>${guide.title}</h3>
-        <a class="btn ghost" href="${guide.url}">Se landesiden</a>
-      </div>
-    </article>`).join('');
-}
-
-function initEstimator() {
-  const form = document.querySelector('#est-form');
-  const zoneSelect = document.querySelector('#est-zone');
-  const totalEl = document.querySelector('#est-total');
-  const breakdownEl = document.querySelector('#est-breakdown');
-  if (!form || !zoneSelect || !totalEl) return;
-  if (DB.shipping?.zones) {
-    zoneSelect.innerHTML = DB.shipping.zones.map(zone => `<option value="${zone.code}">${zone.label}</option>`).join('');
-  }
-  form.addEventListener('submit', evt => {
-    evt.preventDefault();
-    const price = Number(document.querySelector('#est-price')?.value || 0);
-    const weight = Number(document.querySelector('#est-weight')?.value || 0);
-    const zone = zoneSelect.value || 'US';
-    const estimate = computeEstimate({ itemDKK: price, weightKg: weight, zone });
-    totalEl.textContent = `DKK ${estimate.total.toLocaleString('da-DK')}`;
-    if (breakdownEl) {
-      breakdownEl.innerHTML = Object.entries(estimate.breakdown).map(([key, value]) => `<li>${labelForBreakdown(key)}: DKK ${value.toLocaleString('da-DK')}</li>`).join('');
-      breakdownEl.hidden = false;
-    }
-  });
-}
-
-function labelForBreakdown(key) {
-  const labels = {
-    item: 'Vare',
-    freight: 'Fragt',
-    service: 'Service',
-    duty: 'Told (est.)',
-    vat: 'Moms'
-  };
-  return labels[key] || key;
-}
-
-function computeEstimate({ itemDKK, weightKg, zone }) {
-  const config = DB.shipping;
-  if (!config) {
-    return { total: Math.round(itemDKK || 0), breakdown: { item: Math.round(itemDKK || 0) } };
-  }
-  const zoneConfig = config.zones.find(z => z.code === zone) || config.zones[0];
-  const weights = config.weights || [];
-  const freightTable = config.freight?.[zoneConfig.code] || [];
-  const index = weights.findIndex(limit => weightKg <= limit);
-  const freight = freightTable[index >= 0 ? index : freightTable.length - 1] || freightTable[freightTable.length - 1] || 0;
-  const service = Math.max(Math.round((config.service?.rate || 0.12) * itemDKK), config.service?.minDKK || 49);
-  const duty = Math.round((zoneConfig.dutyDefault || 0.03) * (itemDKK + freight));
-  const vat = Math.round((zoneConfig.vat || 0) * (itemDKK + freight + duty + service));
-  const total = Math.round(itemDKK + freight + service + duty + vat);
-  return { total, breakdown: { item: Math.round(itemDKK), freight, service, duty, vat } };
-}
-
-function initHeroEstimator() {
-  const heroForm = document.querySelector('#hero-link');
-  if (!heroForm) return;
-  heroForm.addEventListener('submit', evt => {
-    evt.preventDefault();
-    const input = document.querySelector('#hero-url');
-    if (!input?.value) return;
-    requestQuote(input.value, { context: 'hero' });
-  });
-  const heroEst = document.querySelector('#hero-est');
-  if (heroEst && DB.products.length > 0) {
-    heroEst.textContent = `DKK ${DB.products[0].priceDKK.toLocaleString('da-DK')}`;
-  }
-}
-
-function requestQuote(url, { context }) {
-  const quoteContainer = context === 'hero' ? document.querySelector('#hero-quote') : null;
-  if (quoteContainer) {
-    quoteContainer.innerHTML = '<div class="card quote-card loading">Henter prisestimat…</div>';
-  }
-  fetch('/.netlify/functions/aiLinkQuote', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (!data.ok) throw new Error(data.error || 'Kunne ikke hente pris');
-      const enriched = { ...data, requestUrl: url };
-      state.quotes.set(url, enriched);
-      if (quoteContainer) {
-        quoteContainer.innerHTML = renderQuoteCard(enriched);
-      }
-      if (context === 'chat') {
-        addChatMessage('bot', 'Her er dit estimat:');
-        addChatQuote(enriched);
-      }
-      prefillWishlistFromQuote(enriched);
-    })
-    .catch(err => {
-      console.error(err);
-      if (quoteContainer) {
-        quoteContainer.innerHTML = '<p class="quote-error">Kunne ikke læse siden. Indtast pris og vægt manuelt i estimatoren.</p>';
-      }
-      if (context === 'chat') {
-        addChatMessage('bot', 'Kunne ikke læse linket – indtast pris og vægt manuelt i estimatoren.');
-      }
-      toast('Kunne ikke hente pris – prøv igen eller udfyld pris manuelt');
-    });
-}
-
-function renderQuoteCard(data) {
-  const { detected = {}, estimate = {}, requestUrl } = data;
-  const breakdown = estimate.breakdown || {};
-  const itemValue = coalesceNumber(estimate.itemDKK, breakdown.item);
-  const freightValue = coalesceNumber(estimate.freightDKK, breakdown.freight);
-  const serviceValue = coalesceNumber(estimate.serviceDKK, breakdown.service);
-  const dutyValue = coalesceNumber(estimate.dutyDKK, breakdown.duty);
-  const vatValue = coalesceNumber(estimate.vatDKK, breakdown.vat);
-  return `
-    <article class="card quote-card">
-      <div class="quote-header">
-        <img src="${(detected.images && detected.images[0]) || 'https://via.placeholder.com/200?text=Selekti'}" alt="${detected.title || 'Produkt'}" loading="lazy" />
-        <div>
-          <h3>${detected.title || 'Produkt fundet'}</h3>
-          <p>Original pris: ${detected.priceOriginal ? `${detected.priceOriginal.amount} ${detected.priceOriginal.currency}` : 'ukendt'}</p>
-          <p>Estimat: <strong>${formatDKK(estimate.totalDKK)}</strong></p>
-        </div>
-      </div>
-      <ul class="quote-breakdown">
-        <li>Vare: ${formatDKK(itemValue)}</li>
-        <li>Fragt: ${formatDKK(freightValue)}</li>
-        <li>Service: ${formatDKK(serviceValue)}</li>
-        <li>Told (est.): ${formatDKK(dutyValue)}</li>
-        <li>Moms: ${formatDKK(vatValue)}</li>
-      </ul>
-      <button class="btn primary" data-open="sheet-wishlist" data-prefill-url="${detected.url || requestUrl || ''}">Fortsæt</button>
-    </article>`;
-}
-
-function coalesceNumber(...values) {
-  for (const value of values) {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      return value;
-    }
-  }
-  return undefined;
-}
-
-function formatDKK(value) {
-  if (typeof value !== 'number' || !Number.isFinite(value)) {
-    return '–';
-  }
-  return `DKK ${Math.round(value).toLocaleString('da-DK')}`;
-}
-
-function prefillWishlistFromQuote(data) {
-  const input = document.querySelector('#wishlist-product-url');
-  const fallbackUrl = data.detected?.url || data.requestUrl;
-  if (input && fallbackUrl) {
-    input.value = fallbackUrl;
-  }
-}
-
-function productCard(product) {
-  const article = document.createElement('article');
-  article.className = 'card product-card';
-  article.innerHTML = `
-    <img src="${product.img}" alt="${product.title}" loading="lazy" />
-    <div class="product-card-body">
-      <p class="product-store">${storeName(product.storeId)}</p>
-      <h3>${product.title}</h3>
-      <p class="product-price">DKK ${product.priceDKK.toLocaleString('da-DK')}</p>
-      <div class="product-actions">
-        <button class="btn ghost" data-add-to-wishlist data-id="${product.id}" data-title="${product.title}" data-img="${product.img}" data-price="${product.priceDKK}" data-url="${product.url}">♡</button>
-        <button class="btn primary" data-open="sheet-wishlist" data-prefill-url="${product.url}">Bestil via link</button>
-      </div>
-    </div>`;
-  return article;
-}
-
-function storeName(id) {
-  const store = DB.stores.find(s => s.id === id);
-  return store ? store.name : '';
-}
-
-function initDirectory() {
-  initWishlistSubmitButton();
-  populateFilters();
-  renderDirectory();
-  const searchForm = document.querySelector('#directory-search');
-  if (searchForm) {
-    searchForm.addEventListener('submit', evt => {
-      evt.preventDefault();
-      const input = document.querySelector('#directory-search-input');
-      setParam('q', input?.value || '');
-      renderDirectory();
-    });
-  }
-}
-
-function populateFilters() {
-  const countriesRow = document.querySelector('#filter-countries');
-  const catsRow = document.querySelector('#filter-categories');
-  if (countriesRow) {
-    countriesRow.innerHTML = DB.countries.map(country => `<button class="badge" data-filter="country" data-value="${country.code}">${country.label}</button>`).join('');
-  }
-  if (catsRow) {
-    catsRow.innerHTML = DB.categories.map(cat => `<button class="badge" data-filter="cat" data-value="${cat.id}">${cat.label}</button>`).join('');
-  }
-  document.querySelectorAll('[data-filter]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key = btn.dataset.filter;
-      const value = btn.dataset.value;
-      const current = getParams().get(key);
-      setParam(key, current === value ? '' : value);
-      renderDirectory();
-    });
-  });
-  const select = document.querySelector('#directory-sort');
-  if (select) {
-    select.addEventListener('change', () => {
-      setParam('sort', select.value);
-      renderDirectory();
-    });
-  }
-}
-
-function getParams() {
-  return new URLSearchParams(window.location.search);
-}
-
-function setParam(key, value) {
-  const params = getParams();
-  if (!value) params.delete(key); else params.set(key, value);
-  const queryString = params.toString();
-  const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
-  window.history.replaceState({}, '', newUrl);
-}
-
-function renderDirectory() {
-  const params = getParams();
-  const q = (params.get('q') || '').toLowerCase();
-  const country = params.get('country');
-  const cat = params.get('cat');
-  const storeId = params.get('store');
-  const sort = params.get('sort') || 'popular';
-  const searchInput = document.querySelector('#directory-search-input');
-  if (searchInput) searchInput.value = q;
-  const sortSelect = document.querySelector('#directory-sort');
-  if (sortSelect) sortSelect.value = sort;
-
-  updateFilterActiveStates();
-
-  let list = [...DB.products];
-  if (q) {
-    list = list.filter(product => [product.title, product.tags?.join(' '), storeName(product.storeId)].join(' ').toLowerCase().includes(q));
-  }
-  if (country) list = list.filter(product => product.country === country);
-  if (cat) list = list.filter(product => product.category === cat);
-  if (storeId) list = list.filter(product => product.storeId === storeId);
-
-  list = sortProducts(list, sort);
-
-  const grid = document.querySelector('#directory-grid');
-  const countEl = document.querySelector('#directory-count');
-  const empty = document.querySelector('#directory-empty');
-  if (!grid) return;
-  grid.innerHTML = '';
-  if (countEl) countEl.textContent = `${list.length} produkter`;
-  const activeFilters = document.querySelector('#active-filters');
-  if (activeFilters) {
-    const active = [];
-    if (country) {
-      const label = DB.countries.find(item => item.code === country)?.label || country;
-      active.push({ key: 'country', label });
-    }
-    if (cat) {
-      const label = DB.categories.find(item => item.id === cat)?.label || cat;
-      active.push({ key: 'cat', label });
-    }
-    if (storeId) {
-      const label = storeName(storeId) || storeId;
-      active.push({ key: 'store', label });
-    }
-    if (active.length) {
-      activeFilters.innerHTML = active.map(filter => `<button type="button" data-remove-filter="${filter.key}">${filter.label} ✕</button>`).join('');
-    } else {
-      activeFilters.innerHTML = '';
-    }
-    activeFilters.querySelectorAll('[data-remove-filter]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        setParam(btn.dataset.removeFilter, '');
-        renderDirectory();
-      });
-    });
-  }
-  if (list.length === 0) {
-    if (empty) {
-      empty.removeAttribute('hidden');
-      const suggestions = document.querySelector('#empty-suggestions');
+    if (!list.length) {
+      if (grid) grid.innerHTML = '';
+      if (empty) empty.hidden = false;
       if (suggestions) {
-        const suggestionCountries = DB.countries.slice(0, 4).map(country => `<a class="badge" href="/butikker.html?country=${country.code}">${country.label}</a>`);
-        const suggestionCats = DB.categories.slice(0, 4).map(catItem => `<a class="badge" href="/butikker.html?cat=${catItem.id}">${catItem.label}</a>`);
-        suggestions.innerHTML = [...suggestionCountries, ...suggestionCats].join('');
+        suggestions.innerHTML = '';
+        DATA.categories.slice(0, 4).forEach((category) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'chip';
+          btn.textContent = category.label;
+          btn.addEventListener('click', () => {
+            state.category = category.id;
+            if (categorySelect) categorySelect.value = category.id;
+            writeStateToURL();
+            applyFilters();
+          });
+          suggestions.appendChild(btn);
+        });
       }
+      return;
     }
-  } else {
-    if (empty) empty.setAttribute('hidden', '');
-    const frag = document.createDocumentFragment();
-    list.forEach(product => frag.appendChild(productCard(product)));
-    grid.appendChild(frag);
-  }
-  renderDirectoryFeatured();
-}
 
-function updateFilterActiveStates() {
-  const params = getParams();
-  document.querySelectorAll('[data-filter]').forEach(btn => {
-    const key = btn.dataset.filter;
-    const value = btn.dataset.value;
-    btn.classList.toggle('active', params.get(key) === value);
-  });
-}
+    if (empty) empty.hidden = true;
+    if (grid) grid.innerHTML = list.map(renderProductCard).join('');
+    updateWishlistUI();
+  };
 
-function sortProducts(list, sort) {
-  switch (sort) {
-    case 'price_asc':
-      return list.slice().sort((a, b) => a.priceDKK - b.priceDKK);
-    case 'price_desc':
-      return list.slice().sort((a, b) => b.priceDKK - a.priceDKK);
-    case 'new':
-      return list.slice().reverse();
-    default:
-      return list.slice().sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-  }
-}
-
-function renderDirectoryFeatured() {
-  const container = document.querySelector('#directory-featured');
-  if (!container) return;
-  container.innerHTML = '';
-  const stores = DB.stores.filter(store => store.premium).slice(0, 6);
-  const products = DB.products.filter(product => product.featured).slice(0, 6);
-  if (stores.length === 0 && products.length === 0) {
-    container.setAttribute('hidden', '');
-    return;
-  }
-  container.removeAttribute('hidden');
-  stores.forEach(store => {
-    const card = document.createElement('article');
-    card.className = 'card store-card';
-    card.innerHTML = `
-      <div class="store-card-header">
-        <img src="${store.logo || 'https://via.placeholder.com/120?text=Store'}" alt="${store.name}" loading="lazy" />
-        <span class="badge">Premium-partner</span>
-      </div>
-      <div class="store-card-body">
-        <h3>${store.name}</h3>
-        <p>${store.deliveryHint || ''}</p>
-        <a class="btn primary" href="/butikker.html?store=${encodeURIComponent(store.id)}">Vis produkter</a>
-      </div>`;
-    container.appendChild(card);
-  });
-  products.forEach(product => container.appendChild(productCard(product)));
-}
-
-function initCountry() {
-  const code = document.body.dataset.country;
-  if (!code) return;
-  const storeRow = document.querySelector('#country-stores');
-  const productGrid = document.querySelector('#country-products');
-  if (storeRow) {
-    storeRow.innerHTML = '';
-    DB.stores.filter(store => store.country === code).forEach(store => {
-      const card = document.createElement('article');
-      card.className = 'card store-card';
-      card.innerHTML = `
-        <div class="store-card-header">
-          <img src="${store.logo || 'https://via.placeholder.com/120?text=Store'}" alt="${store.name}" loading="lazy" />
-        </div>
-        <div class="store-card-body">
-          <h3>${store.name}</h3>
-          <p>${store.deliveryHint || ''}</p>
-          <div class="store-card-actions">
-            <a class="btn primary" href="/butikker.html?store=${encodeURIComponent(store.id)}">Se produkter</a>
-            <button class="btn ghost" data-open="sheet-wishlist" data-prefill-url="${store.url}">Bestil via link</button>
-          </div>
-        </div>`;
-      storeRow.appendChild(card);
-    });
-  }
-  if (productGrid) {
-    productGrid.innerHTML = '';
-    DB.products.filter(product => product.country === code).slice(0, 12).forEach(product => productGrid.appendChild(productCard(product)));
-  }
-  initWishlistSubmitButton();
-}
-
-function initPartners() {
-  initWishlistSubmitButton();
-  const form = document.querySelector('form[name="partner-apply"]');
   if (form) {
-    form.addEventListener('submit', evt => {
-      evt.preventDefault();
-      submitNetlifyForm(form);
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      state.q = searchInput.value.trim();
+      writeStateToURL();
+      applyFilters();
     });
   }
-}
-
-function initAbout() {
-  initWishlistSubmitButton();
-}
-
-function submitNetlifyForm(form) {
-  const submitBtn = form.querySelector('button[type="submit"]');
-  if (submitBtn) submitBtn.disabled = true;
-  const errorMsg = form.querySelector('.form-error');
-  if (errorMsg) errorMsg.hidden = true;
-  const formData = new FormData(form);
-  fetch('/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(formData).toString()
-  })
-    .then(() => {
-      form.reset();
-      let success = form.querySelector('.form-success');
-      if (!success) {
-        success = document.createElement('p');
-        success.className = 'form-success note';
-        form.appendChild(success);
-      }
-      success.textContent = 'Tak! Vi vender tilbage hurtigst muligt.';
-      success.hidden = false;
-      toast('Tak! Vi vender tilbage hurtigst muligt.');
-    })
-    .catch(err => {
-      console.error(err);
-      let failure = form.querySelector('.form-error');
-      if (!failure) {
-        failure = document.createElement('p');
-        failure.className = 'form-error note';
-        form.appendChild(failure);
-      }
-      failure.textContent = 'Noget gik galt – prøv igen senere.';
-      failure.hidden = false;
-      toast('Noget gik galt – prøv igen senere.');
-    })
-    .finally(() => {
-      if (submitBtn) submitBtn.disabled = false;
+  if (countrySelect) {
+    countrySelect.addEventListener('change', () => {
+      state.country = countrySelect.value;
+      writeStateToURL();
+      applyFilters();
     });
-}
+  }
+  if (categorySelect) {
+    categorySelect.addEventListener('change', () => {
+      state.category = categorySelect.value;
+      writeStateToURL();
+      applyFilters();
+    });
+  }
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      state.sort = sortSelect.value;
+      writeStateToURL();
+      applyFilters();
+    });
+  }
 
-function toast(message) {
-  const container = document.querySelector('#toasts');
-  if (!container) return;
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = message;
-  container.appendChild(el);
-  requestAnimationFrame(() => el.classList.add('show'));
-  setTimeout(() => {
-    el.classList.remove('show');
-    setTimeout(() => el.remove(), 200);
-  }, 3200);
-}
+  applyFilters();
+};
 
-function ensureChatMarkup() {
-  if (document.querySelector('#chat-toggle')) return;
-  const toggle = document.createElement('button');
-  toggle.id = 'chat-toggle';
-  toggle.type = 'button';
-  toggle.className = 'chat-toggle';
-  toggle.textContent = 'Chat med Selekti';
-  const panel = document.createElement('aside');
-  panel.id = 'chatbot';
-  panel.className = 'chatbot';
-  panel.setAttribute('hidden', '');
-  panel.setAttribute('aria-live', 'polite');
-  panel.innerHTML = `
-    <div class="chat-header">
-      <div class="chat-title">
-        <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" />
-        <div>
-          <h3>Selekti guide</h3>
-          <p>Indsæt et link – jeg estimerer totalprisen</p>
-        </div>
-      </div>
-      <button class="btn ghost" type="button" data-close-chat>Luk</button>
-    </div>
-    <div id="chat-log" class="chat-log">
-      <div class="chat-empty">
-        <img src="/assets/illustrations/magpie.svg" alt="Selekti maskot" />
-        <p>Hej! Indsæt et produktlink eller stil et spørgsmål.</p>
-      </div>
-    </div>
-    <form id="chat-form" class="chat-form">
-      <label class="sr-only" for="chat-input">Din besked</label>
-      <input id="chat-input" type="text" placeholder="Indtast spørgsmål eller indsæt link" required />
-      <button class="btn primary" type="submit">Send</button>
-    </form>`;
-  document.body.appendChild(toggle);
-  document.body.appendChild(panel);
-}
+const initPartnerForm = () => {
+  const form = document.getElementById('partner-form');
+  if (!form) return;
+  const status = document.getElementById('partner-status');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalLabel = submitButton ? submitButton.textContent : '';
 
-function initChatbot() {
-  ensureChatMarkup();
-  const toggle = document.querySelector('#chat-toggle');
-  const panel = document.querySelector('#chatbot');
-  const close = document.querySelector('[data-close-chat]');
-  const form = document.querySelector('#chat-form');
-  if (!toggle || !panel || !form) return;
-  toggle.addEventListener('click', () => {
-    state.chatOpen = !state.chatOpen;
-    panel.hidden = !state.chatOpen;
-    if (state.chatOpen) {
-      document.querySelector('#chat-input')?.focus();
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sender…';
+    }
+    if (status) status.textContent = '';
+
+    const formData = new FormData(form);
+    try {
+      await fetch(form.getAttribute('action') || '/', {
+        method: 'POST',
+        body: formData
+      });
+      form.reset();
+      if (status) status.textContent = 'Tak! Vi vender tilbage inden for 24 timer.';
+    } catch (error) {
+      if (status) status.textContent = 'Noget gik galt. Prøv igen.';
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalLabel;
+      }
     }
   });
-  if (close) {
-    close.addEventListener('click', () => {
-      state.chatOpen = false;
-      panel.hidden = true;
-      toggle.focus();
+};
+
+const initWishlistForm = () => {
+  const form = document.getElementById('wishlist-form');
+  if (!form) return;
+  const status = document.getElementById('wishlist-status');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalLabel = submitButton ? submitButton.textContent : '';
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sender…';
+    }
+    if (status) status.textContent = '';
+
+    const formData = new FormData(form);
+    formData.set('items_json', JSON.stringify(wishlist));
+
+    try {
+      await fetch(form.getAttribute('action') || '/', {
+        method: 'POST',
+        body: formData
+      });
+      form.reset();
+      updateWishlistUI();
+      if (status) status.textContent = 'Tak! Vi vender tilbage med din totalpris.';
+    } catch (error) {
+      if (status) status.textContent = 'Noget gik galt. Prøv igen.';
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalLabel;
+      }
+    }
+  });
+};
+
+let swipeState = {
+  products: [],
+  current: null
+};
+
+const buildSwipeCard = (product) => {
+  const card = document.createElement('article');
+  card.className = 'swipe-card';
+  card.dataset.link = product.url;
+  card.innerHTML = `
+    <figure><img src="${product.image}" alt="${product.title}" loading="lazy" decoding="async"></figure>
+    <div class="info">
+      <div>
+        <h3 style="margin:0;">${product.title}</h3>
+        <p class="muted" style="margin:0;">${product.store} · ${DATA.countryLabel.get(product.country) || product.country}</p>
+        <p style="margin:0;font-weight:600;">${typeof product.price === 'number' ? formatCurrency(product.price) : ''}</p>
+      </div>
+    </div>
+  `;
+  card._product = product;
+  attachSwipeHandlers(card);
+  return card;
+};
+
+const attachSwipeHandlers = (card) => {
+  let startX = 0;
+  let currentX = 0;
+  let activePointer = null;
+  const resetCard = () => {
+    card.style.transition = 'transform 0.3s ease';
+    card.style.transform = 'translate3d(0,0,0)';
+    requestAnimationFrame(() => {
+      card.style.transition = '';
+    });
+  };
+
+  const onPointerMove = (event) => {
+    if (activePointer === null) return;
+    currentX = event.clientX - startX;
+    card.style.transform = `translate3d(${currentX}px, ${currentX * 0.05}px, 0) rotate(${currentX * 0.04}deg)`;
+  };
+
+  const finalize = () => {
+    card.removeEventListener('pointermove', onPointerMove);
+  };
+
+  const onPointerUp = () => {
+    if (activePointer === null) return;
+    finalize();
+    card.releasePointerCapture(activePointer);
+    if (Math.abs(currentX) > 120) {
+      handleSwipeAction(currentX > 0 ? 'save' : 'skip');
+    } else {
+      resetCard();
+    }
+    activePointer = null;
+  };
+
+  card.addEventListener('pointerdown', (event) => {
+    if (activePointer !== null) return;
+    event.preventDefault();
+    activePointer = event.pointerId;
+    startX = event.clientX;
+    currentX = 0;
+    card.setPointerCapture(activePointer);
+    card.addEventListener('pointermove', onPointerMove);
+    card.addEventListener('pointerup', onPointerUp, { once: true });
+    card.addEventListener('pointercancel', () => { onPointerUp(); }, { once: true });
+  });
+};
+
+const setActiveSwipeCard = () => {
+  const dialog = document.getElementById('swipe-wrap');
+  const stack = dialog?.querySelector('.swipe-stack');
+  if (!stack) return;
+  const cards = Array.from(stack.querySelectorAll('.swipe-card'));
+  cards.forEach((card, index) => {
+    card.style.zIndex = String(cards.length - index);
+  });
+  swipeState.current = cards[0] || null;
+  if (!swipeState.current && stack.children.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `
+      <img src="/assets/illustrations/mascot.svg" alt="">
+      <p>Ingen flere produkter lige nu.</p>
+    `;
+    stack.appendChild(empty);
+  }
+};
+
+const handleSwipeAction = (action) => {
+  const dialog = document.getElementById('swipe-wrap');
+  const stack = dialog?.querySelector('.swipe-stack');
+  if (!stack) return;
+  const card = swipeState.current;
+  if (!card || !card._product) return;
+  const link = card._product.url;
+  if (action === 'save') {
+    ensureWishlist(link);
+  }
+  card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+  const translateX = action === 'save' ? 320 : -320;
+  card.style.transform = `translate3d(${translateX}px, -40px, 0) rotate(${action === 'save' ? 18 : -18}deg)`;
+  card.style.opacity = '0';
+  setTimeout(() => {
+    card.remove();
+    setActiveSwipeCard();
+  }, 320);
+};
+
+const openExplore = (trigger) => {
+  const dialog = document.getElementById('swipe-wrap');
+  const stack = dialog?.querySelector('.swipe-stack');
+  if (!dialog || !stack) return;
+  stack.innerHTML = '';
+  const deck = DATA.products
+    .slice()
+    .sort((a, b) => new Date(b.added || 0) - new Date(a.added || 0))
+    .slice(0, 15);
+  if (!deck.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `
+      <img src="/assets/illustrations/mascot.svg" alt="">
+      <p>Tilføj produkter i data/products.json for at aktivere udforskning.</p>
+    `;
+    stack.appendChild(empty);
+  } else {
+    deck.reverse().forEach((product) => {
+      const card = buildSwipeCard(product);
+      stack.appendChild(card);
     });
   }
-  form.addEventListener('submit', evt => {
-    evt.preventDefault();
-    const input = document.querySelector('#chat-input');
-    if (!input?.value) return;
-    addChatMessage('user', input.value);
-    handleChat(input.value.trim());
-    input.value = '';
+  openDialog(dialog, trigger);
+  setActiveSwipeCard();
+};
+
+const initExplore = () => {
+  const fab = document.getElementById('explore-fab');
+  const dialog = document.getElementById('swipe-wrap');
+  if (!fab || !dialog) return;
+  const closeBtn = document.getElementById('swipe-close');
+  const skipBtn = document.getElementById('swipe-skip');
+  const saveBtn = document.getElementById('swipe-save');
+  const viewBtn = document.getElementById('swipe-view');
+
+  fab.addEventListener('click', () => openExplore(fab));
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => closeDialog(dialog));
+  }
+  if (skipBtn) {
+    skipBtn.addEventListener('click', () => handleSwipeAction('skip'));
+  }
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => handleSwipeAction('save'));
+  }
+  if (viewBtn) {
+    viewBtn.addEventListener('click', () => {
+      if (!swipeState.current || !swipeState.current._product) return;
+      window.open(swipeState.current._product.url, '_blank', 'noopener');
+    });
+  }
+};
+
+const initGlobalSearch = () => {
+  const headerSearch = document.getElementById('global-search');
+  if (!headerSearch) return;
+  const input = document.getElementById('global-search-input');
+  headerSearch.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const term = input?.value.trim();
+    const target = term ? `/butikker.html?q=${encodeURIComponent(term)}` : '/butikker.html';
+    location.href = target;
   });
-}
+};
 
-function addChatMessage(role, text) {
-  const log = document.querySelector('#chat-log');
-  if (!log) return;
-  const empty = log.querySelector('.chat-empty');
-  if (empty) empty.remove();
-  const div = document.createElement('div');
-  div.className = `chat-message ${role}`;
-  div.textContent = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
-}
+document.addEventListener('DOMContentLoaded', async () => {
+  initYear();
+  wishlist = readWishlist();
+  updateWishlistUI();
+  handleDialogSetup();
+  initWishlistForm();
+  initPartnerForm();
+  initGlobalSearch();
 
-function addChatQuote(data) {
-  const log = document.querySelector('#chat-log');
-  if (!log) return;
-  const empty = log.querySelector('.chat-empty');
-  if (empty) empty.remove();
-  const wrapper = document.createElement('div');
-  wrapper.className = 'chat-quote';
-  wrapper.innerHTML = renderQuoteCard(data);
-  log.appendChild(wrapper);
-  log.scrollTop = log.scrollHeight;
-}
+  await loadData();
+  updateWishlistUI();
 
-function handleChat(message) {
-  const urlMatch = message.match(/https?:\/\/[\w./?=&%-]+/i);
-  if (urlMatch) {
-    addChatMessage('bot', 'Jeg henter et estimat – et øjeblik…');
-    requestQuote(urlMatch[0], { context: 'chat' });
-    return;
+  const page = document.body.dataset.page;
+  switch (page) {
+    case 'landing':
+      initLanding();
+      break;
+    case 'directory':
+      initDirectory();
+      break;
+    case 'partners':
+      // nothing extra beyond forms
+      break;
+    default:
+      break;
   }
-  const lower = message.toLowerCase();
-  if (lower.includes('levering')) {
-    addChatMessage('bot', 'Levering fra EU tager typisk 2–5 hverdage, UK/US/JP 5–12 hverdage og Kina/Indien 10–18 hverdage.');
-  } else if (lower.includes('selekti+')) {
-    addChatMessage('bot', 'Selekti+ er en venteliste i denne version. Skriv dig op på forsiden for at få besked ved åbning.');
-  } else if (lower.includes('partner')) {
-    addChatMessage('bot', 'Du kan ansøge om partnerskab via siden “Bliv partner”. Vi svarer inden for 24–48 timer.');
-  } else {
-    addChatMessage('bot', 'Tak for dit spørgsmål! Indsæt gerne et link for at få et præcist estimat, eller se vores FAQ på Om os-siden.');
-  }
-}
+});
