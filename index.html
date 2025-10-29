@@ -1,560 +1,284 @@
 <!DOCTYPE html>
 <html lang="da">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Selekti – Shop fra dit favoritland med én totalpris.</title>
-  <meta name="description" content="Selekti gør global shopping enkel for danskere. Søg efter et land, se totalprisen på produktet, og lås fri fragt samt Behovsboks-fordele med Selekti+." />
-  <meta name="author" content="Selekti" />
-
-  <!-- Social -->
-  <meta property="og:title" content="Selekti – Shop fra dit favoritland." />
-  <meta property="og:description" content="Skriv hvor du vil shoppe, se totalprisen på produktet, og få fri fragt med Selekti+." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://selekti.dk/" />
-  <meta property="og:image" content="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%230ea5e9'/><stop offset='1' stop-color='%2310b981'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g)'/><text x='50%25' y='55%25' font-family='Inter' font-size='60' text-anchor='middle' fill='white'>Selekti</text></svg>' />
-
-  <!-- Fonts & Tailwind -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="app.js" defer></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { ink:'#0f172a', soft:'#f6f8fb', mint:'#10b981', ocean:'#0ea5e9', grape:'#7c3aed', amber:'#f59e0b' },
-          boxShadow: { soft:'0 12px 40px rgba(2,6,23,.10)', lift:'0 18px 60px rgba(2,6,23,.16)' },
-          maxWidth: { app:'1180px' },
-          fontFamily: { sans:['Inter','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
-          borderRadius: { xl2:'1.25rem' }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    html,body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif;color:#0f172a}
-    ::selection{background:#dbeafe}
-    .container{max-width:1180px}
-    .glass{background:rgba(255,255,255,.75);backdrop-filter:blur(10px)}
-    .row-track{scroll-snap-type:x mandatory;overflow-x:auto;scroll-behavior:smooth}
-    .row-card{scroll-snap-align:start}
-    .card-hover{transition:transform .25s ease,box-shadow .25s ease}
-    .card-hover:hover{transform:translateY(-2px);box-shadow:0 18px 60px rgba(2,6,23,.16)}
-    .chip{padding:.5rem .85rem;border-radius:9999px;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);white-space:nowrap;border:0;cursor:pointer}
-    .chip.active{background:#0f172a;color:#fff}
-    .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
-    .line-clamp-2{-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
-  </style>
-</head>
-
-<body class="bg-gradient-to-b from-white via-soft to-soft" data-page="landing">
-  <!-- HEADER -->
-  <header class="sticky top-0 z-50 glass border-b border-black/5">
-    <div class="container mx-auto px-4 py-3 flex items-center gap-3">
-      <a href="index.html" class="flex items-center gap-2">
-        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white font-semibold"
-              style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
-        <span class="text-xl font-semibold tracking-tight">Selekti</span>
-      </a>
-      <nav class="ml-auto hidden md:flex items-center gap-6 text-sm text-ink/80">
-        <a href="butikker.html" class="hover:text-ink">Butikker</a>
-        <a href="#fremhaevet" class="hover:text-ink">Fremhævede</a>
-        <a href="#selekti-plus" class="hover:text-ink">Selekti+</a>
-        <a href="#guides" class="hover:text-ink">Guides</a>
-        <a href="om-os.html" class="hover:text-ink">Om os</a>
-        <a href="bliv-partner.html" class="hover:text-ink text-ink/60">Bliv partner</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Få den samlede pris på udenlandske køb inkl. told, moms og service med Selekti." />
+    <meta name="theme-color" content="#10b981" />
+    <title>Selekti – Køb globalt, betal lokalt</title>
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="stylesheet" href="assets/styles/base.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav" aria-label="Primær navigation">
+        <a class="nav__logo" href="/">
+          <img src="assets/logo-selekti.svg" alt="Selekti" width="36" height="36" loading="lazy" />
+          Selekti
+        </a>
+        <div class="nav__links">
+          <a href="/butikker.html">Butikker</a>
+          <a href="#find-butik">Find butik</a>
+          <a href="#fremhaevede">Fremhævede</a>
+          <a href="#selekti-plus">Selekti+</a>
+          <a href="/om-os.html">Om os</a>
+          <a href="/bliv-partner.html">Bliv partner</a>
+          <button class="wishlist-button" type="button" aria-haspopup="dialog" aria-controls="wishlistDialog">
+            Ønskeliste <span class="badge wishlist-badge" aria-live="polite">0</span>
+          </button>
+          <a class="nav__cta" href="#totalpris">Få totalpris</a>
+        </div>
       </nav>
-      <div class="ml-2 flex items-center gap-2">
-        <button id="open-wishlist" class="relative inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium ring-1 ring-black/10" data-open="sheet-favorites">
-          <span>Ønskeliste</span>
-          <span id="wishlist-count" class="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">0</span>
-        </button>
-        <button id="open-cart" class="relative h-10 w-10 grid place-items-center rounded-full bg-white ring-1 ring-black/10" aria-label="Kurv">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6h2l2.5 9h9l2-6H7" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="20" r="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
-          <span id="cart-count" class="absolute -top-1 -right-1 h-5 min-w-[20px] px-1.5 rounded-full bg-ink text-white text-[11px] font-semibold grid place-items-center">0</span>
-        </button>
-        <button id="open-auth" class="inline-flex items-center justify-center px-3 py-2 text-xs font-medium text-white bg-ink rounded-full shadow-soft md:px-4 md:py-2 md:text-sm">Log ind</button>
-      </div>
-    </div>
-    <div class="border-t border-black/5">
-      <div class="container mx-auto px-4 py-2 text-xs flex flex-wrap gap-2 md:gap-3">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10">✔︎ Én totalpris på produktet</span>
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10">🛒 Danskernes shoppinghub</span>
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-black/10">✨ Selekti+ giver fri fragt & Behovsbokse</span>
-      </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- HERO -->
-  <section class="container mx-auto px-4 pt-6 md:pt-10">
-    <div class="rounded-3xl ring-1 ring-black/5 shadow-soft overflow-hidden bg-gradient-to-br from-white to-soft">
-      <div class="grid md:grid-cols-2">
-        <div class="p-6 md:p-10">
-          <p class="text-[11px] md:text-xs uppercase tracking-wide text-ink/60">Danmarks shoppinghub</p>
-          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Hvor vil du shoppe <span class="text-ocean">i dag?</span></h1>
-          <p class="mt-3 text-ink/70">Søg på et land, se produktets totalpris med det samme, og lad os håndtere told, moms og papirarbejde for dig.</p>
-          <div class="mt-4 grid grid-cols-2 gap-2">
-            <a href="butikker.html" class="rounded-full bg-ink text-white px-5 py-3 font-medium text-center">Find butik</a>
-            <button class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium" data-open="sheet-estimator">Få totalpris</button>
+    <main>
+      <section class="container hero" id="hero">
+        <div class="hero__content">
+          <span class="tag">Verdens nye måde at handle globalt</span>
+          <h1>Hvor vil du shoppe i dag?</h1>
+          <p>Indsæt link eller vælg butik. Vi viser total inkl. told, moms og service — du betaler først, når du godkender.</p>
+          <div class="hero__actions">
+            <a class="btn" href="#find-butik">Find butik</a>
+            <a class="btn btn--primary" href="#totalpris">Få totalpris</a>
           </div>
-          <p class="mt-2 text-xs text-ink/60">Tilmeld dig Selekti+, hent appen og invitér en ven – så modtager I begge jeres første Mini Behovsboks uden beregning.</p>
-          <form id="search-form" class="mt-4 grid grid-cols-[1fr_auto] gap-2" action="#butikker">
-            <input id="search-input" type="search" placeholder="Hvor ønsker du at shoppe? fx Japan" class="rounded-xl ring-1 ring-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200" aria-label="Hvor ønsker du at shoppe?">
-            <button class="px-4 py-3 rounded-xl bg-white ring-1 ring-black/10">Find</button>
+          <div class="hero__grid">
+            <div class="feature">
+              <strong>Køb globalt, betal lokalt</strong>
+              <p>Realistiske valutakurser, toldsatser og servicefee giver dig én samlet pris, før du siger godkendt.</p>
+            </div>
+            <div class="feature">
+              <strong>Vi håndterer importen</strong>
+              <p>Selekti står for indkøb, toldbehandling og levering direkte til døren — uden overraskelser.</p>
+            </div>
+            <div class="feature">
+              <strong>Support hele vejen</strong>
+              <p>Fra første spørgsmål til retur hjælper vores team dig med sikre leverancer fra hele verden.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card" id="totalpris">
+          <h2>Få totalpris</h2>
+          <form id="quoteForm" class="form-grid" data-netlify="true" name="selekti-quote">
+            <input type="hidden" name="form-name" value="selekti-quote" />
+            <input type="hidden" name="fxRate" id="fxRate" />
+            <input type="hidden" name="productDkk" id="productDkk" />
+            <input type="hidden" name="shippingDkk" id="shippingDkk" />
+            <input type="hidden" name="serviceFeeDkk" id="serviceFeeDkk" />
+            <input type="hidden" name="dutyRate" id="dutyRate" />
+            <input type="hidden" name="dutyDkk" id="dutyDkk" />
+            <input type="hidden" name="vatDkk" id="vatDkk" />
+            <input type="hidden" name="totalDkk" id="totalDkk" />
+            <input type="hidden" name="fxSnapshot" id="fxSnapshot" />
+            <div class="honeypot" aria-hidden="true">
+              <label for="company">Firma</label>
+              <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="form-row">
+              <label>
+                Produktlink (valgfrit)
+                <input type="url" name="productLink" id="productLink" placeholder="https://" />
+              </label>
+              <label>
+                Butik / land
+                <select id="storeSelect" name="store">
+                  <option value="" disabled selected>Vælg butik</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Valuta
+                <select id="currencySelect" name="currency" required>
+                  <option value="" disabled selected>Vælg valuta</option>
+                </select>
+              </label>
+              <label>
+                Varepris
+                <input type="number" min="0" step="0.01" name="productPrice" id="productPrice" required placeholder="0,00" />
+              </label>
+              <label>
+                Butikkens fragt
+                <input type="number" min="0" step="0.01" name="shippingPrice" id="shippingPrice" placeholder="0,00" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Kategori
+                <select id="categorySelect" name="category" required>
+                  <option value="" disabled selected>Vælg kategori</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-row form-row--actions">
+              <button type="button" id="calculateBtn">Beregn total</button>
+              <button type="submit" id="submitQuote" disabled>Få tilbud nu</button>
+            </div>
+            <div class="calc-breakdown" aria-live="polite">
+              <div class="calc-row"><span>Vare</span><strong id="lineItemProduct">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Fragt</span><strong id="lineItemShipping">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Servicefee</span><strong id="lineItemService">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Told</span><strong id="lineItemDuty">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row"><span>Moms (25&nbsp;%)</span><strong id="lineItemVat">0,00&nbsp;kr.</strong></div>
+              <div class="calc-row calc-row--total"><span>Total i DKK</span><strong id="lineItemTotal">0,00&nbsp;kr.</strong></div>
+            </div>
+            <p class="calc-error" id="calcError" hidden></p>
+            <p class="note" id="quoteSuccess" hidden>Tak! Vi har modtaget din forespørgsel og vender retur inden for én arbejdsdag.</p>
+            <p class="note">Kursgrundlag opdateres manuelt (senest <span id="fxDate"></span>). Toldsatser er vejledende estimater.</p>
           </form>
-          <div class="mt-3 flex flex-wrap gap-2 text-xs" id="country-chips">
-            <button class="chip" type="button" data-country="japan" title="Vis resultater fra Japan">🇯🇵 Japan</button>
-            <button class="chip" type="button" data-country="usa" title="Vis resultater fra USA">🇺🇸 USA</button>
-            <button class="chip" type="button" data-country="uk" title="Vis resultater fra Storbritannien">🇬🇧 UK</button>
-            <button class="chip" type="button" data-country="kina" title="Vis resultater fra Kina">🇨🇳 Kina</button>
-            <button class="chip" type="button" data-country="sydkorea" title="Vis resultater fra Sydkorea">🇰🇷 Sydkorea</button>
-            <button class="chip" type="button" data-country="indien" title="Vis resultater fra Indien">🇮🇳 Indien</button>
+        </div>
+      </section>
+
+      <section class="container find" id="find-butik">
+        <div class="find__intro">
+          <h2 class="section-title">Find butik på få sekunder</h2>
+          <p class="section-subtitle">Vælg en verificeret shop og spring direkte til din totalpris. Vi viser lead-time, standardfragt og foreslået kategori for dig.</p>
+        </div>
+        <div class="store-grid" id="findStoreList" aria-live="polite"></div>
+      </section>
+
+      <section class="container showcase" id="fremhaevede">
+        <div class="showcase__header">
+          <div>
+            <h2 class="section-title">Fremhævede butikker med eksklusive tilbud</h2>
+            <p class="section-subtitle">Giv ønskelisten nyt liv med de mest efterspurgte produkter netop nu.</p>
           </div>
-          <div id="country-link" class="mt-3" aria-live="polite"></div>
+          <a class="btn" href="/butikker.html">Se alle butikker</a>
         </div>
-        <div class="relative min-h-[260px] md:min-h-[420px]">
-          <img alt="Global shopping" class="absolute inset-0 w-full h-full object-cover"
-               src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80">
-          <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur rounded-2xl shadow-soft ring-1 ring-black/10 p-4 max-w-xs">
-            <p class="text-[11px] uppercase tracking-wide text-ink/60">Live estimat</p>
-            <div class="mt-1 text-sm"><span class="font-semibold">NYC Camera Store</span> • Totalpris beregnet</div>
-            <div class="text-xs text-ink/60">Produktets totalpris fra</div>
-            <div id="hero-est" class="text-2xl font-extrabold mt-1">DKK 1.602</div>
+        <div class="showcase__track" id="featuredCarousel" aria-live="polite"></div>
+      </section>
+
+      <section class="container showcase" id="partner-collection">
+        <div class="showcase__header">
+          <div>
+            <h2 class="section-title">Populære partnerbutikker</h2>
+            <p class="section-subtitle">Sjældne fund i Danmark – vi sourcer, tester og leverer direkte fra de originale shops.</p>
           </div>
+          <a class="btn" href="/butikker.html">Gennemse katalog</a>
         </div>
-      </div>
-    </div>
-  </section>
+        <div class="showcase__track" id="partnerShowcase" aria-live="polite"></div>
+      </section>
 
-  <!-- FREMHÆVEDE BUTIKKER -->
-  <section id="fremhaevet" class="container mx-auto px-4 py-10">
-    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-      <div>
-        <p class="text-[11px] uppercase tracking-wide text-ink/60">Udvalgt af Selekti</p>
-        <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Fremhævede butikker med eksklusive tilbud</h2>
-        <p class="mt-2 text-ink/70 text-sm">Butikker, der investerer i ekstra synlighed, deler deres bedste drops og rabatter direkte på forsiden.</p>
-      </div>
-      <a href="butikker.html" class="inline-flex items-center gap-2 text-sm font-medium text-ocean">Se alle butikker →</a>
-    </div>
-    <div id="featured-grid" class="mt-6 grid gap-4 md:grid-cols-2"></div>
-  </section>
-
-  <!-- SÅDAN VIRKER DET -->
-  <section id="saadan" class="container mx-auto px-4 py-10">
-    <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
-      <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Sådan virker Selekti</h2>
-      <div class="grid md:grid-cols-3 gap-4 mt-5 text-sm">
-        <div class="rounded-xl ring-1 ring-black/10 p-4">
-          <p class="font-semibold">1) Vælg land eller produkt</p>
-          <p class="text-ink/70 mt-1">Fortæl os hvor du vil shoppe, eller indsæt et produktlink fra din favoritbutik.</p>
-        </div>
-        <div class="rounded-xl ring-1 ring-black/10 p-4">
-          <p class="font-semibold">2) Bekræft totalprisen</p>
-          <p class="text-ink/70 mt-1">Vi beregner produktets totalpris inkl. told, moms og Selekti service, så du kan godkende med ro i maven.</p>
-        </div>
-        <div class="rounded-xl ring-1 ring-black/10 p-4">
-          <p class="font-semibold">3) Modtag i Danmark</p>
-          <p class="text-ink/70 mt-1">Butikken pakker, vi klarer logistik og told – du vælger levering i checkout.</p>
-        </div>
-      </div>
-      <div class="mt-5 flex flex-wrap gap-2">
-        <button class="rounded-full bg-ink text-white px-5 py-2.5 font-medium" data-open="sheet-wishlist">Bestil via link</button>
-        <button class="rounded-full bg-white ring-1 ring-black/10 px-5 py-2.5 font-medium" data-open="sheet-estimator">Se prisestimat</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- BUTIKKER -->
-  <section id="butikker" class="container mx-auto px-4">
-    <div class="flex items-end justify-between">
-      <div>
-        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Populære partnerbutikker</h3>
-        <p class="mt-1 text-ink/70 text-sm">Shop fra officielle butikker. Vi står for alt det besværlige.</p>
-      </div>
-      <div class="flex gap-2">
-        <button class="row-prev px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-stores" aria-label="Scroll tilbage">‹</button>
-        <button class="row-next px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-stores" aria-label="Scroll frem">›</button>
-      </div>
-    </div>
-    <div id="row-stores" class="row-track no-scrollbar mt-3 flex gap-3 pb-1"></div>
-  </section>
-
-  <!-- SJÆLDNE FUNDS -->
-  <section id="sjældne" class="container mx-auto px-4 py-10">
-    <div class="flex items-end justify-between">
-      <div>
-        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Sjældne fund i DK</h3>
-        <p class="mt-1 text-ink/70 text-sm">Udvalgt fra nichebutikker – ofte udsolgt eller slet ikke lanceret her.</p>
-      </div>
-      <div class="flex gap-2">
-        <button class="row-prev px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-rare">‹</button>
-        <button class="row-next px-3 py-2 rounded-full bg-white ring-1 ring-black/10" data-row="row-rare">›</button>
-      </div>
-    </div>
-    <div id="row-rare" class="row-track no-scrollbar mt-3 flex gap-3 pb-1"></div>
-  </section>
-
-  <!-- GUIDES -->
-  <section id="guides" class="container mx-auto px-4 pb-10">
-    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-      <div>
-        <p class="text-[11px] uppercase tracking-wide text-ink/60">Video guides</p>
-        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Lær af vores verificerede partnere</h3>
-        <p class="mt-2 text-ink/70 text-sm">Se korte walkthroughs, før du lægger limited produkter i kurven.</p>
-      </div>
-      <a href="om-os.html" class="inline-flex items-center gap-2 text-sm font-medium text-ocean">Læs mere om processen →</a>
-    </div>
-    <div id="video-guides" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
-  </section>
-
-  <!-- SELEKTI+ -->
-  <section class="container mx-auto px-4 pb-10" id="selekti-plus">
-    <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-10">
-      <div class="grid md:grid-cols-[1.1fr_.9fr] gap-6 items-center">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold tracking-tight">Selekti+ låser fri fragt og din første Mini Behovsboks</h3>
-          <p class="mt-2 text-ink/70 text-sm">Abonnementet til dig, der shopper globalt. Vi dækker leveringen, kuraterer overraskelser og giver dig førsteret til kampagner fra verificerede partnere.</p>
-          <ul class="mt-4 space-y-2 text-sm text-ink/80">
-            <li>• Fri fragt på alle leveringer i vores zoner</li>
-            <li>• Første Mini Behovsboks til dig og den inviterede ven efter app-login</li>
-            <li>• Eksklusive kampagner fra danske og internationale butikker</li>
+      <section class="container behovsboks" id="behovsboks">
+        <div class="behovsboks__content">
+          <h2 class="section-title">Hvilket behov skal vi løse?</h2>
+          <p class="section-subtitle">Selekti samler global sourcing, toldbehandling og kundeservice i én platform. Fortæl os hvad du jagter – vi klarer resten.</p>
+          <ul>
+            <li>Limited sneakers og streetwear, der sjældent når Norden.</li>
+            <li>Creator-gear til streaming, foto og video uden ekstra gebyrer.</li>
+            <li>Designobjekter og køkkenfavoritter fra nichebrands i EU og USA.</li>
+            <li>Beauty launches og tech, der kræver korrekt toldtarif fra første dag.</li>
           </ul>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <a href="#behovsboks" class="rounded-full bg-ink text-white px-5 py-3 font-medium">Udforsk Behovsboks</a>
-            <a href="om-os.html" class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium">Se hvordan det virker</a>
+          <div class="behovsboks__cta">
+            <a class="btn btn--primary" href="#totalpris">Start din forespørgsel</a>
+            <a class="btn" href="/bliv-partner.html">Bliv partner</a>
           </div>
         </div>
-        <div class="rounded-2xl bg-soft/70 ring-1 ring-black/10 p-5">
-          <p class="text-[11px] uppercase tracking-wide text-ink/60">Medlemskab</p>
-          <h4 class="text-2xl font-extrabold mt-1">Selekti+ fra 249 kr./md</h4>
-          <p class="text-sm text-ink/70 mt-2">Start med 30 dages prøveperiode. Download Selekti appen, invitér en ven, og få begge den første Mini Behovsboks uden beregning.</p>
-          <div class="mt-4 grid gap-3 text-sm">
-            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Standard: Fri fragt i EU/UK & to Mini Behovsbokse årligt</div>
-            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Global: Fri fragt på USA/Asien & ekstra kampagner (329 kr./md)</div>
-            <div class="rounded-xl bg-white ring-1 ring-black/10 p-3">Familiedeling med op til fire profiler og prioriteret support</div>
+      </section>
+
+      <section class="container" id="selekti-plus">
+        <div class="selekti-plus__intro">
+          <h2 class="section-title">Selekti+ medlemskab</h2>
+          <p class="section-subtitle">Fri fragt gælder kun hvis vægt og zone matcher planen. Vælg den løsning der passer bedst til dine køb.</p>
+        </div>
+        <div class="memberships">
+          <div class="membership">
+            <h3>Standard – 249 kr/md</h3>
+            <p>Til dig der handler ofte fra EU og UK. Inkluderer fri fragt op til 2 kg og 2 Mini-bokse hvert år.</p>
+            <ul>
+              <li>Fri fragt fra EU/UK ≤ 2 kg</li>
+              <li>2 Mini-bokse om året</li>
+              <li>Prioriteret kundeservice</li>
+            </ul>
+            <a class="btn" href="/om-os.html#selekti-plus">Læs mere</a>
+          </div>
+          <div class="membership">
+            <h3>Global – 329 kr/md</h3>
+            <p>Perfekt til USA- og Asienfund. Fri fragt op til 2 kg, 3 Mini-bokse og direkte adgang til vores sourcing-team.</p>
+            <ul>
+              <li>Fri fragt fra USA/Asien ≤ 2 kg</li>
+              <li>3 Mini-bokse om året</li>
+              <li>Global sourcing concierge</li>
+            </ul>
+            <a class="btn" href="/om-os.html#selekti-plus">Se fulde vilkår</a>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- BEHOVSBOKS -->
-  <section id="behovsboks" class="container mx-auto px-4 pb-10">
-    <div class="rounded-3xl bg-gradient-to-br from-white to-soft ring-1 ring-black/5 shadow-soft p-6 md:p-10">
-      <div class="grid md:grid-cols-2 gap-6 items-center">
-        <div>
-          <p class="text-[11px] uppercase tracking-wide text-ink/60">Behovsboks by Selekti</p>
-          <h3 class="text-2xl md:text-3xl font-bold tracking-tight">Behovsboks følger dine søgninger og ønsker</h3>
-          <p class="mt-3 text-sm text-ink/70">Som Selekti+ medlem får du kuraterede bokse baseret på dine landesøgninger, ønskelister og tidligere køb. Du kan til enhver tid vælge tema og størrelse.</p>
-          <ul class="mt-4 space-y-2 text-sm text-ink/80">
-            <li>• Temaer som sneakers, K-beauty, Hi-Fi og dansk design</li>
-            <li>• Størrelser fra Mini til Maxi afhængigt af behov og budget</li>
-          </ul>
-          <p class="mt-3 text-xs text-ink/60">Vil du overraske andre? Brug gaveboks-flowet til at sende en personlig hilsen.</p>
-          <div class="mt-5 flex flex-wrap gap-2">
-            <button class="rounded-full bg-ink text-white px-5 py-3 font-medium" data-open="sheet-wishlist">Byg din næste boks</button>
-            <a href="om-os.html#levering" class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium">Læs om størrelserne</a>
-            <button class="rounded-full bg-white ring-1 ring-black/10 px-5 py-3 font-medium" data-open="sheet-gift">Send gaveboks</button>
+      <section class="container" id="guide-flow">
+        <h2 class="section-title">Sådan fungerer Selekti</h2>
+        <p class="section-subtitle">Fra link til levering – vi klarer toldpapirer, betaling, import og service, så du kan handle globalt uden bekymringer.</p>
+        <div class="grid">
+          <div class="feature">
+            <strong>1. Del dit link</strong>
+            <p>Send os linket til produktet, eller vælg en butik fra vores katalog. Vi henter detaljer og kontrollerer lagerstatus.</p>
+          </div>
+          <div class="feature">
+            <strong>2. Få totalprisen</strong>
+            <p>Vi beregner told, moms, fragt og service i samme sekund. Du får et gennemskueligt tilbud i DKK.</p>
+          </div>
+          <div class="feature">
+            <strong>3. Godkend og betal</strong>
+            <p>Når du godkender totalen bestiller vi varen, sørger for importen og leverer sikkert til dig.</p>
           </div>
         </div>
-        <div class="rounded-2xl bg-white ring-1 ring-black/10 p-5 grid gap-4">
-          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/80">
-            <p class="text-xs uppercase tracking-wide text-ink/60">Mini</p>
-            <h4 class="text-lg font-semibold">Til nysgerrige</h4>
-            <p class="text-sm text-ink/70 mt-1">3-4 curatede produkter, perfekt som første Behovsboks eller gave.</p>
-          </article>
-          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft/90">
-            <p class="text-xs uppercase tracking-wide text-ink/60">Favorit</p>
-            <h4 class="text-lg font-semibold">Din faste overraskelse</h4>
-            <p class="text-sm text-ink/70 mt-1">5-7 håndplukkede fund efter dine præferencer – udskift tema når du vil.</p>
-          </article>
-          <article class="rounded-xl ring-1 ring-black/10 p-4 bg-soft">
-            <p class="text-xs uppercase tracking-wide text-ink/60">Maxi</p>
-            <h4 class="text-lg font-semibold">Del glæden</h4>
-            <p class="text-sm text-ink/70 mt-1">Udvidet Behovsboks med limited drops og mulighed for at sende til flere adresser.</p>
-          </article>
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
+    </main>
 
-  <!-- PARTNER CTA -->
-  <section class="container mx-auto px-4 pb-12">
-    <div class="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <p class="text-[11px] uppercase tracking-wide text-ink/60">Til butikker og webshops</p>
-        <h3 class="text-xl md:text-2xl font-bold tracking-tight">Driver du butik? Bliv synlig for danske shoppere</h3>
-        <p class="mt-2 text-sm text-ink/70">Vi hjælper både internationale og danske butikker med at nå nye kunder. Læs mere om kommission, integrationer og fælles kampagner på vores partner-side.</p>
-      </div>
-      <a href="bliv-partner.html" class="inline-flex items-center justify-center rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Til partneruniverset</a>
-    </div>
-  </section>
+    <button class="fab" id="openSwipe" type="button" aria-haspopup="dialog" aria-controls="swipeOverlay" aria-label="Åbn Udforsk">
+      ✦
+    </button>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-black/5 bg-white">
-    <div class="container mx-auto px-4 py-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-white font-semibold" style="background:linear-gradient(135deg,#0ea5e9 0%,#10b981 50%,#7c3aed 100%);">S</span>
-          <span class="font-semibold">Selekti</span>
-        </div>
-        <p class="mt-3 text-ink/70">Globale favoritter, lokale priser og personlige Behovsbokse.</p>
-      </div>
-      <div>
-        <h4 class="font-semibold">Navigation</h4>
-        <ul class="mt-3 space-y-2">
-          <li><a href="butikker.html" class="hover:underline">Butikker</a></li>
-          <li><a href="#saadan" class="hover:underline">Sådan virker det</a></li>
-          <li><a href="#behovsboks" class="hover:underline">Behovsboks</a></li>
-          <li><a href="om-os.html" class="hover:underline">Om os</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-semibold">Juridisk</h4>
-        <ul class="mt-3 space-y-2">
-          <li><a href="om-os.html#privatliv" class="hover:underline">Privatliv</a></li>
-          <li><a href="om-os.html#handelsbetingelser" class="hover:underline">Handelsbetingelser</a></li>
-          <li><a href="om-os.html#kontakt" class="hover:underline">Kontakt</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-semibold">Nyheder</h4>
-        <form name="footer-news" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="mt-3 grid grid-cols-[1fr_auto] gap-2">
-          <input type="hidden" name="form-name" value="footer-news" />
-          <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-          <input required type="email" name="email" placeholder="din@email.dk" class="rounded-xl ring-1 ring-black/10 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200" />
-          <button class="px-4 py-2 rounded-full bg-ink text-white">Tilmeld</button>
-        </form>
-        <p class="mt-2 text-xs text-ink/60">© <span id="year"></span> Selekti. Alle rettigheder forbeholdes.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- FLOATING ACTION (mobil) -->
-  <div class="fixed md:hidden z-[60] bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-black/5 p-3">
-    <div class="container mx-auto px-1">
-      <div class="flex gap-2">
-        <button data-open="sheet-estimator" class="flex-1 rounded-full bg-white ring-1 ring-black/10 text-ink py-3 font-medium">Totalpris</button>
-        <button data-open="sheet-wishlist" class="flex-1 rounded-full bg-ink text-white py-3 font-medium">Bestil via link</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SHEETS -->
-  <!-- Auth -->
-  <div id="sheet-auth" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Log ind / Opret profil</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <div class="p-4 grid md:grid-cols-2 gap-4">
-      <form id="form-login" class="grid gap-3">
-        <h4 class="font-semibold">Log ind</h4>
-        <input required type="email" placeholder="E-mail" class="rounded-xl ring-1 ring-black/10 px-4 py-3">
-        <input required type="password" placeholder="Adgangskode" class="rounded-xl ring-1 ring-black/10 px-4 py-3">
-        <button class="rounded-full bg-ink text-white py-3">Log ind</button>
-      </form>
-      <form id="form-register" class="grid gap-3">
-        <h4 class="font-semibold">Opret profil</h4>
-        <input required type="text" placeholder="Navn" class="rounded-xl ring-1 ring-black/10 px-4 py-3">
-        <input required type="email" placeholder="E-mail" class="rounded-xl ring-1 ring-black/10 px-4 py-3">
-        <input required type="password" placeholder="Adgangskode" class="rounded-xl ring-1 ring-black/10 px-4 py-3">
-        <button class="rounded-full bg-white ring-1 ring-black/10 py-3">Opret</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Bestil via link (kunde) -->
-  <div id="sheet-favorites" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Din ønskeliste</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <div class="p-4">
-      <div id="wishlist-empty" class="text-sm text-ink/60">Din ønskeliste er tom.</div>
-      <div id="wishlist-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      <div id="wishlist-actions" class="hidden mt-4 flex flex-wrap items-center justify-between gap-2">
-        <button class="rounded-full bg-ink text-white px-5 py-2.5 font-medium shadow-soft" data-open="sheet-wishlist">Forespørg totalpris</button>
-        <button id="wishlist-clear" class="rounded-full bg-white ring-1 ring-black/10 px-4 py-2.5 text-sm">Ryd ønskeliste</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="sheet-wishlist" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Bestil via produktlink</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <form id="wishlist-quick-form" name="wishlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="p-4">
-      <input type="hidden" name="form-name" value="wishlist" />
-      <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-      <div class="grid gap-3">
-        <div>
-          <label class="block text-sm font-medium mb-1">Produktlink (URL)</label>
-          <input required type="url" name="product_url" placeholder="https://butik.com/vare…" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
+    <div class="swipe-overlay" id="swipeOverlay" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="swipe-card" id="swipeCard" tabindex="-1">
+        <img src="" alt="" id="swipeImage" loading="lazy" />
+        <div class="swipe-content">
           <div>
-            <label class="block text-sm font-medium mb-1">Butiksland</label>
-            <select name="country" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-              <option>USA</option><option>Japan</option><option>UK</option><option>EU</option><option>Andre</option>
-            </select>
+            <h3 id="swipeTitle"></h3>
+            <p id="swipeMeta" class="section-subtitle" style="margin-bottom:0"></p>
           </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Estimeret pris hos butik (DKK)</label>
-            <input type="number" name="price_hint" min="0" step="1" placeholder="fx 850" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium mb-1">Kategori</label>
-            <select name="category" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-              <option>Elektronik</option><option>Accessories</option><option>Tøj & Sneakers</option><option>Skønhed</option><option>Hobby/Hi-Fi</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Postnr.</label>
-            <input required type="text" name="zip" placeholder="fx 2100" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" />
+          <div class="swipe-actions">
+            <button type="button" data-swipe="skip">Spring over</button>
+            <a id="swipeView" href="#" target="_blank" rel="noopener">Se</a>
+            <button type="button" data-swipe="save">Til ønskeliste</button>
           </div>
         </div>
-        <button type="submit" class="mt-2 rounded-full bg-ink text-white py-3 font-medium shadow-soft">Få totalpris</button>
-        <p class="text-xs text-ink/60">Du betaler først ved godkendelse. Estimatet viser produktets totalpris.</p>
-      </div>
-    </form>
-  </div>
-
-  <!-- Gaveboks -->
-  <div id="sheet-gift" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Send en gaveboks</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <form name="gift-box" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="p-4 grid gap-3">
-      <input type="hidden" name="form-name" value="gift-box" />
-      <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-      <div class="grid md:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-sm font-medium mb-1">Modtager</label>
-          <input required type="text" name="recipient" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Navn">
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">E-mail</label>
-          <input required type="email" name="recipient_email" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="mail@example.com">
-        </div>
-      </div>
-      <div class="grid md:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-sm font-medium mb-1">Tema</label>
-          <select name="theme" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-            <option>Sneakers</option>
-            <option>K-Beauty</option>
-            <option>Hi-Fi</option>
-            <option>Design</option>
-            <option>Overrask mig</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Anledning</label>
-          <input type="text" name="occasion" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Fødselsdag, takkegave…">
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1">Hilsen</label>
-        <textarea name="message" rows="3" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" placeholder="Skriv en kort besked"></textarea>
-      </div>
-      <button class="rounded-full bg-ink text-white px-5 py-3 font-medium shadow-soft">Send forespørgsel</button>
-      <p class="text-xs text-ink/60">Vi bekræfter indhold og leveringstidspunkt, inden gaveboksen sendes.</p>
-    </form>
-  </div>
-
-  <!-- Estimator -->
-  <div id="sheet-estimator" class="fixed inset-x-0 bottom-0 z-[72] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5" role="dialog" aria-modal="true">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Totalpris-estimator (vejledende)</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <div class="p-4 grid md:grid-cols-2 gap-4">
-      <form id="est-form" class="grid gap-3">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium mb-1">Pris hos butik</label>
-            <input id="est-price" type="number" min="0" step="1" placeholder="fx 100" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3" required>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Valuta</label>
-            <select id="est-currency" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-              <option value="DKK">DKK</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="JPY">JPY</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium mb-1">Kategori</label>
-            <select id="est-cat" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-              <option value="electronics">Elektronik</option>
-              <option value="accessories">Accessories</option>
-              <option value="apparel">Tøj & Sneakers</option>
-              <option value="beauty">Skønhed</option>
-              <option value="hifi">Hobby/Hi-Fi</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Vægt (kg)</label>
-            <input id="est-weight" type="number" step="0.1" min="0" placeholder="fx 0.7" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Butiksland</label>
-          <select id="est-country" class="w-full rounded-xl ring-1 ring-black/10 px-4 py-3">
-            <option value="EU">EU</option>
-            <option value="US">USA</option>
-            <option value="UK">UK</option>
-            <option value="JP">Japan</option>
-            <option value="OTHER">Andre</option>
-          </select>
-        </div>
-        <button class="rounded-full bg-ink text-white py-3">Beregn</button>
-        <p class="text-xs text-ink/60">Estimat er vejledende. Endelig pris vises ved check-out og kan afvige ved specialvarer.</p>
-      </form>
-      <div class="rounded-2xl ring-1 ring-black/10 p-4 bg-soft/60">
-        <p class="text-[11px] uppercase tracking-wide text-ink/60">Estimeret totalpris</p>
-        <div id="est-total" class="text-3xl font-extrabold mt-1">–</div>
-        <p id="est-note" class="text-sm text-ink/70 mt-1">Totalpris dækker produkt, afgifter og Selekti service.</p>
-        <ul id="est-highlights" class="mt-3 space-y-2 text-xs text-ink/70">
-          <li id="est-highlight-main">• Levering tilvælges i checkout – fri fragt med Selekti+</li>
-          <li>• Se detaljer om levering på <a href="om-os.html#levering" class="underline">Om os</a></li>
-        </ul>
-        <button class="w-full mt-4 rounded-full bg-white ring-1 ring-black/10 py-3 text-sm" data-open="sheet-wishlist">Fortsæt via link</button>
       </div>
     </div>
-  </div>
 
-  <!-- Cart (simple demo) -->
-  <div id="sheet-cart" class="fixed inset-x-0 bottom-0 z-[70] hidden sheet bg-white rounded-t-2xl shadow-soft ring-1 ring-black/5">
-    <div class="p-4 border-b border-black/5 flex items-center justify-between">
-      <h3 class="font-semibold">Din kurv</h3>
-      <button data-close class="h-8 w-8 grid place-items-center rounded-full ring-1 ring-black/10" aria-label="Luk">✕</button>
-    </div>
-    <div class="p-4">
-      <div id="cart-empty" class="text-sm text-ink/60">Kurven er tom.</div>
-      <div id="cart-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      <div id="cart-actions" class="hidden mt-4 flex items-center justify-between">
-        <div class="text-xs text-ink/60">Totalpris vises ved login.</div>
-        <button id="go-checkout" class="rounded-full bg-ink text-white px-5 py-2.5 font-medium shadow-soft">Fortsæt til login</button>
+    <div class="dialog" id="wishlistDialog" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="dialog__panel" role="document" tabindex="-1">
+        <div class="dialog__header">
+          <h2>Din ønskeliste</h2>
+          <button class="dialog__close" type="button" aria-label="Luk ønskeliste">✕</button>
+        </div>
+        <div class="wishlist-list" id="wishlistItems" aria-live="polite"></div>
+        <div class="wishlist-actions">
+          <button type="button" id="clearWishlist">Ryd alle</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- DIM for sheets -->
-  <div id="sheet-dim" class="fixed inset-0 z-[65] hidden bg-black/50"></div>
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="assets/logo-selekti.svg" alt="Selekti logo" width="48" height="48" loading="lazy" />
+          <p>Selekti gør global shopping ligetil. Vi beregner totalprisen og håndterer importen, så du kun skal vælge dine favoritter.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/">Forside</a>
+          <a href="/butikker.html">Butikker</a>
+          <a href="/bliv-partner.html">Bliv partner</a>
+          <a href="/om-os.html">Om os</a>
+        </div>
+        <div class="contact-info">
+          <strong>Kontakt</strong>
+          <span>E-mail: <a href="mailto:hello@selekti.dk">hello@selekti.dk</a></span>
+          <span>Telefon: <a href="tel:+4589887711">+45 89 88 77 11</a></span>
+        </div>
+      </div>
+    </footer>
 
-  
-</body>
+    <script defer src="app.js"></script>
+  </body>
 </html>
