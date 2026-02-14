@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "name": "Nordisk Hoodie",
+    "price": 499,
+    "category": "Tøj",
+    "description": "Blød premium hoodie i økologisk bomuld.",
+    "images": [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true
+  },
+  {
+    "id": "2",
+    "name": "Minimal Sneaker",
+    "price": 799,
+    "category": "Sko",
+    "description": "Komfortabel hverdagssko med minimalistisk design.",
+    "images": [
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true
+  },
+  {
+    "id": "3",
+    "name": "Urban Rygsæk",
+    "price": 649,
+    "category": "Tasker",
+    "description": "Vandafvisende rygsæk med plads til laptop.",
+    "images": [
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": false
+  },
+  {
+    "id": "4",
+    "name": "Classic T-shirt",
+    "price": 229,
+    "category": "Tøj",
+    "description": "Let og åndbar T-shirt i bomuld.",
+    "images": [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "featured": true
+  }
+]
