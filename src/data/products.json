@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "dashcam-pro-4k",
+    "name": "Dashcam Pro 4K",
+    "price": 899,
+    "shortDescription": "Ultra skarp 4K dashcam med natvision og loop-optagelse.",
+    "description": "Dashcam Pro 4K giver dig tydelige optagelser både dag og nat. Den starter automatisk ved tænding og gemmer vigtige hændelser, så du har dokumentation ved uheld.",
+    "highlights": ["4K video", "Natvision", "G-sensor"],
+    "popular": true,
+    "images": ["/products/dashcam-pro.svg", "/products/detail-cleaner.svg"]
+  },
+  {
+    "slug": "obd2-scanner-bluetooth",
+    "name": "OBD2 Scanner Bluetooth",
+    "price": 349,
+    "shortDescription": "Læs fejlkoder direkte på mobilen via app.",
+    "description": "Tilslut scanneren i bilens OBD2-port og få adgang til fejlkoder, live-data og nulstilling af advarselslamper. Perfekt til hurtig fejlfinding.",
+    "highlights": ["Bluetooth", "Fejlkoder", "Live-data"],
+    "popular": true,
+    "images": ["/products/obd2-scanner.svg", "/products/detail-cleaner.svg"]
+  },
+  {
+    "slug": "traadloes-carplay-adapter",
+    "name": "Trådløs CarPlay Adapter",
+    "price": 599,
+    "shortDescription": "Gør kablet CarPlay trådløst på få sekunder.",
+    "description": "Slip for kabler i bilen. Adapteren forbinder automatisk din iPhone til bilens CarPlay, så du kan bruge navigation, musik og opkald trådløst.",
+    "highlights": ["Plug & Play", "Hurtig opstart", "Stabil forbindelse"],
+    "popular": true,
+    "images": ["/products/carplay-adapter.svg", "/products/detail-cleaner.svg"]
+  },
+  {
+    "slug": "digital-daektryksmaaler",
+    "name": "Digital Dæktryksmåler",
+    "price": 199,
+    "shortDescription": "Præcis måling af dæktryk med baggrundslys.",
+    "description": "Hold dæktrykket korrekt og spar både brændstof og dækslid. Den digitale måler har tydeligt display og understøtter flere måleenheder.",
+    "highlights": ["Høj præcision", "LED display", "Kompakt størrelse"],
+    "popular": false,
+    "images": ["/products/daektryksmaaler.svg", "/products/detail-cleaner.svg"]
+  },
+  {
+    "slug": "mini-bilstoevsuger",
+    "name": "Mini Bilstøvsuger",
+    "price": 429,
+    "shortDescription": "Kraftig og kompakt støvsuger til kabinen.",
+    "description": "Fjern krummer, støv og småsten hurtigt. Denne model har HEPA-filter og flere mundstykker, så du nemt kan nå mellem sæderne.",
+    "highlights": ["Kraftig sug", "HEPA filter", "Flere mundstykker"],
+    "popular": true,
+    "images": ["/products/bilstoevsuger.svg", "/products/detail-cleaner.svg"]
+  },
+  {
+    "slug": "magnetisk-telefonholder",
+    "name": "Magnetisk Telefonholder",
+    "price": 159,
+    "shortDescription": "Stærk magnet og stabil montering i luftdyse.",
+    "description": "Hold mobilen sikkert på plads under kørsel. Telefonholderen kan roteres 360° og giver fri adgang til navigation uden at blokere udsynet.",
+    "highlights": ["360° rotation", "Stærk magnet", "Nem montering"],
+    "popular": false,
+    "images": ["/products/telefonholder.svg", "/products/detail-cleaner.svg"]
+  },
+  {
+    "slug": "led-interior-kit-rgb",
+    "name": "LED Interior Kit RGB",
+    "price": 279,
+    "shortDescription": "Skab stemning i bilen med farveskiftende LED.",
+    "description": "Tilpas kabinelyset med app-styring, farveskift og musik-synk. Sættet er nemt at montere og giver et moderne look i bilen.",
+    "highlights": ["App-kontrol", "Musik-synk", "RGB farver"],
+    "popular": false,
+    "images": ["/products/led-kit.svg", "/products/detail-cleaner.svg"]
+  },
+  {
+    "slug": "jump-starter-2000a",
+    "name": "Jump Starter 2000A",
+    "price": 749,
+    "shortDescription": "Start bilen hurtigt ved fladt batteri.",
+    "description": "Kompakt jump starter med høj kapacitet, USB-udgange og indbygget lommelygte. Ideel at have i bilen året rundt.",
+    "highlights": ["2000A peak", "Powerbank funktion", "Sikkerhedsbeskyttelse"],
+    "popular": false,
+    "images": ["/products/jumpstarter.svg", "/products/detail-cleaner.svg"]
+  }
+]
