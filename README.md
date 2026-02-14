@@ -1,77 +1,66 @@
-# MinWebshop (Next.js + Tailwind)
+# AutoGadget Shop (Next.js + Tailwind)
 
-Fuldt funktionel, simpel webshop uden betaling.
+Lille webshop-hjemmeside uden betaling med 8 bil-gadgets.
 
 ## Funktioner
-- Forside med hero + udvalgte produkter
-- Produkter-side med grid, søgning og filtrering
-- Produkt-side med billeder, beskrivelse og **Tilføj til kurv**
-- Kurv med tilføj/fjern/ændre antal (gemmes i `localStorage`)
-- Admin-side med opret/rediger/slet produkter
-- Produkter gemmes i JSON-fil (`data/products.json`) via API-routes
+- Forside med hero og **Populære produkter** (viser 4)
+- `/produkter` med produkt-grid og søgning
+- `/produkt/[slug]` med galleri, pris, highlights, **Tilføj til kurv** og **Køb nu** (link til `/kurv`)
+- `/kurv` med ændre antal, fjern og subtotal
+- `/kontakt` med simpel formular, der viser “Tak for din besked!” (ingen backend)
+- Kurv gemmes i `localStorage`
 - Mobilvenligt design
-- SEO metadata (`title` + `description`)
+- SEO title/description pr. side
+- Ingen database (produkter i JSON)
 
-## Projektstruktur
-
+## Filstruktur
 ```txt
 app/
-  admin/page.js
-  api/products/route.js
-  api/products/[id]/route.js
-  cart/page.js
-  products/page.js
-  products/[id]/page.js
   globals.css
   layout.js
   page.js
+  kontakt/page.js
+  kurv/page.js
+  produkt/[slug]/page.js
+  produkter/page.js
 components/
   AddToCartButton.js
-  AdminPanel.js
+  CartPageClient.js
   Footer.js
   Header.js
+  KontaktPageClient.js
   ProductCard.js
   ProductFilters.js
-data/
-  products.json
 lib/
   cart-context.js
   products.js
 public/
-  images/
+  products/
+src/
+  data/products.json
 ```
 
 ## Start på Windows
-1. Åbn PowerShell eller CMD i projektmappen.
-2. Kør:
+Åbn PowerShell i projektmappen og kør:
 
 ```bash
 npm install
 npm run dev
 ```
 
-3. Åbn browser på:
+Åbn derefter:
 
 ```txt
 http://localhost:3000
 ```
 
-## Hvor ændrer jeg produkter og billeder?
+## Hvor ændrer jeg produkter?
+- Redigér: `src/data/products.json`
+- Hvert produkt har fx felter: `slug`, `name`, `price`, `shortDescription`, `description`, `highlights`, `popular`, `images`
 
-### Hurtigst (for ikke-udvikler)
-- Gå til `http://localhost:3000/admin`
-- Opret/redigér/slet produkter i formularen
-- Billeder indsættes som URL’er (én eller flere, adskilt med komma)
+## Hvor ændrer jeg billeder?
+- Læg billeder i: `public/products/`
+- Henvis i JSON med stier som fx: `/products/dashcam-pro.svg`
 
-### Direkte i fil
-- Redigér `data/products.json`
-- Hvert produkt har felter som:
-  - `name`
-  - `price`
-  - `category`
-  - `description`
-  - `images` (liste af billed-URL’er)
-  - `featured` (`true/false` for forsiden)
-
-## Vigtigt
-Denne løsning har ingen betaling og ingen database, så den er god til at komme hurtigt i gang lokalt.
+## Bemærk
+Der er **ingen betaling** endnu. “Køb nu” sender brugeren til kurv-siden.

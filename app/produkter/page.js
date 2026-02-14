@@ -2,8 +2,8 @@ import ProductFilters from '@/components/ProductFilters';
 import { getProducts } from '@/lib/products';
 
 export const metadata = {
-  title: 'Produkter | MinWebshop',
-  description: 'Se alle produkter med søgning og filtrering.'
+  title: 'Produkter | AutoGadget Shop',
+  description: 'Se alle bil-gadgets med nem søgning.'
 };
 
 export default async function ProductsPage() {
@@ -12,7 +12,7 @@ export default async function ProductsPage() {
   return (
     <section className="space-y-4">
       <h1 className="text-3xl font-bold">Produkter</h1>
-      <p className="text-slate-600">Søg og filtrér blandt alle varer i shoppen.</p>
+      <p className="text-slate-600">Søg blandt vores udvalg af smarte produkter til biler.</p>
       <ProductFilters products={products} />
     </section>
   );

@@ -5,46 +5,30 @@ import ProductCard from '@/components/ProductCard';
 
 export default function ProductFilters({ products }) {
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('Alle');
-
-  const categories = useMemo(
-    () => ['Alle', ...new Set(products.map((product) => product.category))],
-    [products]
-  );
 
   const filtered = useMemo(() => {
-    return products.filter((product) => {
-      const searchMatch = product.name.toLowerCase().includes(query.toLowerCase());
-      const categoryMatch = category === 'Alle' || product.category === category;
-      return searchMatch && categoryMatch;
-    });
-  }, [products, query, category]);
+    const q = query.toLowerCase().trim();
+    if (!q) return products;
+
+    return products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(q) ||
+        product.shortDescription.toLowerCase().includes(q)
+    );
+  }, [products, query]);
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-3 rounded-xl border bg-white p-4 sm:grid-cols-2">
-        <input
-          className="rounded-lg border px-3 py-2"
-          placeholder="Søg efter produkt..."
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        <select
-          className="rounded-lg border px-3 py-2"
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-      </div>
+      <input
+        className="w-full rounded-lg border bg-white px-4 py-3"
+        placeholder="Søg efter bil-gadgets..."
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+      />
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.slug} product={product} />
         ))}
       </div>
 

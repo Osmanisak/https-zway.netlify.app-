@@ -4,8 +4,9 @@ import Footer from '@/components/Footer';
 import { CartProvider } from '@/lib/cart-context';
 
 export const metadata = {
-  title: 'MinWebshop | Enkel webshop i Next.js',
-  description: 'Mobilvenlig webshop med produkter, kurv og admin bygget i Next.js + Tailwind.'
+  title: 'AutoGadget Shop | Smarte produkter til biler',
+  description:
+    'Lille webshop med smarte bil-gadgets: dashcams, OBD2 scannere, CarPlay adaptere og mere.'
 };
 
 export default function RootLayout({ children }) {
